@@ -9,19 +9,22 @@
   <!-- Background circle -->
   <circle cx="50" cy="50" r="48" fill="url(#bg)"/>
   
-  <!-- Music note with analytics bars -->
-  <!-- Note stem -->
-  <rect x="35" y="25" width="4" height="35" fill="#000000" rx="2"/>
-  
-  <!-- Note flag (curved line at top) - properly connected to stem -->
-  <path d="M 39 25 Q 52 22, 52 32 Q 52 27, 39 28 Z" fill="#000000"/>
-  
-  <!-- Note head -->
-  <ellipse cx="37" cy="62" rx="8" ry="6" fill="#000000"/>
+  <!-- Music Note (eighth note) -->
+  <g fill="#000000">
+    <!-- Note head (ellipse) -->
+    <ellipse cx="32" cy="62" rx="9" ry="7" transform="rotate(-20 32 62)"/>
+    
+    <!-- Note stem -->
+    <rect x="40" y="28" width="3.5" height="34" rx="1.75"/>
+    
+    <!-- Note flag -->
+    <path d="M 43.5 28 C 43.5 28, 54 26, 54 35 C 54 35, 54 30, 43.5 32 Z"/>
+  </g>
   
   <!-- Analytics bars -->
-  <rect x="50" y="45" width="5" height="20" fill="#000000" rx="2.5"/>
-  <rect x="58" y="35" width="5" height="30" fill="#000000" rx="2.5"/>
-  <rect x="66" y="40" width="5" height="25" fill="#000000" rx="2.5"/>
+  <g fill="#000000">
+    <rect x="58" y="48" width="5" height="17" rx="2.5"/>
+    <rect x="66" y="38" width="5" height="27" rx="2.5"/>
+    <rect x="74" y="43" width="5" height="22" rx="2.5"/>
+  </g>
 </svg>
-
