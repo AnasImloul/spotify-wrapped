@@ -16,6 +16,7 @@ import {
 } from 'recharts';
 import { StreamingHistoryEntry } from '@/types/spotify';
 import { sortArtists } from '@/lib/sorting';
+import { msToMinutes, formatNumber } from '@/lib/utils';
 
 interface ArtistComparisonProps {
   streamingHistory: StreamingHistoryEntry[];
@@ -221,7 +222,7 @@ export function ArtistComparison({
                               <span className="truncate">{artist.name}</span>
                             </div>
                             <div className="text-xs text-white/40 ml-2 flex-shrink-0">
-                              {artist.playCount} plays
+                              {formatNumber(msToMinutes(artist.totalTime))} min
                             </div>
                           </button>
                         ))
