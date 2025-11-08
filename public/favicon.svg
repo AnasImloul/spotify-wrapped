@@ -11,17 +11,17 @@
   
   <!-- Music note with analytics bars -->
   <!-- Note stem -->
-  <rect x="35" y="25" width="4" height="35" fill="white" rx="2"/>
+  <rect x="35" y="25" width="4" height="35" fill="#000000" rx="2"/>
   
-  <!-- Note flag (curved line at top) -->
-  <path d="M 39 25 Q 50 20, 50 30 L 50 35 Q 50 28, 39 30 Z" fill="white"/>
+  <!-- Note flag (curved line at top) - properly connected to stem -->
+  <path d="M 39 25 Q 52 22, 52 32 Q 52 27, 39 28 Z" fill="#000000"/>
   
   <!-- Note head -->
-  <ellipse cx="37" cy="62" rx="8" ry="6" fill="white"/>
+  <ellipse cx="37" cy="62" rx="8" ry="6" fill="#000000"/>
   
   <!-- Analytics bars -->
-  <rect x="50" y="45" width="5" height="20" fill="white" rx="2.5"/>
-  <rect x="58" y="35" width="5" height="30" fill="white" rx="2.5"/>
-  <rect x="66" y="40" width="5" height="25" fill="white" rx="2.5"/>
+  <rect x="50" y="45" width="5" height="20" fill="#000000" rx="2.5"/>
+  <rect x="58" y="35" width="5" height="30" fill="#000000" rx="2.5"/>
+  <rect x="66" y="40" width="5" height="25" fill="#000000" rx="2.5"/>
 </svg>
 
