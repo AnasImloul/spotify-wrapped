@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import Fuse from 'fuse.js';
 import { X, TrendingUp, Plus, Trash2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -21,7 +22,7 @@ interface ArtistComparisonProps {
   endDate: string;
   onClose: () => void;
   initialArtists?: string[];
-  availableArtists: string[];
+  availableArtists: { name: string; playCount: number; totalTime: number }[];
 }
 
 const COLORS = [
@@ -48,15 +49,39 @@ export function ArtistComparison({
   );
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Filter available artists based on search
+  // Configure Fuse.js for fuzzy search
+  const artistFuse = useMemo(
+    () =>
+      new Fuse(availableArtists, {
+        keys: ['name'],
+        threshold: 0.3,
+        distance: 100,
+        minMatchCharLength: 1,
+      }),
+    [availableArtists]
+  );
+
+  // Filter and sort available artists based on search
   const filteredArtists = useMemo(() => {
-    return availableArtists
-      .filter(artist => 
-        !selectedArtists.includes(artist) &&
-        artist.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-      .slice(0, 10);
-  }, [availableArtists, selectedArtists, searchTerm]);
+    // Filter out already selected artists
+    const unselectedArtists = availableArtists.filter(
+      artist => !selectedArtists.includes(artist.name)
+    );
+
+    // If no search term, return sorted by playCount
+    if (!searchTerm.trim()) {
+      return unselectedArtists
+        .sort((a, b) => b.playCount - a.playCount)
+        .slice(0, 20);
+    }
+
+    // Use fuzzy search
+    const results = artistFuse.search(searchTerm);
+    return results
+      .map(result => result.item)
+      .filter(artist => !selectedArtists.includes(artist.name))
+      .slice(0, 20);
+  }, [availableArtists, selectedArtists, searchTerm, artistFuse]);
 
   // Calculate data for all selected artists
   const chartData = useMemo(() => {
@@ -174,24 +199,36 @@ export function ArtistComparison({
                   <div className="relative">
                     <Input
                       type="text"
-                      placeholder="Search for an artist to add..."
+                      placeholder="Search for an artist to add... (supports fuzzy search)"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                       className="bg-white/5 border-white/10 text-white placeholder:text-white/40"
+                      autoComplete="off"
                     />
                   </div>
-                  {searchTerm && filteredArtists.length > 0 && (
-                    <div className="bg-white/5 border border-white/10 rounded-lg max-h-40 overflow-y-auto custom-scrollbar">
-                      {filteredArtists.map(artist => (
-                        <button
-                          key={artist}
-                          onClick={() => addArtist(artist)}
-                          className="w-full text-left px-3 py-2 text-sm text-white hover:bg-white/10 transition-colors flex items-center gap-2"
-                        >
-                          <Plus className="w-4 h-4 text-green-400" />
-                          {artist}
-                        </button>
-                      ))}
+                  {(searchTerm || filteredArtists.length > 0) && (
+                    <div className="bg-black/80 backdrop-blur-sm border border-white/10 rounded-lg max-h-60 overflow-y-auto custom-scrollbar">
+                      {filteredArtists.length > 0 ? (
+                        filteredArtists.map(artist => (
+                          <button
+                            key={artist.name}
+                            onClick={() => addArtist(artist.name)}
+                            className="w-full text-left px-3 py-2 text-sm text-white hover:bg-white/10 transition-colors flex items-center justify-between group"
+                          >
+                            <div className="flex items-center gap-2 flex-1 min-w-0">
+                              <Plus className="w-4 h-4 text-green-400 flex-shrink-0" />
+                              <span className="truncate">{artist.name}</span>
+                            </div>
+                            <div className="text-xs text-white/40 ml-2 flex-shrink-0">
+                              {artist.playCount} plays
+                            </div>
+                          </button>
+                        ))
+                      ) : (
+                        <div className="px-3 py-4 text-sm text-white/40 text-center">
+                          No artists found matching "{searchTerm}"
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>

@@ -415,7 +415,11 @@ export function TopItems({ stats, streamingHistory, startDate, endDate }: TopIte
           startDate={startDate}
           endDate={endDate}
           onClose={() => setShowComparison(false)}
-          availableArtists={stats.topArtists.map(a => a.name)}
+          availableArtists={stats.topArtists.map(a => ({
+            name: a.name,
+            playCount: a.playCount,
+            totalTime: a.totalTime
+          }))}
           initialArtists={stats.topArtists.slice(0, 3).map(a => a.name)}
         />
       )}
