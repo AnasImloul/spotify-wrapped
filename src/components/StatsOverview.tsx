@@ -110,6 +110,16 @@ export function StatsOverview({ stats }: StatsOverviewProps) {
             <p className="text-xs text-white/60 mt-2">
               {stats.mostActiveDayMinutes ? `${formatNumber(stats.mostActiveDayMinutes)} minutes played` : 'Your most music-filled day'}
             </p>
+            {stats.mostActiveDayTracks && stats.mostActiveDayTracks.length > 0 && (
+              <div className="mt-3 space-y-1.5">
+                {stats.mostActiveDayTracks.map((track, index) => (
+                  <div key={index} className="text-xs bg-white/5 rounded px-2 py-1.5 border border-white/10">
+                    <div className="font-medium text-white/90 truncate">{track.name}</div>
+                    <div className="text-white/50 truncate">{track.artist} • {Math.round(track.minutes)} min</div>
+                  </div>
+                ))}
+              </div>
+            )}
           </CardContent>
         </Card>
       )}
