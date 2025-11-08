@@ -11,10 +11,10 @@
   
   <!-- Music note with analytics bars -->
   <!-- Note stem -->
-  <rect x="35" y="25" width="4" height="35" fill="white" rx="2"/>
+  <rect x="35" y="25" width="4" height="35" fill="#000000" rx="2"/>
   
   <!-- Note head -->
-  <ellipse cx="37" cy="62" rx="8" ry="6" fill="white"/>
+  <ellipse cx="37" cy="62" rx="8" ry="6" fill="#000000"/>
   
   <!-- Analytics bars -->
   <rect x="50" y="45" width="5" height="20" fill="#000000" rx="2.5"/>
