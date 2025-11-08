@@ -137,49 +137,12 @@ export function processStreamingHistory(
 
   let mostActiveDay = '';
   let mostActiveDayMinutes = 0;
-  let mostActiveDayTracks: { name: string; artist: string; minutes: number }[] = [];
   let maxMs = 0;
   dayMap.forEach((ms, day) => {
     if (ms > maxMs) {
       maxMs = ms;
       mostActiveDay = day;
       mostActiveDayMinutes = Math.round(ms / 1000 / 60); // convert to minutes
-      
-      // Calculate top tracks for this day
-      const dayTracks = new Map<string, { artist: string; ms: number }>();
-      filteredHistories
-        .filter(entry => entry.endTime.split(' ')[0] === day)
-        .forEach(entry => {
-          const key = entry.trackName;
-          const existing = dayTracks.get(key);
-          if (existing) {
-            existing.ms += entry.msPlayed;
-          } else {
-            dayTracks.set(key, { artist: entry.artistName, ms: entry.msPlayed });
-          }
-        });
-      
-      // Get top 3 tracks sorted by time
-      const topThreeTracks = Array.from(dayTracks.entries())
-        .map(([name, data]) => ({
-          name,
-          artist: data.artist,
-          minutes: data.ms / 1000 / 60
-        }))
-        .sort((a, b) => b.minutes - a.minutes)
-        .slice(0, 3);
-      
-      // Apply the filtering logic: a > 2*b -> show only a, b > 2*c -> show a,b, else show all three
-      if (topThreeTracks.length > 0) {
-        const [a, b, c] = topThreeTracks;
-        if (b && a.minutes > 2 * b.minutes) {
-          mostActiveDayTracks = [a];
-        } else if (c && b && b.minutes > 2 * c.minutes) {
-          mostActiveDayTracks = [a, b];
-        } else {
-          mostActiveDayTracks = topThreeTracks;
-        }
-      }
     }
   });
 
@@ -193,7 +156,6 @@ export function processStreamingHistory(
     averageListeningPerDay,
     mostActiveDay,
     mostActiveDayMinutes,
-    mostActiveDayTracks,
     topArtistName: topArtists[0]?.name,
     topTrackName: topTracks[0]?.name,
   };
@@ -230,7 +192,6 @@ export function mergeStats(
     averageListeningPerDay: streamingStats.averageListeningPerDay || 0,
     mostActiveDay: streamingStats.mostActiveDay,
     mostActiveDayMinutes: streamingStats.mostActiveDayMinutes,
-    mostActiveDayTracks: streamingStats.mostActiveDayTracks,
     musicEvolution: wrappedStats.musicEvolution,
     yearlyMetrics: wrappedStats.yearlyMetrics,
   };
