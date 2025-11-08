@@ -36,7 +36,7 @@ export function DateRangeSelector({
                 min={minDate}
                 max={maxDate}
                 onChange={(e) => onStartDateChange(e.target.value)}
-                className="date-input w-full px-3 py-2.5 rounded-lg bg-white/5 backdrop-blur-sm border border-green-500/20 text-white focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500/50 hover:border-green-500/30 transition-all"
+                className="w-full px-4 py-2.5 rounded-xl bg-black/40 backdrop-blur-md border border-green-500/20 text-white focus:outline-none focus:ring-2 focus:ring-green-500/40 focus:border-green-500/40 hover:bg-black/50 hover:border-green-500/30 transition-all duration-200 font-medium"
               />
             </div>
             
@@ -48,7 +48,7 @@ export function DateRangeSelector({
                 min={minDate}
                 max={maxDate}
                 onChange={(e) => onEndDateChange(e.target.value)}
-                className="date-input w-full px-3 py-2.5 rounded-lg bg-white/5 backdrop-blur-sm border border-green-500/20 text-white focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500/50 hover:border-green-500/30 transition-all"
+                className="w-full px-4 py-2.5 rounded-xl bg-black/40 backdrop-blur-md border border-green-500/20 text-white focus:outline-none focus:ring-2 focus:ring-green-500/40 focus:border-green-500/40 hover:bg-black/50 hover:border-green-500/30 transition-all duration-200 font-medium"
               />
             </div>
           </div>
