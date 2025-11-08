@@ -228,7 +228,7 @@ export function TrackComparison({
                   <div className="relative">
                     <Input
                       type="text"
-                      placeholder="Search for a track to add... (supports fuzzy search)"
+                      placeholder="Type track name..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                       onFocus={() => setShowAutocomplete(true)}

@@ -215,7 +215,7 @@ export function ArtistComparison({
                   <div className="relative">
                     <Input
                       type="text"
-                      placeholder="Search for an artist to add... (supports fuzzy search)"
+                      placeholder="Type artist name..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                       onFocus={() => setShowAutocomplete(true)}

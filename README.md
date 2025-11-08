@@ -1,35 +1,51 @@
-# 🎵 Spotify Wrapped - Your Year in Music
+# Spotify Wrapped Analytics
 
-A beautiful, privacy-focused web application that lets you visualize your Spotify listening history. Upload your Spotify data export and discover insights about your musical journey throughout the year.
+A privacy-focused web application for visualizing and analyzing your Spotify listening history. Upload your Spotify data export to gain insights into your music consumption patterns, discover your most-played artists and tracks, and explore how your musical taste evolved over time.
 
-## ✨ Features
+## Features
 
-- 📊 **Comprehensive Statistics**: See your total listening time, number of tracks, and unique artists
-- 🏆 **Top Charts**: Discover your most-played artists and tracks
-- 📈 **Listening Trends**: Visualize your listening patterns over time
-- ✨ **Music Evolution**: Explore how your music taste evolved throughout the year
-- 🔒 **Privacy First**: All data processing happens locally in your browser - nothing is sent to any server
-- 🎨 **Beautiful UI**: Modern, responsive design with smooth animations
+- **Comprehensive Statistics**: Total listening time, track count, unique artists, and daily averages
+- **Top Charts**: Most-played artists and tracks with detailed play counts and listening duration
+- **Timeline Analysis**: Interactive graphs showing individual artist/track listening patterns over time
+- **Comparison Tools**: Compare listening trends across multiple artists or tracks simultaneously
+- **Listening Trends**: Monthly listening patterns visualized through interactive charts
+- **Music Evolution**: Explore how your music taste evolved throughout the year (when Wrapped data is available)
+- **Date Range Filtering**: Filter statistics by specific time periods
+- **Search & Discovery**: Fuzzy search across artists and tracks with pagination
+- **Privacy First**: All data processing occurs locally in your browser—nothing is uploaded to any server
 
-## 🚀 Getting Started
+## Technology Stack
+
+- **React 18** - UI framework
+- **TypeScript** - Type safety and developer experience
+- **Vite** - Build tool and development server
+- **TailwindCSS** - Utility-first styling
+- **shadcn/ui** - Modern UI component library
+- **Recharts** - Interactive data visualization
+- **Lucide React** - Icon system
+- **Fuse.js** - Fuzzy search implementation
+
+## Getting Started
 
 ### Prerequisites
 
-- Node.js 18+ or 20+
-- npm or yarn
+- Node.js 18.0.0 or higher
+- npm or yarn package manager
 
 ### Installation
 
-1. Clone the repository or download the source code
+1. Clone the repository:
+```bash
+git clone <repository-url>
+cd spotify-wrapped
+```
 
 2. Install dependencies:
-
 ```bash
 npm install
 ```
 
 3. Start the development server:
-
 ```bash
 npm run dev
 ```
@@ -42,110 +58,121 @@ npm run dev
 npm run build
 ```
 
-The built files will be in the `dist` directory.
+The optimized production build will be available in the `dist` directory.
 
-## 📥 How to Get Your Spotify Data
+## Obtaining Your Spotify Data
 
-1. Go to your [Spotify Privacy Settings](https://www.spotify.com/account/privacy/)
-2. Scroll down to "Download your data"
-3. Request your "Extended streaming history" (recommended) or "Account data"
-4. Wait for the email from Spotify (usually takes a few days)
-5. Download the ZIP file and extract it
-6. Upload the JSON files to this app
+1. Navigate to [Spotify Privacy Settings](https://www.spotify.com/account/privacy/)
+2. Scroll to "Download your data" section
+3. Request your **Extended streaming history** (recommended) or **Account data**
+4. Wait for Spotify's email confirmation (typically 5-30 days)
+5. Download and extract the ZIP file
+6. Upload the JSON files to this application
 
-### Supported Files
+### Supported File Types
 
-- `StreamingHistory_music_*.json` - Your listening history
-- `Wrapped*.json` - Official Spotify Wrapped data
-- `Userdata.json` - Your account information
+The application processes the following data files:
 
-## 🛠️ Tech Stack
+- `StreamingHistory_music_*.json` - Detailed listening history with timestamps
+- `Wrapped*.json` - Official Spotify Wrapped analytics (if available)
+- `Userdata.json` - Account information and preferences
 
-- **React 18** - UI framework
-- **TypeScript** - Type safety
-- **Vite** - Build tool and dev server
-- **TailwindCSS** - Styling
-- **shadcn/ui** - UI components
-- **Recharts** - Data visualization
-- **Lucide React** - Icons
-
-## 📁 Project Structure
+## Project Structure
 
 ```
 src/
-├── components/          # React components
-│   ├── ui/             # Base UI components (shadcn)
-│   ├── FileUpload.tsx  # Drag & drop file upload
-│   ├── StatsOverview.tsx
-│   ├── TopItems.tsx
-│   ├── ListeningTrends.tsx
-│   └── MusicEvolution.tsx
+├── components/
+│   ├── ui/                      # Base UI components (buttons, inputs, cards, etc.)
+│   ├── ArtistComparison.tsx     # Multi-artist comparison modal
+│   ├── DateRangeSelector.tsx    # Date filtering interface
+│   ├── FileUpload.tsx           # Drag-and-drop file upload
+│   ├── ItemTimeline.tsx         # Individual artist/track timeline modal
+│   ├── ListeningTrends.tsx      # Monthly trends chart
+│   ├── MonthPicker.tsx          # Custom month/year selector
+│   ├── MusicEvolution.tsx       # Music taste evolution display
+│   ├── StatsOverview.tsx        # Key statistics cards
+│   ├── TopItems.tsx             # Top artists and tracks tables
+│   └── TrackComparison.tsx      # Multi-track comparison modal
 ├── lib/
-│   ├── utils.ts        # Utility functions
-│   └── dataProcessor.ts # Data parsing and statistics
+│   ├── dataProcessor.ts         # Data parsing and statistics calculation
+│   ├── sorting.ts               # Centralized sorting utilities
+│   └── utils.ts                 # Helper functions
 ├── types/
-│   └── spotify.ts      # TypeScript type definitions
-├── App.tsx             # Main application
-├── main.tsx            # Entry point
-└── index.css           # Global styles
+│   └── spotify.ts               # TypeScript type definitions
+├── App.tsx                      # Main application component
+├── main.tsx                     # Application entry point
+└── index.css                    # Global styles and theme
 ```
 
-## 🎨 Features in Detail
+## Key Features Explained
 
-### Statistics Overview
-- Total listening time (hours and days)
-- Number of unique tracks played
-- Number of unique artists discovered
-- Daily listening average
-- Top listener percentile (from Wrapped data)
-- Most active listening day
+### Statistics Dashboard
+- Aggregate listening metrics (total time, tracks, artists)
+- Daily listening averages
+- Top listener percentile (when Wrapped data is available)
+- Most active listening day identification
 
-### Top Charts
-- Top 10 Artists with play counts and listening time
-- Top 10 Tracks with play counts
-- Detailed tables with hover effects
+### Advanced Charts
+- **Artist/Track Tables**: Paginated tables with fuzzy search, sortable by play count or listening time
+- **Individual Timelines**: Click any artist or track to view detailed monthly listening patterns
+- **Comparison Mode**: Compare up to 8 artists or tracks simultaneously on a single chart
+- **Interactive Tooltips**: Hover over any data point for detailed information
 
-### Listening Trends
-- Interactive line chart showing monthly listening patterns
-- Visual representation of your music consumption over time
+### Date Range Filtering
+- Custom month/year picker with modern UI
+- Filter all statistics by specific time periods
+- Defaults to current calendar year
+- Respects available data boundaries
 
-### Music Evolution
-- Spotify's music evolution eras (from Wrapped data)
-- Genre, mood, and descriptor tags for each era
-- Defining tracks for each musical period
+### Privacy & Security
 
-## 🔐 Privacy & Security
+- **100% Client-Side Processing**: All computations run in your browser
+- **Zero Server Communication**: No data is transmitted over the network
+- **No Tracking or Analytics**: Your listening history remains completely private
+- **Open Source**: Full transparency—audit the code yourself
 
-- **100% Client-Side**: All data processing happens in your browser
-- **No Server Upload**: Your data never leaves your device
-- **No Tracking**: No analytics or tracking scripts
-- **Open Source**: You can review the entire codebase
+## Performance Considerations
 
-## 🤝 Contributing
+The application efficiently handles large datasets:
+- Streaming history files with 50,000+ entries
+- Pagination prevents UI lag with large result sets
+- Optimized React rendering with `useMemo` and `useCallback`
+- Debounced search for responsive filtering
 
-Contributions are welcome! Feel free to:
+## Browser Compatibility
 
-- Report bugs
-- Suggest new features
-- Submit pull requests
-- Improve documentation
+- Chrome/Edge 90+
+- Firefox 88+
+- Safari 14+
+- Opera 76+
 
-## 📝 License
+Modern ES2020+ features are used, so older browsers are not supported.
 
-This project is open source and available under the MIT License.
+## Contributing
 
-## ⚠️ Disclaimer
+Contributions are welcome. Please:
 
-This is an unofficial tool and is not affiliated with, endorsed by, or connected to Spotify AB. All Spotify trademarks, service marks, trade names, logos, and other intellectual property are the property of Spotify AB.
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/improvement`)
+3. Commit your changes (`git commit -m 'Add new feature'`)
+4. Push to the branch (`git push origin feature/improvement`)
+5. Open a Pull Request
 
-## 🙏 Acknowledgments
+## License
 
-- Spotify for providing the data export feature
-- The React and Vite teams for excellent tools
-- The shadcn/ui project for beautiful components
-- All contributors and users of this project
+MIT License - see LICENSE file for details.
+
+## Disclaimer
+
+This is an independent project and is not affiliated with, endorsed by, or connected to Spotify AB. All Spotify trademarks and intellectual property belong to Spotify AB.
+
+## Acknowledgments
+
+- Spotify for providing data export functionality
+- React, Vite, and TailwindCSS teams for excellent developer tools
+- shadcn for the component design system
+- The open-source community
 
 ---
 
-Made with 💚 for music lovers
-
+Built for music enthusiasts who love data.

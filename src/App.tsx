@@ -92,8 +92,8 @@ function App() {
             </span>
           </h2>
           <p className="text-lg text-white/70 max-w-2xl mx-auto">
-            Upload your Spotify data export and dive deep into your listening habits.
-            See your top artists, tracks, and how your music taste evolved throughout the year.
+            Upload your Spotify data export to explore your listening patterns,
+            discover your most-played content, and visualize your musical journey.
           </p>
         </div>
 
@@ -203,7 +203,7 @@ function App() {
                     3
                   </span>
                   <span>
-                    Wait for the email (usually takes a few days)
+                    Wait for Spotify's email (typically 5-30 days)
                   </span>
                 </li>
                 <li className="flex gap-3">
@@ -219,12 +219,12 @@ function App() {
                     5
                   </span>
                   <span>
-                    Upload the files here to see your personalized wrapped!
+                    Upload the JSON files to analyze your data
                   </span>
                 </li>
               </ol>
             <p className="mt-6 text-sm text-white/60 italic">
-              Your data never leaves your device - all processing happens locally in your browser!
+              Your data remains on your device—all processing happens locally
             </p>
             </div>
           </div>
@@ -236,9 +236,9 @@ function App() {
         <div className="container mx-auto px-4 py-8">
           <div className="text-center text-white/60 text-sm">
             <p>
-              Made with 💚 for music lovers |{' '}
+              Built for music enthusiasts |{' '}
               <span className="text-white/40">
-                This is an unofficial tool and is not affiliated with Spotify
+                Independent project not affiliated with Spotify
               </span>
             </p>
           </div>

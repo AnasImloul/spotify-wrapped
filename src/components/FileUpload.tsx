@@ -108,9 +108,9 @@ export function FileUpload({ onFilesProcessed }: FileUploadProps) {
             Drop your Spotify data files here
           </h3>
           <p className="text-muted-foreground text-center mb-6 max-w-md">
-            Upload your <span className="font-mono">StreamingHistory</span>,{' '}
-            <span className="font-mono">Wrapped</span>, or{' '}
-            <span className="font-mono">Userdata</span> JSON files from your Spotify data export
+            Supports <span className="font-mono">StreamingHistory</span>,{' '}
+            <span className="font-mono">Wrapped</span>, and{' '}
+            <span className="font-mono">Userdata</span> JSON files
           </p>
           <div className="flex gap-4">
             <Button asChild variant="default" size="lg">
