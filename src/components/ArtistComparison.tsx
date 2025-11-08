@@ -272,7 +272,7 @@ export function ArtistComparison({
                           color: 'white',
                           fontSize: '12px'
                         }}
-                        formatter={(value: number) => [`${value} min`, '']}
+                        formatter={(value: number, name: string) => [`${value} min`, name]}
                       />
                       <Legend 
                         wrapperStyle={{ fontSize: '12px', paddingTop: '10px' }}
