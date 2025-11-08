@@ -12,23 +12,34 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { ProcessedStats } from '@/types/spotify';
+import { ProcessedStats, StreamingHistoryEntry } from '@/types/spotify';
 import { formatNumber, msToMinutes } from '@/lib/utils';
-import { Music2, Trophy, ChevronLeft, ChevronRight, Search, X } from 'lucide-react';
+import { Music2, Trophy, ChevronLeft, ChevronRight, Search, X, TrendingUp } from 'lucide-react';
+import { ItemTimeline } from './ItemTimeline';
 
 interface TopItemsProps {
   stats: ProcessedStats;
+  streamingHistory: StreamingHistoryEntry[];
+  startDate: string;
+  endDate: string;
 }
 
 const ITEMS_PER_PAGE = 10;
 
-export function TopItems({ stats }: TopItemsProps) {
+export function TopItems({ stats, streamingHistory, startDate, endDate }: TopItemsProps) {
   const [artistPage, setArtistPage] = useState(1);
   const [trackPage, setTrackPage] = useState(1);
   const [artistSearch, setArtistSearch] = useState('');
   const [trackSearch, setTrackSearch] = useState('');
   const [artistPageInput, setArtistPageInput] = useState('1');
   const [trackPageInput, setTrackPageInput] = useState('1');
+  
+  // Timeline modal state
+  const [timelineItem, setTimelineItem] = useState<{
+    name: string;
+    type: 'artist' | 'track';
+    artistName?: string;
+  } | null>(null);
 
   // Configure Fuse.js for fuzzy search on artists
   const artistFuse = useMemo(
@@ -205,14 +216,19 @@ export function TopItems({ stats }: TopItemsProps) {
                 paginatedArtists.map((artist) => {
                   const actualIndex = stats.topArtists.findIndex(a => a.name === artist.name);
                   return (
-                    <TableRow key={actualIndex} className="hover:bg-white/5 border-white/5">
+                    <TableRow 
+                      key={actualIndex} 
+                      className="hover:bg-white/5 border-white/5 cursor-pointer group"
+                      onClick={() => setTimelineItem({ name: artist.name, type: 'artist' })}
+                    >
                       <TableCell className="font-bold text-white/40">
                         {actualIndex + 1}
                       </TableCell>
-                      <TableCell className="font-medium text-white">
+                      <TableCell className="font-medium text-white group-hover:text-green-300 transition-colors">
                         <div className="flex items-center gap-2">
                           <Music2 className="w-4 h-4 text-green-400" />
-                          {artist.name}
+                          <span className="truncate">{artist.name}</span>
+                          <TrendingUp className="w-4 h-4 text-green-400/60 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
                         </div>
                       </TableCell>
                       <TableCell className="text-right">
@@ -325,12 +341,17 @@ export function TopItems({ stats }: TopItemsProps) {
                     t => t.name === track.name && t.artist === track.artist
                   );
                   return (
-                    <TableRow key={actualIndex} className="hover:bg-white/5 border-white/5">
+                    <TableRow 
+                      key={actualIndex} 
+                      className="hover:bg-white/5 border-white/5 cursor-pointer group"
+                      onClick={() => setTimelineItem({ name: track.name, type: 'track', artistName: track.artist })}
+                    >
                       <TableCell className="font-bold text-white/40">
                         {actualIndex + 1}
                       </TableCell>
-                      <TableCell className="font-medium max-w-[200px] truncate text-white">
-                        {track.name}
+                      <TableCell className="font-medium max-w-[200px] text-white group-hover:text-green-300 transition-colors flex items-center gap-2">
+                        <span className="truncate">{track.name}</span>
+                        <TrendingUp className="w-4 h-4 text-blue-400/60 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
                       </TableCell>
                       <TableCell className="text-sm text-white/60 max-w-[150px] truncate">
                         {track.artist}
@@ -359,6 +380,19 @@ export function TopItems({ stats }: TopItemsProps) {
           </Table>
         </CardContent>
       </Card>
+
+      {/* Timeline Modal */}
+      {timelineItem && (
+        <ItemTimeline
+          itemName={timelineItem.name}
+          itemType={timelineItem.type}
+          artistName={timelineItem.artistName}
+          streamingHistory={streamingHistory}
+          startDate={startDate}
+          endDate={endDate}
+          onClose={() => setTimelineItem(null)}
+        />
+      )}
     </div>
   );
 }

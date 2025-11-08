@@ -239,3 +239,15 @@ export function getDateRangeFromFiles(files: UploadedFile[]): { min: string; max
   return { min: minDate, max: maxDate };
 }
 
+export function getStreamingHistoryFromFiles(files: UploadedFile[]): StreamingHistoryEntry[] {
+  const streamingHistories: StreamingHistoryEntry[] = [];
+
+  files.forEach((file) => {
+    if (file.type === 'streaming' && Array.isArray(file.data)) {
+      streamingHistories.push(...(file.data as StreamingHistoryEntry[]));
+    }
+  });
+
+  return streamingHistories;
+}
+

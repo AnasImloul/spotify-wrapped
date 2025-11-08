@@ -5,13 +5,14 @@ import { StatsOverview } from './components/StatsOverview';
 import { TopItems } from './components/TopItems';
 import { ListeningTrends } from './components/ListeningTrends';
 import { MusicEvolution } from './components/MusicEvolution';
-import { parseUploadedFiles, getDateRangeFromFiles } from './lib/dataProcessor';
-import { UploadedFile, ProcessedStats } from './types/spotify';
+import { parseUploadedFiles, getDateRangeFromFiles, getStreamingHistoryFromFiles } from './lib/dataProcessor';
+import { UploadedFile, ProcessedStats, StreamingHistoryEntry } from './types/spotify';
 import { Music2, BarChart3, Trophy, TrendingUp, Sparkles } from 'lucide-react';
 
 function App() {
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
   const [stats, setStats] = useState<ProcessedStats | null>(null);
+  const [streamingHistory, setStreamingHistory] = useState<StreamingHistoryEntry[]>([]);
   
   // Date range state
   const currentYear = new Date().getFullYear();
@@ -53,7 +54,9 @@ function App() {
   useEffect(() => {
     if (uploadedFiles.length > 0) {
       const processedStats = parseUploadedFiles(uploadedFiles, startDate, endDate);
+      const history = getStreamingHistoryFromFiles(uploadedFiles);
       setStats(processedStats);
+      setStreamingHistory(history);
     }
   }, [uploadedFiles, startDate, endDate]);
 
@@ -130,7 +133,7 @@ function App() {
                     <Trophy className="w-8 h-8 text-green-400" />
                     Hall of Fame
                   </h3>
-                  <TopItems stats={stats} />
+                  <TopItems stats={stats} streamingHistory={streamingHistory} startDate={startDate} endDate={endDate} />
                 </div>
               </>
             )}
