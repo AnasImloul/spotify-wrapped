@@ -6,6 +6,8 @@ export interface Artist {
   name: string;
   playCount: number;
   totalTime: number;
+  totalMs: number;
+  rank?: number;
 }
 
 export interface Track {
@@ -13,6 +15,7 @@ export interface Track {
   artist: string;
   playCount: number;
   totalMs: number;
+  rank?: number;
 }
 
 /**

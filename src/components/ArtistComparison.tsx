@@ -2,7 +2,6 @@ import { useState, useMemo } from 'react';
 import Fuse from 'fuse.js';
 import { X, TrendingUp, Trash2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
   LineChart,
@@ -24,7 +23,7 @@ interface ArtistComparisonProps {
   endDate: string;
   onClose: () => void;
   initialArtists?: string[];
-  availableArtists: { name: string; playCount: number; totalTime: number; rank: number }[];
+  availableArtists: { name: string; playCount: number; totalTime: number; totalMs: number; rank: number }[];
 }
 
 const COLORS = [

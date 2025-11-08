@@ -431,6 +431,7 @@ export function TopItems({ stats, streamingHistory, startDate, endDate }: TopIte
             name: a.name,
             playCount: a.playCount,
             totalTime: a.totalTime,
+            totalMs: a.totalMs,
             rank: index + 1
           }))}
           initialArtists={stats.topArtists.slice(0, 3).map(a => a.name)}

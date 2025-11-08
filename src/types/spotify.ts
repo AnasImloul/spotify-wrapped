@@ -90,7 +90,7 @@ export interface ProcessedStats {
   topTrackName?: string;
   topGenres: { genre: string; count: number }[];
   listeningByMonth: { month: string; minutes: number }[];
-  topArtists: { name: string; playCount: number; totalMs: number }[];
+  topArtists: { name: string; playCount: number; totalMs: number; totalTime: number }[];
   topTracks: { name: string; artist: string; playCount: number; totalMs: number }[];
   averageListeningPerDay: number;
   mostActiveDay?: string;
