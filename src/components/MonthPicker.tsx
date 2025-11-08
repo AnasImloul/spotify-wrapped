@@ -72,7 +72,10 @@ export function MonthPicker({ value, minDate, maxDate, onChange, label }: MonthP
         </button>
 
         {isOpen && (
-          <div className="absolute z-50 mt-2 w-full bg-black/80 backdrop-blur-md border border-green-500/30 rounded-xl shadow-2xl shadow-green-500/10 p-4">
+          <div 
+            className="absolute z-50 mt-2 w-full bg-black/80 border border-green-500/30 rounded-xl shadow-2xl shadow-green-500/10 p-4"
+            style={{ backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}
+          >
             {/* Year selector */}
             <div className="flex items-center justify-between mb-4">
               <button
