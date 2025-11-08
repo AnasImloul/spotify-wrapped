@@ -110,14 +110,26 @@ export function StatsOverview({ stats }: StatsOverviewProps) {
             <p className="text-xs text-white/60 mt-2">
               {stats.mostActiveDayMinutes ? `${formatNumber(stats.mostActiveDayMinutes)} minutes played` : 'Your most music-filled day'}
             </p>
-            {stats.mostActiveDayTracks && stats.mostActiveDayTracks.length > 0 && (
+            {stats.mostActiveDayTracks && stats.mostActiveDayTracks.length > 0 && stats.mostActiveDayMinutes && (
               <div className="mt-3 space-y-1.5">
-                {stats.mostActiveDayTracks.map((track, index) => (
-                  <div key={index} className="text-xs bg-white/5 rounded px-2 py-1.5 border border-white/10">
-                    <div className="font-medium text-white/90 truncate">{track.name}</div>
-                    <div className="text-white/50 truncate">{track.artist} • {Math.round(track.minutes)} min</div>
-                  </div>
-                ))}
+                <p className="text-[10px] text-white/40 mb-1.5 uppercase tracking-wide">Top tracks that day</p>
+                {stats.mostActiveDayTracks.map((track, index) => {
+                  const percentage = stats.mostActiveDayMinutes ? (track.minutes / stats.mostActiveDayMinutes) * 100 : 0;
+                  return (
+                    <div key={index} className="text-xs bg-white/5 rounded px-2 py-1.5 border border-white/10">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex-1 min-w-0">
+                          <div className="font-medium text-white/90 truncate">{track.name}</div>
+                          <div className="text-white/50 truncate">{track.artist}</div>
+                        </div>
+                        <div className="text-white/60 text-right flex-shrink-0">
+                          <div className="font-medium">{Math.round(track.minutes)} min</div>
+                          <div className="text-[10px] text-white/40">{percentage.toFixed(1)}%</div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             )}
           </CardContent>
