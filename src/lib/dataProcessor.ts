@@ -4,6 +4,7 @@ import {
   ProcessedStats,
   UploadedFile,
 } from '@/types/spotify';
+import { sortArtists, sortTracks } from './sorting';
 
 export type { UploadedFile };
 
@@ -85,8 +86,8 @@ export function processStreamingHistory(
   });
 
   // Get top tracks
-  const topTracks = Array.from(trackMap.entries())
-    .map(([key, value]) => {
+  const topTracks = sortTracks(
+    Array.from(trackMap.entries()).map(([key, value]) => {
       const [name, artist] = key.split('|||');
       return {
         name,
@@ -95,16 +96,17 @@ export function processStreamingHistory(
         totalMs: value.totalMs,
       };
     })
-    .sort((a, b) => b.totalMs - a.totalMs);
+  );
 
   // Get top artists
-  const topArtists = Array.from(artistMap.entries())
-    .map(([name, value]) => ({
+  const topArtists = sortArtists(
+    Array.from(artistMap.entries()).map(([name, value]) => ({
       name,
       playCount: value.playCount,
       totalMs: value.totalMs,
+      totalTime: value.totalMs, // Add totalTime for compatibility
     }))
-    .sort((a, b) => b.totalMs - a.totalMs);
+  );
 
   // Calculate listening by month
   const monthMap = new Map<string, number>();
