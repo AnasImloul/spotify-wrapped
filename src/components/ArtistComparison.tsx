@@ -22,7 +22,7 @@ interface ArtistComparisonProps {
   endDate: string;
   onClose: () => void;
   initialArtists?: string[];
-  availableArtists: { name: string; playCount: number; totalTime: number }[];
+  availableArtists: { name: string; playCount: number; totalTime: number; rank: number }[];
 }
 
 const COLORS = [
@@ -215,9 +215,14 @@ export function ArtistComparison({
                             onClick={() => addArtist(artist.name)}
                             className="w-full text-left px-3 py-2 text-sm text-white hover:bg-white/10 transition-colors flex items-center justify-between group"
                           >
-                            <div className="flex items-center gap-2 flex-1 min-w-0">
+                            <div className="flex items-center gap-3 flex-1 min-w-0">
                               <Plus className="w-4 h-4 text-green-400 flex-shrink-0" />
-                              <span className="truncate">{artist.name}</span>
+                              <div className="flex items-center gap-2 flex-1 min-w-0">
+                                <span className="text-xs font-semibold text-green-400 w-8 text-center flex-shrink-0">
+                                  #{artist.rank}
+                                </span>
+                                <span className="truncate">{artist.name}</span>
+                              </div>
                             </div>
                             <div className="text-xs text-white/40 ml-2 flex-shrink-0">
                               {artist.playCount} plays
