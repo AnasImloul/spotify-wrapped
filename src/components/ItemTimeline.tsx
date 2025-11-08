@@ -170,10 +170,13 @@ export function ItemTimeline({
                           color: 'white',
                           fontSize: '12px'
                         }}
-                        formatter={(value: number, name: string) => [
-                          name === 'minutes' ? `${value} min` : value,
-                          name === 'minutes' ? 'Listening Time' : 'Plays'
-                        ]}
+                        formatter={(value: number, name: string) => {
+                          const dataPoint = chartData.find(d => d.minutes === value || d.plays === value);
+                          if (name === 'minutes') {
+                            return [`${value} min (${dataPoint?.plays || 0} plays)`, 'Listening Time'];
+                          }
+                          return [value, name];
+                        }}
                       />
                       <Line
                         type="monotone"
@@ -192,25 +195,6 @@ export function ItemTimeline({
                 </div>
               )}
             </div>
-
-            {/* Monthly Breakdown */}
-            {chartData.length > 0 && (
-              <div>
-                <h3 className="text-white font-semibold mb-2">Monthly Breakdown</h3>
-                <div className="grid grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2">
-                  {chartData.map((item) => (
-                    <div
-                      key={item.month}
-                      className="bg-white/5 border border-white/10 rounded-lg p-2 hover:border-green-500/30 transition-colors"
-                    >
-                      <p className="text-[10px] text-white/60 mb-0.5 truncate">{item.month}</p>
-                      <p className="text-sm font-bold text-white">{item.minutes} min</p>
-                      <p className="text-[10px] text-green-400">{item.plays} plays</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
 
             {/* Top Tracks (for artists only) */}
             {itemType === 'artist' && topTracks.length > 0 && (
