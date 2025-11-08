@@ -190,7 +190,7 @@ function App() {
 
         {/* How to Get Data Section */}
         {!stats && (
-          <div className="mt-16 max-w-3xl mx-auto">
+          <div className="mt-16">
             <div className="rounded-xl border border-white/10 bg-white/5 backdrop-blur-lg p-8">
               <h3 className="text-2xl font-bold text-white mb-4">
                 How to Get Your Spotify Data
