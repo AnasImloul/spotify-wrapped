@@ -73,7 +73,7 @@ export function MonthPicker({ value, minDate, maxDate, onChange, label }: MonthP
 
         {isOpen && (
           <div 
-            className="absolute z-50 mt-2 w-full bg-black/80 border border-green-500/30 rounded-xl shadow-2xl shadow-green-500/10 p-4"
+            className="absolute z-[9999] mt-2 w-full bg-black/80 border border-green-500/30 rounded-xl shadow-2xl shadow-green-500/10 p-4"
             style={{ backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}
           >
             {/* Year selector */}
