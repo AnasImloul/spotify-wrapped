@@ -9,12 +9,8 @@
   <!-- Background circle -->
   <circle cx="50" cy="50" r="48" fill="url(#bg)"/>
   
-  <!-- Music Note (single path for clean rendering) -->
-  <path d="M 28 58 C 28 61, 26 64, 26 67 C 26 71, 29 74, 33 74 C 37 74, 40 71, 40 67 C 40 64, 38 61, 36 58 L 36 30 C 36 30, 48 28, 48 36 C 48 36, 48 32, 38 33 L 38 58 C 38 58, 35 56, 28 58 Z" 
-        fill="#000000"/>
-  
   <!-- Analytics bars -->
-  <rect x="56" y="48" width="6" height="18" rx="3" fill="#000000"/>
-  <rect x="65" y="38" width="6" height="28" rx="3" fill="#000000"/>
-  <rect x="74" y="43" width="6" height="23" rx="3" fill="#000000"/>
+  <rect x="30" y="45" width="10" height="25" rx="5" fill="#000000"/>
+  <rect x="45" y="30" width="10" height="40" rx="5" fill="#000000"/>
+  <rect x="60" y="38" width="10" height="32" rx="5" fill="#000000"/>
 </svg>
