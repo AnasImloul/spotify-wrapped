@@ -61,7 +61,15 @@ export function FileUpload({ onFilesProcessed }: FileUploadProps) {
       return; // Don't update if no valid files were added
     }
 
+    // Check for mixed types (standard + extended)
     const allFiles = [...uploadedFiles, ...newFiles];
+    const types = new Set(allFiles.map(f => f.type));
+    
+    if (types.has('streaming') && types.has('extended')) {
+      setError('Cannot mix standard and extended streaming history files. Please upload only one type to avoid duplicate data. Remove all files and start over with a single format.');
+      return;
+    }
+
     setUploadedFiles(allFiles);
     onFilesProcessed(allFiles);
   };
@@ -118,7 +126,7 @@ export function FileUpload({ onFilesProcessed }: FileUploadProps) {
             Drop your streaming history files here
           </h3>
           <p className="text-muted-foreground text-center mb-6 max-w-md">
-            Upload <span className="font-mono">StreamingHistory_music_*.json</span> (standard) or <span className="font-mono">Streaming_History_Audio_*.json</span> (extended) files from your Spotify data export
+            Upload <span className="font-mono">StreamingHistory_music_*.json</span> (standard) <strong>OR</strong> <span className="font-mono">Streaming_History_Audio_*.json</span> (extended) files from your Spotify data export. <span className="text-yellow-400 text-xs block mt-2">⚠️ Do not mix both types to avoid duplicate data</span>
           </p>
           <div className="flex gap-4">
             <Button asChild variant="default" size="lg">
@@ -164,7 +172,7 @@ export function FileUpload({ onFilesProcessed }: FileUploadProps) {
                     <div>
                       <p className="text-sm font-medium text-white">{file.name}</p>
                       <p className="text-xs text-white/60 capitalize">
-                        {file.type === 'unknown' ? '⚠️ Unknown file type' : file.type === 'extended' ? 'Extended Streaming' : file.type}
+                        {file.type === 'extended' ? 'Extended Streaming' : 'Standard Streaming'}
                       </p>
                     </div>
                   </div>

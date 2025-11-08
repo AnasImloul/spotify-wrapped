@@ -1,7 +1,6 @@
 import {
   StreamingHistoryEntry,
   ExtendedStreamingHistoryEntry,
-  WrappedData,
   ProcessedStats,
   UploadedFile,
 } from '@/types/spotify';
@@ -36,7 +35,7 @@ export function convertExtendedToStandard(
 export function detectFileType(
   fileName: string,
   data: any
-): 'streaming' | 'extended' | 'wrapped' | 'userdata' | 'unknown' {
+): 'streaming' | 'extended' {
   // Check for extended streaming history by filename pattern
   if (fileName.match(/Streaming_History_Audio_.*\.json/i)) {
     return 'extended';
@@ -45,13 +44,6 @@ export function detectFileType(
   // Check for standard streaming history
   if (fileName.match(/StreamingHistory_music_\d+\.json/i)) {
     return 'streaming';
-  }
-  
-  if (fileName.includes('Wrapped')) {
-    return 'wrapped';
-  }
-  if (fileName.includes('Userdata')) {
-    return 'userdata';
   }
 
   // Detect by structure
@@ -65,15 +57,9 @@ export function detectFileType(
       return 'streaming';
     }
   }
-  
-  if (data.topArtists && data.yearlyMetrics) {
-    return 'wrapped';
-  }
-  if (data.username && data.email) {
-    return 'userdata';
-  }
 
-  return 'unknown';
+  // Default to streaming if can't determine
+  return 'streaming';
 }
 
 export function processStreamingHistory(
@@ -205,50 +191,11 @@ export function processStreamingHistory(
   };
 }
 
-export function processWrappedData(
-  wrapped: WrappedData
-): Partial<ProcessedStats> {
-  return {
-    yearlyMetrics: wrapped.yearlyMetrics,
-    musicEvolution: wrapped.musicEvolution,
-    totalListeningTime: wrapped.yearlyMetrics.totalMsListened / 1000 / 60 / 60,
-    totalTracks: wrapped.topTracks.distinctTracksPlayed,
-    totalArtists: wrapped.topArtists.numUniqueArtists,
-  };
-}
-
-export function mergeStats(
-  streamingStats: Partial<ProcessedStats>,
-  wrappedStats: Partial<ProcessedStats>
-): ProcessedStats {
-  return {
-    totalListeningTime:
-      wrappedStats.totalListeningTime || streamingStats.totalListeningTime || 0,
-    totalTracks: wrappedStats.totalTracks || streamingStats.totalTracks || 0,
-    totalArtists:
-      wrappedStats.totalArtists || streamingStats.totalArtists || 0,
-    topArtistName: streamingStats.topArtistName,
-    topTrackName: streamingStats.topTrackName,
-    topGenres: streamingStats.topGenres || [],
-    listeningByMonth: streamingStats.listeningByMonth || [],
-    topArtists: streamingStats.topArtists || [],
-    topTracks: streamingStats.topTracks || [],
-    averageListeningPerDay: streamingStats.averageListeningPerDay || 0,
-    mostActiveDay: streamingStats.mostActiveDay,
-    mostActiveDayMinutes: streamingStats.mostActiveDayMinutes,
-    musicEvolution: wrappedStats.musicEvolution,
-    yearlyMetrics: wrappedStats.yearlyMetrics,
-  };
-}
-
 export function parseUploadedFiles(
   files: UploadedFile[],
   startDate?: string,
   endDate?: string
 ): ProcessedStats {
-  let streamingStats: Partial<ProcessedStats> = {};
-  let wrappedStats: Partial<ProcessedStats> = {};
-
   const allStreamingHistory: StreamingHistoryEntry[] = [];
 
   files.forEach((file) => {
@@ -260,16 +207,38 @@ export function parseUploadedFiles(
         .map((entry: ExtendedStreamingHistoryEntry) => convertExtendedToStandard(entry))
         .filter((entry): entry is StreamingHistoryEntry => entry !== null);
       allStreamingHistory.push(...converted);
-    } else if (file.type === 'wrapped') {
-      wrappedStats = processWrappedData(file.data);
     }
   });
 
   if (allStreamingHistory.length > 0) {
-    streamingStats = processStreamingHistory(allStreamingHistory, startDate, endDate);
+    const streamingStats = processStreamingHistory(allStreamingHistory, startDate, endDate);
+    return {
+      totalListeningTime: streamingStats.totalListeningTime || 0,
+      totalTracks: streamingStats.totalTracks || 0,
+      totalArtists: streamingStats.totalArtists || 0,
+      topArtistName: streamingStats.topArtistName,
+      topTrackName: streamingStats.topTrackName,
+      topGenres: streamingStats.topGenres || [],
+      listeningByMonth: streamingStats.listeningByMonth || [],
+      topArtists: streamingStats.topArtists || [],
+      topTracks: streamingStats.topTracks || [],
+      averageListeningPerDay: streamingStats.averageListeningPerDay || 0,
+      mostActiveDay: streamingStats.mostActiveDay,
+      mostActiveDayMinutes: streamingStats.mostActiveDayMinutes,
+    };
   }
 
-  return mergeStats(streamingStats, wrappedStats);
+  // Return empty stats if no files
+  return {
+    totalListeningTime: 0,
+    totalTracks: 0,
+    totalArtists: 0,
+    topGenres: [],
+    listeningByMonth: [],
+    topArtists: [],
+    topTracks: [],
+    averageListeningPerDay: 0,
+  };
 }
 
 export function getDateRangeFromFiles(files: UploadedFile[]): { min: string; max: string } {

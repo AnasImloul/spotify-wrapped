@@ -129,7 +129,7 @@ export interface ProcessedStats {
 
 export interface UploadedFile {
   name: string;
-  type: 'streaming' | 'extended' | 'wrapped' | 'userdata' | 'unknown';
+  type: 'streaming' | 'extended';
   data: any;
 }
 
