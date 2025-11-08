@@ -1,4 +1,3 @@
-import React from 'react';
 import { Music, Headphones, Calendar, TrendingUp, Clock } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ProcessedStats } from '@/types/spotify';

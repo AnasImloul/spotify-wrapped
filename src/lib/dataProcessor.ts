@@ -1,10 +1,11 @@
 import {
   StreamingHistoryEntry,
   WrappedData,
-  UserData,
   ProcessedStats,
   UploadedFile,
 } from '@/types/spotify';
+
+export type { UploadedFile };
 
 export function detectFileType(
   fileName: string,

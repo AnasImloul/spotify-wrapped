@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import Fuse from 'fuse.js';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -202,7 +202,7 @@ export function TopItems({ stats }: TopItemsProps) {
             </TableHeader>
             <TableBody>
               {paginatedArtists.length > 0 ? (
-                paginatedArtists.map((artist, index) => {
+                paginatedArtists.map((artist) => {
                   const actualIndex = stats.topArtists.findIndex(a => a.name === artist.name);
                   return (
                     <TableRow key={actualIndex} className="hover:bg-white/5 border-white/5">
@@ -320,7 +320,7 @@ export function TopItems({ stats }: TopItemsProps) {
             </TableHeader>
             <TableBody>
               {paginatedTracks.length > 0 ? (
-                paginatedTracks.map((track, index) => {
+                paginatedTracks.map((track) => {
                   const actualIndex = stats.topTracks.findIndex(
                     t => t.name === track.name && t.artist === track.artist
                   );
