@@ -115,7 +115,7 @@ function App() {
             />
             
             {/* Global Sorting Selector */}
-            <div className="max-w-4xl mx-auto">
+            <div>
               <div className="glass-card rounded-xl p-4 border border-white/10">
                 <div className="flex items-center justify-between gap-4">
                   <label className="text-sm font-medium text-white/80">Sort Rankings By:</label>
