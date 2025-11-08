@@ -163,14 +163,18 @@ export function processStreamingHistory(
 
   // Calculate average listening per day
   const uniqueDays = new Set(
-    filteredHistories.map((entry) => entry.endTime.split(' ')[0])
+    filteredHistories.map((entry) => {
+      const date = new Date(entry.endTime);
+      return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+    })
   ).size;
   const averageListeningPerDay = totalMs / 1000 / 60 / uniqueDays; // minutes
 
   // Find most active day
   const dayMap = new Map<string, number>();
   filteredHistories.forEach((entry) => {
-    const day = entry.endTime.split(' ')[0];
+    const date = new Date(entry.endTime);
+    const day = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
     const existing = dayMap.get(day) || 0;
     dayMap.set(day, existing + entry.msPlayed);
   });
