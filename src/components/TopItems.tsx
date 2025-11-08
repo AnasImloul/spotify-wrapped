@@ -24,11 +24,12 @@ interface TopItemsProps {
   streamingHistory: StreamingHistoryEntry[];
   startDate: string;
   endDate: string;
+  sortBy: 'time' | 'plays';
 }
 
 const ITEMS_PER_PAGE = 10;
 
-export function TopItems({ stats, streamingHistory, startDate, endDate }: TopItemsProps) {
+export function TopItems({ stats, streamingHistory, startDate, endDate, sortBy }: TopItemsProps) {
   const [artistPage, setArtistPage] = useState(1);
   const [trackPage, setTrackPage] = useState(1);
   const [artistSearch, setArtistSearch] = useState('');
@@ -47,43 +48,60 @@ export function TopItems({ stats, streamingHistory, startDate, endDate }: TopIte
   const [showComparison, setShowComparison] = useState(false);
   const [showTrackComparison, setShowTrackComparison] = useState(false);
 
+  // Sort artists and tracks based on global sortBy
+  const sortedArtists = useMemo(() => {
+    if (sortBy === 'plays') {
+      return [...stats.topArtists].sort((a, b) => b.playCount - a.playCount);
+    }
+    // Default: sort by time (totalTime in ms)
+    return [...stats.topArtists].sort((a, b) => b.totalTime - a.totalTime);
+  }, [stats.topArtists, sortBy]);
+
+  const sortedTracks = useMemo(() => {
+    if (sortBy === 'plays') {
+      return [...stats.topTracks].sort((a, b) => b.playCount - a.playCount);
+    }
+    // Default: sort by time (totalMs)
+    return [...stats.topTracks].sort((a, b) => b.totalMs - a.totalMs);
+  }, [stats.topTracks, sortBy]);
+
   // Configure Fuse.js for fuzzy search on artists
   const artistFuse = useMemo(
     () =>
-      new Fuse(stats.topArtists, {
+      new Fuse(sortedArtists, {
         keys: ['name'],
         threshold: 0.4, // 0 = perfect match, 1 = match anything
         distance: 100,
         minMatchCharLength: 2,
       }),
-    [stats.topArtists]
+    [sortedArtists]
   );
 
   // Configure Fuse.js for fuzzy search on tracks
   const trackFuse = useMemo(
     () =>
-      new Fuse(stats.topTracks, {
+      new Fuse(sortedTracks, {
         keys: ['name', 'artist'],
         threshold: 0.4,
         distance: 100,
         minMatchCharLength: 2,
       }),
-    [stats.topTracks]
+    [sortedTracks]
   );
 
   // Filter artists based on fuzzy search
   const filteredArtists = useMemo(() => {
-    if (!artistSearch.trim()) return stats.topArtists;
+    if (!artistSearch.trim()) return sortedArtists;
     const results = artistFuse.search(artistSearch);
     return results.map((result) => result.item);
-  }, [stats.topArtists, artistSearch, artistFuse]);
+  }, [sortedArtists, artistSearch, artistFuse]);
 
   // Filter tracks based on fuzzy search
   const filteredTracks = useMemo(() => {
-    if (!trackSearch.trim()) return stats.topTracks;
+    if (!trackSearch.trim()) return sortedTracks;
     const results = trackFuse.search(trackSearch);
     return results.map((result) => result.item);
-  }, [stats.topTracks, trackSearch, trackFuse]);
+  }, [sortedTracks, trackSearch, trackFuse]);
 
   // Reset to page 1 when search changes
   useMemo(() => {
@@ -230,7 +248,7 @@ export function TopItems({ stats, streamingHistory, startDate, endDate }: TopIte
             <TableBody>
               {paginatedArtists.length > 0 ? (
                 paginatedArtists.map((artist) => {
-                  const actualIndex = stats.topArtists.findIndex(a => a.name === artist.name);
+                  const actualIndex = sortedArtists.findIndex(a => a.name === artist.name);
                   return (
                     <TableRow 
                       key={actualIndex} 
@@ -363,7 +381,7 @@ export function TopItems({ stats, streamingHistory, startDate, endDate }: TopIte
             <TableBody>
               {paginatedTracks.length > 0 ? (
                 paginatedTracks.map((track) => {
-                  const actualIndex = stats.topTracks.findIndex(
+                  const actualIndex = sortedTracks.findIndex(
                     t => t.name === track.name && t.artist === track.artist
                   );
                   return (
@@ -427,14 +445,14 @@ export function TopItems({ stats, streamingHistory, startDate, endDate }: TopIte
           startDate={startDate}
           endDate={endDate}
           onClose={() => setShowComparison(false)}
-          availableArtists={stats.topArtists.map((a, index) => ({
+          availableArtists={sortedArtists.map((a, index) => ({
             name: a.name,
             playCount: a.playCount,
             totalTime: a.totalTime,
             totalMs: a.totalMs,
             rank: index + 1
           }))}
-          initialArtists={stats.topArtists.slice(0, 3).map(a => a.name)}
+          initialArtists={sortedArtists.slice(0, 3).map(a => a.name)}
         />
       )}
 
@@ -445,14 +463,14 @@ export function TopItems({ stats, streamingHistory, startDate, endDate }: TopIte
           startDate={startDate}
           endDate={endDate}
           onClose={() => setShowTrackComparison(false)}
-          availableTracks={stats.topTracks.map((t, index) => ({
+          availableTracks={sortedTracks.map((t, index) => ({
             name: t.name,
             artist: t.artist,
             playCount: t.playCount,
             totalMs: t.totalMs,
             rank: index + 1
           }))}
-          initialTracks={stats.topTracks.slice(0, 3).map(t => ({ name: t.name, artist: t.artist }))}
+          initialTracks={sortedTracks.slice(0, 3).map(t => ({ name: t.name, artist: t.artist }))}
         />
       )}
     </div>
