@@ -34,13 +34,13 @@ interface TrackComparisonProps {
 
 const COLORS = [
   '#1DB954', // Spotify Green
-  '#1E90FF', // Blue
-  '#FF6B6B', // Red
-  '#FFA500', // Orange
+  '#1E90FF', // Dodger Blue
+  '#FF6B6B', // Coral Red
+  '#FFD700', // Gold
   '#9B59B6', // Purple
-  '#3498DB', // Light Blue
-  '#E74C3C', // Coral
-  '#F39C12', // Gold
+  '#FF1493', // Deep Pink
+  '#00CED1', // Dark Turquoise
+  '#FF8C00', // Dark Orange
 ];
 
 export function TrackComparison({
