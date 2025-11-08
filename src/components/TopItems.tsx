@@ -17,6 +17,7 @@ import { formatNumber, msToMinutes } from '@/lib/utils';
 import { Music2, Trophy, ChevronLeft, ChevronRight, Search, X, TrendingUp, BarChart3 } from 'lucide-react';
 import { ItemTimeline } from './ItemTimeline';
 import { ArtistComparison } from './ArtistComparison';
+import { TrackComparison } from './TrackComparison';
 
 interface TopItemsProps {
   stats: ProcessedStats;
@@ -44,6 +45,7 @@ export function TopItems({ stats, streamingHistory, startDate, endDate }: TopIte
   
   // Comparison modal state
   const [showComparison, setShowComparison] = useState(false);
+  const [showTrackComparison, setShowTrackComparison] = useState(false);
 
   // Configure Fuse.js for fuzzy search on artists
   const artistFuse = useMemo(
@@ -281,6 +283,16 @@ export function TopItems({ stats, streamingHistory, startDate, endDate }: TopIte
             <div className="flex items-center gap-2">
               <Button
                 variant="ghost"
+                size="sm"
+                onClick={() => setShowTrackComparison(true)}
+                className="text-blue-400 hover:text-blue-300 hover:bg-blue-500/10 gap-2"
+              >
+                <BarChart3 className="h-4 w-4" />
+                Compare Tracks
+              </Button>
+              <div className="w-px h-6 bg-white/10" />
+              <Button
+                variant="ghost"
                 size="icon"
                 onClick={() => setTrackPage((p) => Math.max(1, p - 1))}
                 disabled={trackPage === 1}
@@ -422,6 +434,24 @@ export function TopItems({ stats, streamingHistory, startDate, endDate }: TopIte
             rank: index + 1
           }))}
           initialArtists={stats.topArtists.slice(0, 3).map(a => a.name)}
+        />
+      )}
+
+      {/* Track Comparison Modal */}
+      {showTrackComparison && (
+        <TrackComparison
+          streamingHistory={streamingHistory}
+          startDate={startDate}
+          endDate={endDate}
+          onClose={() => setShowTrackComparison(false)}
+          availableTracks={stats.topTracks.map((t, index) => ({
+            name: t.name,
+            artist: t.artist,
+            playCount: t.playCount,
+            totalMs: t.totalMs,
+            rank: index + 1
+          }))}
+          initialTracks={stats.topTracks.slice(0, 3).map(t => ({ name: t.name, artist: t.artist }))}
         />
       )}
     </div>
