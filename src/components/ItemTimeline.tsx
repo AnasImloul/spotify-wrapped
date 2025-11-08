@@ -106,39 +106,39 @@ export function ItemTimeline({
         </CardHeader>
         
         <CardContent className="p-6 flex-1 overflow-y-auto custom-scrollbar">
-          <div className="space-y-6">
+          <div className="space-y-4">
             {/* Summary Stats */}
-            <div className="grid grid-cols-2 gap-4">
-              <div className="bg-gradient-to-br from-green-500/20 to-green-600/10 border border-green-500/30 rounded-lg p-4">
-                <p className="text-sm text-green-300/80 mb-1">Total Plays</p>
-                <p className="text-3xl font-bold text-white">{totalPlays.toLocaleString()}</p>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="bg-gradient-to-br from-green-500/20 to-green-600/10 border border-green-500/30 rounded-lg p-3">
+                <p className="text-xs text-green-300/80 mb-1">Total Plays</p>
+                <p className="text-2xl font-bold text-white">{totalPlays.toLocaleString()}</p>
               </div>
-              <div className="bg-gradient-to-br from-blue-500/20 to-blue-600/10 border border-blue-500/30 rounded-lg p-4">
-                <p className="text-sm text-blue-300/80 mb-1">Total Minutes</p>
-                <p className="text-3xl font-bold text-white">{totalMinutes.toLocaleString()}</p>
+              <div className="bg-gradient-to-br from-blue-500/20 to-blue-600/10 border border-blue-500/30 rounded-lg p-3">
+                <p className="text-xs text-blue-300/80 mb-1">Total Minutes</p>
+                <p className="text-2xl font-bold text-white">{totalMinutes.toLocaleString()}</p>
               </div>
             </div>
 
             {/* Chart */}
             <div>
-              <h3 className="text-white font-semibold mb-4 text-lg">Listening Activity Over Time</h3>
+              <h3 className="text-white font-semibold mb-3">Listening Activity Over Time</h3>
               {chartData.length > 0 ? (
-                <div className="bg-white/5 rounded-lg p-4 border border-white/10">
-                  <ResponsiveContainer width="100%" height={250}>
+                <div className="bg-white/5 rounded-lg p-3 border border-white/10">
+                  <ResponsiveContainer width="100%" height={220}>
                     <LineChart data={chartData}>
                       <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
                       <XAxis
                         dataKey="month"
                         stroke="rgba(255,255,255,0.5)"
-                        style={{ fontSize: '12px' }}
+                        style={{ fontSize: '11px' }}
                         angle={-45}
                         textAnchor="end"
-                        height={70}
+                        height={60}
                       />
                       <YAxis
                         stroke="rgba(255,255,255,0.5)"
-                        style={{ fontSize: '12px' }}
-                        label={{ value: 'Minutes', angle: -90, position: 'insideLeft', fill: 'rgba(255,255,255,0.7)' }}
+                        style={{ fontSize: '11px' }}
+                        label={{ value: 'Minutes', angle: -90, position: 'insideLeft', fill: 'rgba(255,255,255,0.7)', style: { fontSize: '11px' } }}
                       />
                       <Tooltip
                         contentStyle={{
@@ -146,6 +146,7 @@ export function ItemTimeline({
                           border: '1px solid rgba(29, 185, 84, 0.3)',
                           borderRadius: '8px',
                           color: 'white',
+                          fontSize: '12px'
                         }}
                         formatter={(value: number, name: string) => [
                           name === 'minutes' ? `${value} min` : value,
@@ -156,15 +157,15 @@ export function ItemTimeline({
                         type="monotone"
                         dataKey="minutes"
                         stroke="#1DB954"
-                        strokeWidth={3}
-                        dot={{ fill: '#1DB954', r: 4 }}
-                        activeDot={{ r: 6 }}
+                        strokeWidth={2.5}
+                        dot={{ fill: '#1DB954', r: 3 }}
+                        activeDot={{ r: 5 }}
                       />
                     </LineChart>
                   </ResponsiveContainer>
                 </div>
               ) : (
-                <div className="text-center py-12 text-white/60">
+                <div className="text-center py-8 text-white/60">
                   No listening data available for the selected date range
                 </div>
               )}
@@ -173,16 +174,16 @@ export function ItemTimeline({
             {/* Monthly Breakdown */}
             {chartData.length > 0 && (
               <div>
-                <h3 className="text-white font-semibold mb-3 text-lg">Monthly Breakdown</h3>
-                <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+                <h3 className="text-white font-semibold mb-2">Monthly Breakdown</h3>
+                <div className="grid grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2">
                   {chartData.map((item) => (
                     <div
                       key={item.month}
-                      className="bg-white/5 border border-white/10 rounded-lg p-3 hover:border-green-500/30 transition-colors"
+                      className="bg-white/5 border border-white/10 rounded-lg p-2 hover:border-green-500/30 transition-colors"
                     >
-                      <p className="text-xs text-white/60 mb-1 truncate">{item.month}</p>
-                      <p className="text-base font-bold text-white">{item.minutes} min</p>
-                      <p className="text-xs text-green-400">{item.plays} plays</p>
+                      <p className="text-[10px] text-white/60 mb-0.5 truncate">{item.month}</p>
+                      <p className="text-sm font-bold text-white">{item.minutes} min</p>
+                      <p className="text-[10px] text-green-400">{item.plays} plays</p>
                     </div>
                   ))}
                 </div>
