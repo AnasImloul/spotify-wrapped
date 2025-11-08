@@ -14,8 +14,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ProcessedStats, StreamingHistoryEntry } from '@/types/spotify';
 import { formatNumber, msToMinutes } from '@/lib/utils';
-import { Music2, Trophy, ChevronLeft, ChevronRight, Search, X, TrendingUp } from 'lucide-react';
+import { Music2, Trophy, ChevronLeft, ChevronRight, Search, X, TrendingUp, BarChart3 } from 'lucide-react';
 import { ItemTimeline } from './ItemTimeline';
+import { ArtistComparison } from './ArtistComparison';
 
 interface TopItemsProps {
   stats: ProcessedStats;
@@ -40,6 +41,9 @@ export function TopItems({ stats, streamingHistory, startDate, endDate }: TopIte
     type: 'artist' | 'track';
     artistName?: string;
   } | null>(null);
+  
+  // Comparison modal state
+  const [showComparison, setShowComparison] = useState(false);
 
   // Configure Fuse.js for fuzzy search on artists
   const artistFuse = useMemo(
@@ -143,6 +147,16 @@ export function TopItems({ stats, streamingHistory, startDate, endDate }: TopIte
               Your Top Artists
             </CardTitle>
             <div className="flex items-center gap-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowComparison(true)}
+                className="text-green-400 hover:text-green-300 hover:bg-green-500/10 gap-2"
+              >
+                <BarChart3 className="h-4 w-4" />
+                Compare Artists
+              </Button>
+              <div className="w-px h-6 bg-white/10" />
               <Button
                 variant="ghost"
                 size="icon"
@@ -391,6 +405,18 @@ export function TopItems({ stats, streamingHistory, startDate, endDate }: TopIte
           startDate={startDate}
           endDate={endDate}
           onClose={() => setTimelineItem(null)}
+        />
+      )}
+
+      {/* Artist Comparison Modal */}
+      {showComparison && (
+        <ArtistComparison
+          streamingHistory={streamingHistory}
+          startDate={startDate}
+          endDate={endDate}
+          onClose={() => setShowComparison(false)}
+          availableArtists={stats.topArtists.map(a => a.name)}
+          initialArtists={stats.topArtists.slice(0, 3).map(a => a.name)}
         />
       )}
     </div>
