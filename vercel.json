@@ -2,8 +2,6 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "devCommand": "npm run dev",
-  "installCommand": "npm install",
-  "framework": "vite",
-  "regions": ["iad1"]
+  "framework": "vite"
 }
 
