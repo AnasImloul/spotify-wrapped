@@ -65,8 +65,8 @@ The optimized production build will be available in the `dist` directory.
 2. Scroll to "Download your data" section
 3. Request your data:
    - **Extended streaming history** (recommended) - Provides comprehensive data including skip information, platforms, and more metadata
-   - **Account data** (basic) - Includes standard streaming history with essential information
-4. Wait for Spotify's email confirmation (typically 5-30 days for extended, 1-5 days for basic)
+   - **Account data** (standard) - Includes standard streaming history with essential information
+4. Wait for Spotify's email confirmation (typically 5-30 days for extended, 1-5 days for standard)
 5. Download and extract the ZIP file
 6. Upload the streaming history JSON files to this application
 
@@ -74,7 +74,7 @@ The optimized production build will be available in the `dist` directory.
 
 The application processes both standard and extended streaming history files:
 
-- **Standard**: `StreamingHistory_music_*.json` - Basic listening history with timestamps and play duration
+- **Standard**: `StreamingHistory_music_*.json` - Standard listening history with timestamps and play duration
 - **Extended**: `Streaming_History_Audio_*.json` - Comprehensive listening data with additional metadata (platform, country, skip status, etc.)
 
 Both formats are automatically detected and processed. Extended history provides more accurate data and covers longer time periods.

@@ -217,7 +217,7 @@ function App() {
                     2
                   </span>
                   <span>
-                    Request "Extended streaming history" (recommended) or "Account data" (basic)
+                    Request "Extended streaming history" (recommended) or "Account data" (standard)
                   </span>
                 </li>
                 <li className="flex gap-3">
@@ -225,7 +225,7 @@ function App() {
                     3
                   </span>
                   <span>
-                    Wait for Spotify's email (5-30 days for extended, 1-5 days for basic)
+                    Wait for Spotify's email (5-30 days for extended, 1-5 days for standard)
                   </span>
                 </li>
                 <li className="flex gap-3">
