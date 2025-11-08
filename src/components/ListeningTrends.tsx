@@ -26,7 +26,6 @@ export function ListeningTrends({ stats }: ListeningTrendsProps) {
       year: '2-digit',
     }),
     minutes: Math.round(item.minutes),
-    hours: Math.round(item.minutes / 60),
   }));
 
   return (
@@ -53,7 +52,7 @@ export function ListeningTrends({ stats }: ListeningTrendsProps) {
                 tick={{ fill: 'rgba(255, 255, 255, 0.6)' }}
                 stroke="rgba(255, 255, 255, 0.2)"
                 label={{
-                  value: 'Hours',
+                  value: 'Minutes',
                   angle: -90,
                   position: 'insideLeft',
                   style: { fill: 'rgba(255, 255, 255, 0.6)' },
@@ -68,10 +67,11 @@ export function ListeningTrends({ stats }: ListeningTrendsProps) {
                 }}
                 labelStyle={{ color: 'rgba(255, 255, 255, 0.9)' }}
                 itemStyle={{ color: '#1DB954' }}
+                formatter={(value: number) => [`${value} min`, 'Listening Time']}
               />
               <Line
                 type="monotone"
-                dataKey="hours"
+                dataKey="minutes"
                 stroke="#1DB954"
                 strokeWidth={3}
                 dot={{ fill: '#1DB954', r: 4 }}
