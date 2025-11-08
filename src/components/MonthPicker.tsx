@@ -59,9 +59,9 @@ export function MonthPicker({ value, minDate, maxDate, onChange, label }: MonthP
   const displayValue = `${months[selectedMonth - 1]} ${selectedYear}`;
 
   return (
-    <div className="flex-1" ref={dropdownRef}>
+    <div className="flex-1 relative" ref={dropdownRef}>
       <label className="text-xs text-green-300/80 mb-1.5 block font-medium">{label}</label>
-      <div className="relative">
+      <div className="relative overflow-visible">
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
