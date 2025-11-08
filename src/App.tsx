@@ -217,7 +217,7 @@ function App() {
                     2
                   </span>
                   <span>
-                    Scroll down and request your "Extended streaming history"
+                    Request "Extended streaming history" (recommended) or "Account data" (basic)
                   </span>
                 </li>
                 <li className="flex gap-3">
@@ -225,7 +225,7 @@ function App() {
                     3
                   </span>
                   <span>
-                    Wait for Spotify's email (typically 5-30 days)
+                    Wait for Spotify's email (5-30 days for extended, 1-5 days for basic)
                   </span>
                 </li>
                 <li className="flex gap-3">
@@ -233,7 +233,7 @@ function App() {
                     4
                   </span>
                   <span>
-                    Download and extract the StreamingHistory_music_*.json files
+                    Download and extract the files: <code className="font-mono text-xs bg-white/10 px-1 py-0.5 rounded">StreamingHistory_music_*.json</code> (standard) or <code className="font-mono text-xs bg-white/10 px-1 py-0.5 rounded">Streaming_History_Audio_*.json</code> (extended)
                   </span>
                 </li>
                 <li className="flex gap-3">

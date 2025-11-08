@@ -41,9 +41,9 @@ export function FileUpload({ onFilesProcessed }: FileUploadProps) {
         const data = JSON.parse(text);
         const type = detectFileType(file.name, data);
         
-        // Only accept streaming history files
-        if (type !== 'streaming') {
-          setError(`${file.name} is not a streaming history file. Please upload only StreamingHistory_music_*.json files.`);
+        // Only accept streaming history files (both standard and extended)
+        if (type !== 'streaming' && type !== 'extended') {
+          setError(`${file.name} is not a streaming history file. Please upload only StreamingHistory_music_*.json or Streaming_History_Audio_*.json files.`);
           continue;
         }
         
@@ -118,7 +118,7 @@ export function FileUpload({ onFilesProcessed }: FileUploadProps) {
             Drop your streaming history files here
           </h3>
           <p className="text-muted-foreground text-center mb-6 max-w-md">
-            Upload <span className="font-mono">StreamingHistory_music_*.json</span> files from your Spotify data export
+            Upload <span className="font-mono">StreamingHistory_music_*.json</span> (standard) or <span className="font-mono">Streaming_History_Audio_*.json</span> (extended) files from your Spotify data export
           </p>
           <div className="flex gap-4">
             <Button asChild variant="default" size="lg">
@@ -164,7 +164,7 @@ export function FileUpload({ onFilesProcessed }: FileUploadProps) {
                     <div>
                       <p className="text-sm font-medium text-white">{file.name}</p>
                       <p className="text-xs text-white/60 capitalize">
-                        {file.type === 'unknown' ? '⚠️ Unknown file type' : file.type}
+                        {file.type === 'unknown' ? '⚠️ Unknown file type' : file.type === 'extended' ? 'Extended Streaming' : file.type}
                       </p>
                     </div>
                   </div>

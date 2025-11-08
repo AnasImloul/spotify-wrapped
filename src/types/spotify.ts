@@ -1,10 +1,38 @@
 // Type definitions for Spotify Wrapped data
 
+// Standard streaming history format
 export interface StreamingHistoryEntry {
   endTime: string;
   artistName: string;
   trackName: string;
   msPlayed: number;
+}
+
+// Extended streaming history format
+export interface ExtendedStreamingHistoryEntry {
+  ts: string;
+  platform: string;
+  ms_played: number;
+  conn_country: string;
+  ip_addr: string;
+  master_metadata_track_name: string | null;
+  master_metadata_album_artist_name: string | null;
+  master_metadata_album_album_name: string | null;
+  spotify_track_uri: string | null;
+  episode_name: string | null;
+  episode_show_name: string | null;
+  spotify_episode_uri: string | null;
+  audiobook_title: string | null;
+  audiobook_uri: string | null;
+  audiobook_chapter_uri: string | null;
+  audiobook_chapter_title: string | null;
+  reason_start: string;
+  reason_end: string;
+  shuffle: boolean;
+  skipped: boolean | null;
+  offline: boolean;
+  offline_timestamp: number;
+  incognito_mode: boolean;
 }
 
 export interface TopArtist {
@@ -101,7 +129,7 @@ export interface ProcessedStats {
 
 export interface UploadedFile {
   name: string;
-  type: 'streaming' | 'wrapped' | 'userdata' | 'unknown';
+  type: 'streaming' | 'extended' | 'wrapped' | 'userdata' | 'unknown';
   data: any;
 }
 

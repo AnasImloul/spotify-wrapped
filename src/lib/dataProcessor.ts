@@ -1,5 +1,6 @@
 import {
   StreamingHistoryEntry,
+  ExtendedStreamingHistoryEntry,
   WrappedData,
   ProcessedStats,
   UploadedFile,
@@ -8,13 +9,44 @@ import { sortArtists, sortTracks } from './sorting';
 
 export type { UploadedFile };
 
+/**
+ * Convert extended streaming history to standard format
+ */
+export function convertExtendedToStandard(
+  extended: ExtendedStreamingHistoryEntry
+): StreamingHistoryEntry | null {
+  // Filter out non-music content (podcasts, audiobooks, videos)
+  if (
+    !extended.master_metadata_track_name ||
+    !extended.master_metadata_album_artist_name ||
+    extended.episode_name ||
+    extended.audiobook_title
+  ) {
+    return null;
+  }
+
+  return {
+    endTime: extended.ts,
+    artistName: extended.master_metadata_album_artist_name,
+    trackName: extended.master_metadata_track_name,
+    msPlayed: extended.ms_played,
+  };
+}
+
 export function detectFileType(
   fileName: string,
   data: any
-): 'streaming' | 'wrapped' | 'userdata' | 'unknown' {
-  if (fileName.includes('StreamingHistory')) {
+): 'streaming' | 'extended' | 'wrapped' | 'userdata' | 'unknown' {
+  // Check for extended streaming history by filename pattern
+  if (fileName.match(/Streaming_History_Audio_.*\.json/i)) {
+    return 'extended';
+  }
+  
+  // Check for standard streaming history
+  if (fileName.match(/StreamingHistory_music_\d+\.json/i)) {
     return 'streaming';
   }
+  
   if (fileName.includes('Wrapped')) {
     return 'wrapped';
   }
@@ -23,9 +55,17 @@ export function detectFileType(
   }
 
   // Detect by structure
-  if (Array.isArray(data) && data[0]?.endTime && data[0]?.artistName) {
-    return 'streaming';
+  if (Array.isArray(data) && data.length > 0) {
+    // Check for extended format
+    if (data[0]?.ts && data[0]?.master_metadata_track_name !== undefined) {
+      return 'extended';
+    }
+    // Check for standard format
+    if (data[0]?.endTime && data[0]?.artistName) {
+      return 'streaming';
+    }
   }
+  
   if (data.topArtists && data.yearlyMetrics) {
     return 'wrapped';
   }
@@ -210,6 +250,12 @@ export function parseUploadedFiles(
   files.forEach((file) => {
     if (file.type === 'streaming' && Array.isArray(file.data)) {
       allStreamingHistory.push(...file.data);
+    } else if (file.type === 'extended' && Array.isArray(file.data)) {
+      // Convert extended format to standard format
+      const converted = file.data
+        .map((entry: ExtendedStreamingHistoryEntry) => convertExtendedToStandard(entry))
+        .filter((entry): entry is StreamingHistoryEntry => entry !== null);
+      allStreamingHistory.push(...converted);
     } else if (file.type === 'wrapped') {
       wrappedStats = processWrappedData(file.data);
     }
@@ -239,6 +285,21 @@ export function getDateRangeFromFiles(files: UploadedFile[]): { min: string; max
           maxDate = yearMonth;
         }
       });
+    } else if (file.type === 'extended' && Array.isArray(file.data)) {
+      file.data.forEach((entry: ExtendedStreamingHistoryEntry) => {
+        const converted = convertExtendedToStandard(entry);
+        if (converted) {
+          const date = new Date(converted.endTime);
+          const yearMonth = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+          
+          if (!minDate || yearMonth < minDate) {
+            minDate = yearMonth;
+          }
+          if (!maxDate || yearMonth > maxDate) {
+            maxDate = yearMonth;
+          }
+        }
+      });
     }
   });
 
@@ -251,6 +312,11 @@ export function getStreamingHistoryFromFiles(files: UploadedFile[]): StreamingHi
   files.forEach((file) => {
     if (file.type === 'streaming' && Array.isArray(file.data)) {
       streamingHistories.push(...(file.data as StreamingHistoryEntry[]));
+    } else if (file.type === 'extended' && Array.isArray(file.data)) {
+      const converted = file.data
+        .map((entry: ExtendedStreamingHistoryEntry) => convertExtendedToStandard(entry))
+        .filter((entry): entry is StreamingHistoryEntry => entry !== null);
+      streamingHistories.push(...converted);
     }
   });
 
