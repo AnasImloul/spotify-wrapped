@@ -20,7 +20,7 @@ export function DateRangeSelector({
   onEndDateChange,
 }: DateRangeSelectorProps) {
   return (
-    <Card className="border-green-500/30 bg-black/40 overflow-visible relative z-50">
+    <Card className="border-green-500/30 bg-black/40 overflow-visible relative z-10">
       <CardContent className="p-6 overflow-visible">
         <div className="flex flex-col md:flex-row items-start md:items-end gap-4">
           <div className="flex items-center gap-2 text-white md:pb-[18px]">
