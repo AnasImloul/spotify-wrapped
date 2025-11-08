@@ -19,7 +19,7 @@ export function DateRangeSelector({
   onEndDateChange,
 }: DateRangeSelectorProps) {
   return (
-    <Card className="border-green-500/30">
+    <Card className="border-green-500/30 bg-gradient-to-br from-green-500/10 to-green-600/5">
       <CardContent className="p-6">
         <div className="flex flex-col md:flex-row items-start md:items-end gap-4">
           <div className="flex items-center gap-2 text-white md:pb-[18px]">
@@ -29,26 +29,26 @@ export function DateRangeSelector({
           
           <div className="flex flex-col sm:flex-row gap-4 flex-1">
             <div className="flex-1">
-              <label className="text-xs text-white/60 mb-1 block">From</label>
+              <label className="text-xs text-green-300/80 mb-1.5 block font-medium">From</label>
               <input
                 type="month"
                 value={startDate}
                 min={minDate}
                 max={maxDate}
                 onChange={(e) => onStartDateChange(e.target.value)}
-                className="w-full px-3 py-2 rounded-md bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="date-input w-full px-3 py-2.5 rounded-lg bg-white/5 backdrop-blur-sm border border-green-500/20 text-white focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500/50 hover:border-green-500/30 transition-all"
               />
             </div>
             
             <div className="flex-1">
-              <label className="text-xs text-white/60 mb-1 block">To</label>
+              <label className="text-xs text-green-300/80 mb-1.5 block font-medium">To</label>
               <input
                 type="month"
                 value={endDate}
                 min={minDate}
                 max={maxDate}
                 onChange={(e) => onEndDateChange(e.target.value)}
-                className="w-full px-3 py-2 rounded-md bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="date-input w-full px-3 py-2.5 rounded-lg bg-white/5 backdrop-blur-sm border border-green-500/20 text-white focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500/50 hover:border-green-500/30 transition-all"
               />
             </div>
           </div>
@@ -60,14 +60,15 @@ export function DateRangeSelector({
               onStartDateChange(`${currentYear}-01`);
               onEndDateChange(`${currentYear}-12`);
             }}
-            className="px-4 py-2 h-[42px] rounded-md bg-green-500/20 border border-green-500/30 text-green-400 hover:bg-green-500/30 transition-colors text-sm font-medium whitespace-nowrap self-start md:self-auto"
+            className="px-4 py-2.5 h-[42px] rounded-lg bg-gradient-to-r from-green-500/20 to-green-600/20 border border-green-500/30 text-green-300 hover:bg-gradient-to-r hover:from-green-500/30 hover:to-green-600/30 hover:border-green-500/40 transition-all duration-200 text-sm font-medium whitespace-nowrap self-start md:self-auto shadow-lg shadow-green-500/10"
           >
             Reset to Current Year
           </button>
         </div>
         
-        <p className="text-xs text-white/40 mt-3">
-          Tip: All statistics will be calculated based on the selected date range
+        <p className="text-xs text-white/40 mt-4 flex items-center gap-2">
+          <span className="w-1 h-1 rounded-full bg-green-400/50"></span>
+          All statistics will be calculated based on the selected date range
         </p>
       </CardContent>
     </Card>
