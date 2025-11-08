@@ -89,7 +89,7 @@ function App() {
         <div className="text-center space-y-4 mb-12">
           <h2 className="text-4xl md:text-6xl font-bold text-white mb-4">
             Discover Your{' '}
-            <span className="bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent">
+            <span className="animated-gradient">
               Musical Story
             </span>
           </h2>
