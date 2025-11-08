@@ -1,5 +1,6 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { Calendar } from 'lucide-react';
+import { MonthPicker } from './MonthPicker';
 
 interface DateRangeSelectorProps {
   startDate: string;
@@ -28,29 +29,21 @@ export function DateRangeSelector({
           </div>
           
           <div className="flex flex-col sm:flex-row gap-4 flex-1">
-            <div className="flex-1">
-              <label className="text-xs text-green-300/80 mb-1.5 block font-medium">From</label>
-              <input
-                type="month"
-                value={startDate}
-                min={minDate}
-                max={maxDate}
-                onChange={(e) => onStartDateChange(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-xl bg-black/40 backdrop-blur-md border border-green-500/20 text-white focus:outline-none focus:ring-2 focus:ring-green-500/40 focus:border-green-500/40 hover:bg-black/50 hover:border-green-500/30 transition-all duration-200 font-medium"
-              />
-            </div>
+            <MonthPicker
+              value={startDate}
+              minDate={minDate}
+              maxDate={maxDate}
+              onChange={onStartDateChange}
+              label="From"
+            />
             
-            <div className="flex-1">
-              <label className="text-xs text-green-300/80 mb-1.5 block font-medium">To</label>
-              <input
-                type="month"
-                value={endDate}
-                min={minDate}
-                max={maxDate}
-                onChange={(e) => onEndDateChange(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-xl bg-black/40 backdrop-blur-md border border-green-500/20 text-white focus:outline-none focus:ring-2 focus:ring-green-500/40 focus:border-green-500/40 hover:bg-black/50 hover:border-green-500/30 transition-all duration-200 font-medium"
-              />
-            </div>
+            <MonthPicker
+              value={endDate}
+              minDate={minDate}
+              maxDate={maxDate}
+              onChange={onEndDateChange}
+              label="To"
+            />
           </div>
 
           <button
