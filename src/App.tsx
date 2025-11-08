@@ -4,10 +4,9 @@ import { DateRangeSelector } from './components/DateRangeSelector';
 import { StatsOverview } from './components/StatsOverview';
 import { TopItems } from './components/TopItems';
 import { ListeningTrends } from './components/ListeningTrends';
-import { MusicEvolution } from './components/MusicEvolution';
 import { parseUploadedFiles, getDateRangeFromFiles, getStreamingHistoryFromFiles } from './lib/dataProcessor';
 import { UploadedFile, ProcessedStats, StreamingHistoryEntry } from './types/spotify';
-import { Music2, BarChart3, Trophy, TrendingUp, Sparkles } from 'lucide-react';
+import { Music2, BarChart3, Trophy, TrendingUp } from 'lucide-react';
 
 function App() {
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
@@ -150,19 +149,6 @@ function App() {
                 </div>
               </>
             )}
-
-            {stats.musicEvolution && (
-              <>
-                <div className="h-px bg-gradient-to-r from-transparent via-green-500/50 to-transparent" />
-                <div>
-                  <h3 className="text-3xl font-bold text-white mb-6 flex items-center gap-3">
-                    <Sparkles className="w-8 h-8 text-green-400" />
-                    Your Musical Evolution
-                  </h3>
-                  <MusicEvolution stats={stats} />
-                </div>
-              </>
-            )}
           </div>
         )}
 
@@ -211,7 +197,7 @@ function App() {
                     4
                   </span>
                   <span>
-                    Download the ZIP file and extract the JSON files
+                    Download and extract the StreamingHistory_music_*.json files
                   </span>
                 </li>
                 <li className="flex gap-3">
@@ -219,7 +205,7 @@ function App() {
                     5
                   </span>
                   <span>
-                    Upload the JSON files to analyze your data
+                    Upload the streaming history files to analyze your data
                   </span>
                 </li>
               </ol>

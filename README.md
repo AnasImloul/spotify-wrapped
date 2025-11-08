@@ -9,7 +9,6 @@ A privacy-focused web application for visualizing and analyzing your Spotify lis
 - **Timeline Analysis**: Interactive graphs showing individual artist/track listening patterns over time
 - **Comparison Tools**: Compare listening trends across multiple artists or tracks simultaneously
 - **Listening Trends**: Monthly listening patterns visualized through interactive charts
-- **Music Evolution**: Explore how your music taste evolved throughout the year (when Wrapped data is available)
 - **Date Range Filtering**: Filter statistics by specific time periods
 - **Search & Discovery**: Fuzzy search across artists and tracks with pagination
 - **Privacy First**: All data processing occurs locally in your browser—nothing is uploaded to any server
@@ -64,18 +63,18 @@ The optimized production build will be available in the `dist` directory.
 
 1. Navigate to [Spotify Privacy Settings](https://www.spotify.com/account/privacy/)
 2. Scroll to "Download your data" section
-3. Request your **Extended streaming history** (recommended) or **Account data**
+3. Request your **Extended streaming history** (recommended)
 4. Wait for Spotify's email confirmation (typically 5-30 days)
 5. Download and extract the ZIP file
-6. Upload the JSON files to this application
+6. Upload the `StreamingHistory_music_*.json` files to this application
 
 ### Supported File Types
 
-The application processes the following data files:
+The application processes only streaming history files:
 
-- `StreamingHistory_music_*.json` - Detailed listening history with timestamps
-- `Wrapped*.json` - Official Spotify Wrapped analytics (if available)
-- `Userdata.json` - Account information and preferences
+- `StreamingHistory_music_*.json` - Detailed listening history with timestamps and play duration
+
+**Note**: Wrapped and Userdata files are not supported. Only raw streaming history data is used for analysis.
 
 ## Project Structure
 
@@ -109,7 +108,6 @@ src/
 ### Statistics Dashboard
 - Aggregate listening metrics (total time, tracks, artists)
 - Daily listening averages
-- Top listener percentile (when Wrapped data is available)
 - Most active listening day identification
 
 ### Advanced Charts

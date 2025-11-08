@@ -41,6 +41,12 @@ export function FileUpload({ onFilesProcessed }: FileUploadProps) {
         const data = JSON.parse(text);
         const type = detectFileType(file.name, data);
         
+        // Only accept streaming history files
+        if (type !== 'streaming') {
+          setError(`${file.name} is not a streaming history file. Please upload only StreamingHistory_music_*.json files.`);
+          continue;
+        }
+        
         newFiles.push({
           name: file.name,
           type,
@@ -49,6 +55,10 @@ export function FileUpload({ onFilesProcessed }: FileUploadProps) {
       } catch (err) {
         setError(`Error parsing ${file.name}: ${err instanceof Error ? err.message : 'Unknown error'}`);
       }
+    }
+
+    if (newFiles.length === 0 && error) {
+      return; // Don't update if no valid files were added
     }
 
     const allFiles = [...uploadedFiles, ...newFiles];
@@ -105,12 +115,10 @@ export function FileUpload({ onFilesProcessed }: FileUploadProps) {
             )}
           />
           <h3 className="text-2xl font-semibold mb-2">
-            Drop your Spotify data files here
+            Drop your streaming history files here
           </h3>
           <p className="text-muted-foreground text-center mb-6 max-w-md">
-            Supports <span className="font-mono">StreamingHistory</span>,{' '}
-            <span className="font-mono">Wrapped</span>, and{' '}
-            <span className="font-mono">Userdata</span> JSON files
+            Upload <span className="font-mono">StreamingHistory_music_*.json</span> files from your Spotify data export
           </p>
           <div className="flex gap-4">
             <Button asChild variant="default" size="lg">
