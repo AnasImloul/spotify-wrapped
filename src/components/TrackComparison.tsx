@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef, useEffect } from 'react';
 import Fuse from 'fuse.js';
 import { X, TrendingUp, Trash2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -55,6 +55,22 @@ export function TrackComparison({
     initialTracks.slice(0, 5)
   );
   const [searchTerm, setSearchTerm] = useState('');
+  const [showAutocomplete, setShowAutocomplete] = useState(false);
+  const searchContainerRef = useRef<HTMLDivElement>(null);
+
+  // Close autocomplete when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (searchContainerRef.current && !searchContainerRef.current.contains(event.target as Node)) {
+        setShowAutocomplete(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   // Configure Fuse.js for fuzzy search
   const trackFuse = useMemo(
@@ -145,6 +161,7 @@ export function TrackComparison({
     if (selectedTracks.length < 8) {
       setSelectedTracks([...selectedTracks, track]);
       setSearchTerm('');
+      setShowAutocomplete(false);
     }
   };
 
@@ -207,18 +224,19 @@ export function TrackComparison({
               </div>
 
               {selectedTracks.length < 8 && (
-                <div className="space-y-2">
+                <div className="space-y-2" ref={searchContainerRef}>
                   <div className="relative">
                     <Input
                       type="text"
                       placeholder="Search for a track to add... (supports fuzzy search)"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
+                      onFocus={() => setShowAutocomplete(true)}
                       className="bg-white/5 border-white/10 text-white placeholder:text-white/40"
                       autoComplete="off"
                     />
                   </div>
-                  {(searchTerm || filteredTracks.length > 0) && (
+                  {showAutocomplete && (searchTerm || filteredTracks.length > 0) && (
                     <div className="bg-black/80 backdrop-blur-sm border border-white/10 rounded-lg max-h-60 overflow-y-auto custom-scrollbar">
                       {filteredTracks.length > 0 ? (
                         filteredTracks.map(track => (
