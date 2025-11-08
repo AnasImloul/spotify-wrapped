@@ -136,11 +136,13 @@ export function processStreamingHistory(
   });
 
   let mostActiveDay = '';
+  let mostActiveDayMinutes = 0;
   let maxMs = 0;
   dayMap.forEach((ms, day) => {
     if (ms > maxMs) {
       maxMs = ms;
       mostActiveDay = day;
+      mostActiveDayMinutes = Math.round(ms / 1000 / 60); // convert to minutes
     }
   });
 
@@ -153,6 +155,7 @@ export function processStreamingHistory(
     listeningByMonth,
     averageListeningPerDay,
     mostActiveDay,
+    mostActiveDayMinutes,
     topArtistName: topArtists[0]?.name,
     topTrackName: topTracks[0]?.name,
   };
@@ -188,6 +191,7 @@ export function mergeStats(
     topTracks: streamingStats.topTracks || [],
     averageListeningPerDay: streamingStats.averageListeningPerDay || 0,
     mostActiveDay: streamingStats.mostActiveDay,
+    mostActiveDayMinutes: streamingStats.mostActiveDayMinutes,
     musicEvolution: wrappedStats.musicEvolution,
     yearlyMetrics: wrappedStats.yearlyMetrics,
   };

@@ -108,7 +108,7 @@ export function StatsOverview({ stats }: StatsOverviewProps) {
               })}
             </div>
             <p className="text-xs text-white/60 mt-2">
-              Your most music-filled day
+              {stats.mostActiveDayMinutes ? `${formatNumber(stats.mostActiveDayMinutes)} minutes played` : 'Your most music-filled day'}
             </p>
           </CardContent>
         </Card>

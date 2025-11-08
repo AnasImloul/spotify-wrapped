@@ -94,6 +94,7 @@ export interface ProcessedStats {
   topTracks: { name: string; artist: string; playCount: number; totalMs: number }[];
   averageListeningPerDay: number;
   mostActiveDay?: string;
+  mostActiveDayMinutes?: number;
   musicEvolution?: MusicEvolution;
   yearlyMetrics?: YearlyMetrics;
 }
