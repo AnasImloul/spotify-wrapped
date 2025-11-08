@@ -47,6 +47,28 @@ export function ItemTimeline({
     }
   });
 
+  // For artists, calculate top tracks
+  const topTracks = itemType === 'artist' ? (() => {
+    const trackMap = new Map<string, { plays: number; minutes: number }>();
+    
+    filteredEntries.forEach(entry => {
+      const existing = trackMap.get(entry.trackName) || { plays: 0, minutes: 0 };
+      trackMap.set(entry.trackName, {
+        plays: existing.plays + 1,
+        minutes: existing.minutes + (entry.msPlayed / 1000 / 60)
+      });
+    });
+    
+    return Array.from(trackMap.entries())
+      .map(([track, stats]) => ({
+        track,
+        plays: stats.plays,
+        minutes: Math.round(stats.minutes)
+      }))
+      .sort((a, b) => b.minutes - a.minutes)
+      .slice(0, 5);
+  })() : [];
+
   // Group by month
   const monthlyData = filteredEntries.reduce((acc, entry) => {
     const date = new Date(entry.endTime);
@@ -184,6 +206,37 @@ export function ItemTimeline({
                       <p className="text-[10px] text-white/60 mb-0.5 truncate">{item.month}</p>
                       <p className="text-sm font-bold text-white">{item.minutes} min</p>
                       <p className="text-[10px] text-green-400">{item.plays} plays</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Top Tracks (for artists only) */}
+            {itemType === 'artist' && topTracks.length > 0 && (
+              <div>
+                <h3 className="text-white font-semibold mb-2">Top Tracks by {itemName}</h3>
+                <div className="space-y-2">
+                  {topTracks.map((track, index) => (
+                    <div
+                      key={track.track}
+                      className="bg-white/5 border border-white/10 rounded-lg p-3 hover:border-green-500/30 transition-colors flex items-center gap-3"
+                    >
+                      <div className="flex-shrink-0 w-6 h-6 rounded-full bg-green-500/20 border border-green-500/30 flex items-center justify-center">
+                        <span className="text-xs font-bold text-green-400">{index + 1}</span>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-white truncate">{track.track}</p>
+                        <p className="text-xs text-white/60">{track.plays} plays • {track.minutes} min</p>
+                      </div>
+                      <div className="flex-shrink-0">
+                        <div className="h-1.5 w-20 bg-white/10 rounded-full overflow-hidden">
+                          <div 
+                            className="h-full bg-gradient-to-r from-green-500 to-green-400 rounded-full"
+                            style={{ width: `${(track.minutes / topTracks[0].minutes) * 100}%` }}
+                          />
+                        </div>
+                      </div>
                     </div>
                   ))}
                 </div>
