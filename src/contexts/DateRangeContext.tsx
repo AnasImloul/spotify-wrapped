@@ -29,8 +29,29 @@ export function DateRangeProvider({ children }: DateRangeProviderProps) {
   const resetToCurrentYear = () => {
     const now = new Date();
     const currentYear = now.getFullYear();
-    setStartDate(`${currentYear}-01`);
-    setEndDate(`${currentYear}-12`);
+    const currentYearStart = `${currentYear}-01`;
+    const currentYearEnd = `${currentYear}-12`;
+    
+    // If current year is within the data range, use it
+    // Otherwise, reset to the full data range
+    if (minDate && maxDate) {
+      const minYear = parseInt(minDate.split('-')[0]);
+      const maxYear = parseInt(maxDate.split('-')[0]);
+      
+      if (currentYear >= minYear && currentYear <= maxYear) {
+        // Current year is within data range
+        setStartDate(currentYearStart);
+        setEndDate(currentYearEnd);
+      } else {
+        // Current year is outside data range, reset to full range
+        setStartDate(minDate);
+        setEndDate(maxDate);
+      }
+    } else {
+      // No data loaded yet, use current year
+      setStartDate(currentYearStart);
+      setEndDate(currentYearEnd);
+    }
   };
 
   const updateDateRangeFromFiles = (files: UploadedFile[]) => {

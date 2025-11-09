@@ -36,7 +36,7 @@ export function DateRangeSelector() {
             onClick={resetToCurrentYear}
             className="w-full sm:w-auto px-4 py-2.5 rounded-lg bg-gradient-to-r from-green-500/20 to-green-600/20 border border-green-500/30 text-green-300 hover:bg-gradient-to-r hover:from-green-500/30 hover:to-green-600/30 hover:border-green-500/40 transition-all duration-200 text-sm font-medium shadow-lg shadow-green-500/10"
           >
-            Reset to Current Year
+            Reset to Full Range
           </button>
         </div>
         
