@@ -36,6 +36,13 @@ export function MonthPicker({ value, minDate, maxDate, onChange, label }: MonthP
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  // Sync internal state with value prop when it changes externally
+  useEffect(() => {
+    const [year, month] = value.split('-');
+    setSelectedYear(parseInt(year));
+    setSelectedMonth(parseInt(month));
+  }, [value]);
+
   const handleMonthSelect = (month: number) => {
     const yearMonthStr = `${selectedYear}-${String(month).padStart(2, '0')}`;
     onChange(yearMonthStr);
