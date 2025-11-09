@@ -325,7 +325,7 @@ export function ListeningHeatmap({ timeUnit = 'hours' }: ListeningHeatmapProps) 
           ) : (
             // Calendar view - GitHub-style year view with each day
             calendarData && (
-              <div className="flex flex-col w-full pt-8">
+              <div className="flex flex-col w-full pt-8 overflow-x-auto">
                 {/* Year label */}
                 <div className="flex gap-1 mb-2 justify-center">
                   <div className="text-sm text-white/80 font-semibold">
@@ -333,7 +333,7 @@ export function ListeningHeatmap({ timeUnit = 'hours' }: ListeningHeatmapProps) 
                   </div>
                 </div>
 
-                <div className="flex gap-1 w-full justify-center">
+                <div className="flex gap-1 min-w-max">
                   {/* Day labels */}
                   <div className="flex flex-col gap-1 justify-start pt-5 flex-shrink-0">
                     {['Mon', 'Wed', 'Fri'].map((day) => (
@@ -348,7 +348,7 @@ export function ListeningHeatmap({ timeUnit = 'hours' }: ListeningHeatmapProps) 
                   </div>
 
                   {/* Calendar grid - each column is a week */}
-                  <div className="flex gap-1 flex-wrap justify-center">
+                  <div className="flex gap-1">
                     {calendarData.weeks.map((week, weekIndex) => (
                       <div key={weekIndex} className="flex flex-col gap-1">
                         {week.map((day, dayIndex) => {
