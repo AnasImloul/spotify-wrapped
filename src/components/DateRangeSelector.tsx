@@ -5,7 +5,7 @@ import { useDateRange } from '@/hooks';
 import { useMemo } from 'react';
 
 export function DateRangeSelector() {
-  const { startDate, endDate, minDate, maxDate, setStartDate, setEndDate, setDateRange, resetToCurrentYear } = useDateRange();
+  const { startDate, endDate, minDate, maxDate, setStartDate, setEndDate, setDateRange, resetToFullRange } = useDateRange();
   
   // Get available years from the data range
   const availableYears = useMemo(() => {
@@ -74,7 +74,7 @@ export function DateRangeSelector() {
                   </button>
                 ))}
                 <button
-                  onClick={resetToCurrentYear}
+                  onClick={resetToFullRange}
                   className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 ${
                     startDate === minDate && endDate === maxDate
                       ? 'bg-gradient-to-r from-green-500 to-green-600 text-white border border-green-400 shadow-lg shadow-green-500/20'

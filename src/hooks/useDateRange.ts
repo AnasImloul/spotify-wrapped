@@ -15,6 +15,7 @@ export function useDateRange() {
     setEndDate: context.setEndDate,
     setDateRange: context.setDateRange,
     resetToCurrentYear: context.resetToCurrentYear,
+    resetToFullRange: context.resetToFullRange,
     updateDateRangeFromFiles: context.updateDateRangeFromFiles,
   };
 }

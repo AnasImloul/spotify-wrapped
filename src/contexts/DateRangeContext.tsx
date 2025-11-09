@@ -11,6 +11,7 @@ interface DateRangeContextType {
   setEndDate: (date: string) => void;
   setDateRange: (start: string, end: string) => void;
   resetToCurrentYear: () => void;
+  resetToFullRange: () => void;
   updateDateRangeFromFiles: (files: UploadedFile[]) => void;
 }
 
@@ -63,6 +64,14 @@ export function DateRangeProvider({ children }: DateRangeProviderProps) {
     }
   };
 
+  const resetToFullRange = () => {
+    // Always reset to the full data range
+    if (minDate && maxDate) {
+      setStartDate(minDate);
+      setEndDate(maxDate);
+    }
+  };
+
   const updateDateRangeFromFiles = (files: UploadedFile[]) => {
     if (files.length === 0) {
       setMinDate('');
@@ -104,6 +113,7 @@ export function DateRangeProvider({ children }: DateRangeProviderProps) {
         setEndDate,
         setDateRange,
         resetToCurrentYear,
+        resetToFullRange,
         updateDateRangeFromFiles,
       }}
     >
