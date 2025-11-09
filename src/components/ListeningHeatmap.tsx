@@ -272,60 +272,62 @@ export function ListeningHeatmap({ timeUnit = 'hours' }: ListeningHeatmapProps) 
         <div className="overflow-x-auto overflow-y-visible">
           {viewMode === 'detailed' ? (
             // Detailed view - hourly heatmap by day of week
-            <div className="flex flex-col items-center w-full pt-8">
-              {/* Hour labels */}
-              <div className="flex mb-2 gap-1">
-                <div className="w-8 flex-shrink-0"></div>
-                {HOURS.map((hour) => (
-                  <div
-                    key={hour}
-                    className="w-4 text-center text-[9px] text-white/60"
-                  >
-                    {hour % 3 === 0 ? (hour === 0 ? '0' : hour) : ''}
+            <div className="flex flex-col items-center w-full pt-8 pb-2 overflow-x-auto">
+              <div className="min-w-max">
+                {/* Hour labels */}
+                <div className="flex mb-2 gap-1">
+                  <div className="w-8 flex-shrink-0"></div>
+                  {HOURS.map((hour) => (
+                    <div
+                      key={hour}
+                      className="w-4 text-center text-[9px] text-white/60"
+                    >
+                      {hour % 3 === 0 ? (hour === 0 ? '0' : hour) : ''}
+                    </div>
+                  ))}
+                </div>
+
+                {/* Heatmap grid */}
+                {DAYS.map((day, dayIndex) => (
+                  <div key={day} className="flex items-center mb-1 gap-1">
+                    {/* Day label */}
+                    <div className="w-8 text-[10px] text-white/80 font-medium flex-shrink-0 text-right pr-1">
+                      {day}
+                    </div>
+
+                    {/* Hour cells */}
+                    <div className="flex gap-1">
+                      {HOURS.map((hour) => {
+                        const value = heatmapData.data[dayIndex][hour];
+                        const count = heatmapData.counts[dayIndex][hour];
+                        const average = count > 0 ? value / count : 0;
+                        return (
+                          <div
+                            key={hour}
+                            className={`w-4 h-4 rounded-sm ${getColor(value, heatmapData.maxValue)} 
+                              transition-all hover:scale-150 hover:z-50 hover:ring-1 hover:ring-white/50 cursor-pointer`}
+                            onMouseEnter={(e) => handleMouseEnter(e, (
+                              <>
+                                {day} {hour}:00
+                                <br />
+                                Total: {formatMinutes(value, timeUnit)}
+                                <br />
+                                Avg: {formatMinutes(average, timeUnit)} ({count} {count === 1 ? 'day' : 'days'})
+                              </>
+                            ))}
+                            onMouseLeave={handleMouseLeave}
+                          />
+                        );
+                      })}
+                    </div>
                   </div>
                 ))}
               </div>
-
-              {/* Heatmap grid */}
-              {DAYS.map((day, dayIndex) => (
-                <div key={day} className="flex items-center mb-1 gap-1">
-                  {/* Day label */}
-                  <div className="w-8 text-[10px] text-white/80 font-medium flex-shrink-0 text-right pr-1">
-                    {day}
-                  </div>
-
-                  {/* Hour cells */}
-                  <div className="flex gap-1">
-                    {HOURS.map((hour) => {
-                      const value = heatmapData.data[dayIndex][hour];
-                      const count = heatmapData.counts[dayIndex][hour];
-                      const average = count > 0 ? value / count : 0;
-                      return (
-                        <div
-                          key={hour}
-                          className={`w-4 h-4 rounded-sm ${getColor(value, heatmapData.maxValue)} 
-                            transition-all hover:scale-150 hover:z-50 hover:ring-1 hover:ring-white/50 cursor-pointer`}
-                          onMouseEnter={(e) => handleMouseEnter(e, (
-                            <>
-                              {day} {hour}:00
-                              <br />
-                              Total: {formatMinutes(value, timeUnit)}
-                              <br />
-                              Avg: {formatMinutes(average, timeUnit)} ({count} {count === 1 ? 'day' : 'days'})
-                            </>
-                          ))}
-                          onMouseLeave={handleMouseLeave}
-                        />
-                      );
-                    })}
-                  </div>
-                </div>
-              ))}
             </div>
           ) : (
             // Calendar view - GitHub-style year view with each day
             calendarData && (
-              <div className="flex flex-col w-full pt-8 overflow-x-auto">
+              <div className="flex flex-col w-full pt-8 pb-2 overflow-x-auto">
                 {/* Year label */}
                 <div className="flex gap-1 mb-2 justify-center">
                   <div className="text-sm text-white/80 font-semibold">
