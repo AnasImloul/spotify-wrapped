@@ -36,7 +36,14 @@ export function DateRangeSelector() {
   
   // Check if a specific year is currently selected
   const isYearSelected = (year: number) => {
-    return startDate === `${year}-01` && endDate === `${year}-12`;
+    // Get what the clamped dates would be for this year
+    const yearStart = `${year}-01`;
+    const yearEnd = `${year}-12`;
+    const clampedStart = yearStart < minDate ? minDate : yearStart;
+    const clampedEnd = yearEnd > maxDate ? maxDate : yearEnd;
+    
+    // Check if current selection matches the clamped year range
+    return startDate === clampedStart && endDate === clampedEnd;
   };
   
   return (
