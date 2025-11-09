@@ -13,16 +13,12 @@ import {
   ResponsiveContainer,
   Legend,
 } from 'recharts';
-import { StreamingHistoryEntry } from '@/types/spotify';
 import { msToMinutes, formatNumber } from '@/lib/utils';
+import { useSpotifyData, useDateRange, useSortedArtists } from '@/hooks';
 
 interface ArtistComparisonProps {
-  streamingHistory: StreamingHistoryEntry[];
-  startDate: string;
-  endDate: string;
   onClose: () => void;
   initialArtists?: string[];
-  availableArtists: { name: string; playCount: number; totalTime: number; totalMs: number; rank: number }[];
 }
 
 const COLORS = [
@@ -37,13 +33,12 @@ const COLORS = [
 ];
 
 export function ArtistComparison({
-  streamingHistory,
-  startDate,
-  endDate,
   onClose,
   initialArtists = [],
-  availableArtists,
 }: ArtistComparisonProps) {
+  const { streamingHistory } = useSpotifyData();
+  const { startDate, endDate } = useDateRange();
+  const sortedArtists = useSortedArtists();
   const [selectedArtists, setSelectedArtists] = useState<string[]>(
     initialArtists.slice(0, 5)
   );
@@ -68,19 +63,19 @@ export function ArtistComparison({
   // Configure Fuse.js for fuzzy search
   const artistFuse = useMemo(
     () =>
-      new Fuse(availableArtists, {
+      new Fuse(sortedArtists, {
         keys: ['name'],
         threshold: 0.3,
         distance: 100,
         minMatchCharLength: 1,
       }),
-    [availableArtists]
+    [sortedArtists]
   );
 
   // Filter and sort available artists based on search
   const filteredArtists = useMemo(() => {
     // Filter out already selected artists
-    const unselectedArtists = availableArtists.filter(
+    const unselectedArtists = sortedArtists.filter(
       artist => !selectedArtists.includes(artist.name)
     );
 
@@ -95,7 +90,7 @@ export function ArtistComparison({
       .map(result => result.item)
       .filter(artist => !selectedArtists.includes(artist.name))
       .slice(0, 20);
-  }, [availableArtists, selectedArtists, searchTerm, artistFuse]);
+  }, [sortedArtists, selectedArtists, searchTerm, artistFuse]);
 
   // Calculate data for all selected artists
   const chartData = useMemo(() => {
@@ -238,7 +233,7 @@ export function ArtistComparison({
                               <span className="truncate">{artist.name}</span>
                             </div>
                             <div className="text-xs text-white/40 ml-2 flex-shrink-0">
-                              {formatNumber(msToMinutes(artist.totalTime))} min
+                              {formatNumber(msToMinutes(artist.totalMs))} min
                             </div>
                           </button>
                         ))

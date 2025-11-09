@@ -1,66 +1,16 @@
-import { useState, useEffect } from 'react';
 import { FileUpload } from './components/FileUpload';
 import { DateRangeSelector } from './components/DateRangeSelector';
 import { StatsOverview } from './components/StatsOverview';
 import { TopItems } from './components/TopItems';
 import { ListeningTrends } from './components/ListeningTrends';
-import { parseUploadedFiles, getDateRangeFromFiles, getStreamingHistoryFromFiles } from './lib/dataProcessor';
-import { UploadedFile, ProcessedStats, StreamingHistoryEntry } from './types/spotify';
 import { Music2, BarChart3, Trophy, TrendingUp } from 'lucide-react';
+import { SpotifyDataProvider, DateRangeProvider, FilterProvider } from './contexts';
+import { useSpotifyData, useDateRange, useFilterSettings } from './hooks';
 
-function App() {
-  const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
-  const [stats, setStats] = useState<ProcessedStats | null>(null);
-  const [streamingHistory, setStreamingHistory] = useState<StreamingHistoryEntry[]>([]);
-  
-  // Date range state
-  const currentYear = new Date().getFullYear();
-  const [startDate, setStartDate] = useState(`${currentYear}-01`);
-  const [endDate, setEndDate] = useState(`${currentYear}-12`);
-  const [minDate, setMinDate] = useState('');
-  const [maxDate, setMaxDate] = useState('');
-  
-  // Global sorting state
-  const [sortBy, setSortBy] = useState<'time' | 'plays'>('time');
-
-  const handleFilesProcessed = (files: UploadedFile[]) => {
-    setUploadedFiles(files);
-    
-    if (files.length === 0) {
-      setStats(null);
-      setMinDate('');
-      setMaxDate('');
-      return;
-    }
-
-    // Get date range from files
-    const { min, max } = getDateRangeFromFiles(files);
-    setMinDate(min);
-    setMaxDate(max);
-    
-    // If current date range is outside the data range, adjust it
-    if (min && max) {
-      const currentStart = startDate;
-      const currentEnd = endDate;
-      
-      if (currentStart < min || currentStart > max) {
-        setStartDate(min);
-      }
-      if (currentEnd > max || currentEnd < min) {
-        setEndDate(max);
-      }
-    }
-  };
-
-  // Recalculate stats when date range changes
-  useEffect(() => {
-    if (uploadedFiles.length > 0) {
-      const processedStats = parseUploadedFiles(uploadedFiles, startDate, endDate);
-      const history = getStreamingHistoryFromFiles(uploadedFiles);
-      setStats(processedStats);
-      setStreamingHistory(history);
-    }
-  }, [uploadedFiles, startDate, endDate]);
+function AppContent() {
+  const { stats } = useSpotifyData();
+  const { minDate, maxDate } = useDateRange();
+  const { sortBy, setSortBy } = useFilterSettings();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-green-950 to-slate-950">
@@ -100,19 +50,12 @@ function App() {
         </div>
 
         {/* File Upload */}
-        <FileUpload onFilesProcessed={handleFilesProcessed} />
+        <FileUpload />
 
         {/* Date Range Selector */}
         {stats && minDate && maxDate && (
           <>
-            <DateRangeSelector
-              startDate={startDate}
-              endDate={endDate}
-              minDate={minDate}
-              maxDate={maxDate}
-              onStartDateChange={setStartDate}
-              onEndDateChange={setEndDate}
-            />
+            <DateRangeSelector />
             
             {/* Global Sorting Selector */}
             <div>
@@ -157,7 +100,7 @@ function App() {
                 <BarChart3 className="w-8 h-8 text-green-400" />
                 Your Statistics
               </h3>
-              <StatsOverview stats={stats} />
+              <StatsOverview />
             </div>
 
             {(stats.topArtists.length > 0 || stats.topTracks.length > 0) && (
@@ -168,7 +111,7 @@ function App() {
                     <Trophy className="w-8 h-8 text-green-400" />
                     Hall of Fame
                   </h3>
-                  <TopItems stats={stats} streamingHistory={streamingHistory} startDate={startDate} endDate={endDate} sortBy={sortBy} />
+                  <TopItems />
                 </div>
               </>
             )}
@@ -181,7 +124,7 @@ function App() {
                     <TrendingUp className="w-8 h-8 text-green-400" />
                     Your Listening Journey
                   </h3>
-                  <ListeningTrends stats={stats} />
+                  <ListeningTrends />
                 </div>
               </>
             )}
@@ -267,6 +210,18 @@ function App() {
         </div>
       </footer>
     </div>
+  );
+}
+
+function App() {
+  return (
+    <DateRangeProvider>
+      <FilterProvider>
+        <SpotifyDataProvider>
+          <AppContent />
+        </SpotifyDataProvider>
+      </FilterProvider>
+    </DateRangeProvider>
   );
 }
 

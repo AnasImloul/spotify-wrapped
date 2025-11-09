@@ -5,6 +5,7 @@ import {
   UploadedFile,
 } from '@/types/spotify';
 import { sortArtists, sortTracks } from './sorting';
+import { detectFileTypeBySchema } from './schemas';
 
 export type { UploadedFile };
 
@@ -32,33 +33,54 @@ export function convertExtendedToStandard(
   };
 }
 
+/**
+ * Detect file type using Zod schema validation with filename fallback
+ * @returns Object with type, validation status, and optional error message
+ */
 export function detectFileType(
   fileName: string,
   data: any
 ): 'streaming' | 'extended' {
+  // First, try schema-based detection (most reliable)
+  const schemaResult = detectFileTypeBySchema(data);
+  
+  if (schemaResult.isValid && schemaResult.type !== 'unknown') {
+    console.log(`✓ Detected ${schemaResult.type} format via schema validation for ${fileName}`);
+    return schemaResult.type;
+  }
+
+  // Fallback to filename pattern matching (for edge cases)
+  console.warn(`⚠ Schema validation failed for ${fileName}, falling back to filename pattern matching`);
+  console.warn(`Schema error: ${schemaResult.error}`);
+  
   // Check for extended streaming history by filename pattern
   if (fileName.match(/Streaming_History_Audio_.*\.json/i)) {
+    console.log(`Detected extended format via filename for ${fileName}`);
     return 'extended';
   }
   
   // Check for standard streaming history
   if (fileName.match(/StreamingHistory_music_\d+\.json/i)) {
+    console.log(`Detected streaming format via filename for ${fileName}`);
     return 'streaming';
   }
 
-  // Detect by structure
+  // Last resort: basic structure check
   if (Array.isArray(data) && data.length > 0) {
     // Check for extended format
     if (data[0]?.ts && data[0]?.master_metadata_track_name !== undefined) {
+      console.log(`Detected extended format via structure check for ${fileName}`);
       return 'extended';
     }
     // Check for standard format
     if (data[0]?.endTime && data[0]?.artistName) {
+      console.log(`Detected streaming format via structure check for ${fileName}`);
       return 'streaming';
     }
   }
 
   // Default to streaming if can't determine
+  console.warn(`⚠ Could not definitively detect format for ${fileName}, defaulting to 'streaming'`);
   return 'streaming';
 }
 

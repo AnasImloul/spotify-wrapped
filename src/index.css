@@ -65,32 +65,19 @@ body {
   @apply bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent;
 }
 
-/* Animated gradient for hero text */
+/* Static gradient for hero text - Green to Blue */
 .animated-gradient {
   background: linear-gradient(
     90deg,
     #1DB954,
-    #1ed760,
-    #3b82f6,
-    #8b5cf6,
-    #ec4899,
-    #f59e0b,
-    #1DB954
+    #10b981,
+    #14b8a6,
+    #06b6d4,
+    #3b82f6
   );
-  background-size: 300% 100%;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: gradient-cycle 8s ease-in-out infinite;
-}
-
-@keyframes gradient-cycle {
-  0%, 100% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
 }
 
 /* Custom scrollbar styling */

@@ -4,14 +4,11 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { detectFileType, UploadedFile } from '@/lib/dataProcessor';
 import { cn } from '@/lib/utils';
+import { useSpotifyData } from '@/hooks';
 
-interface FileUploadProps {
-  onFilesProcessed: (files: UploadedFile[]) => void;
-}
-
-export function FileUpload({ onFilesProcessed }: FileUploadProps) {
+export function FileUpload() {
+  const { uploadedFiles, handleFilesProcessed } = useSpotifyData();
   const [isDragging, setIsDragging] = useState(false);
-  const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   const handleDrag = useCallback((e: React.DragEvent) => {
@@ -70,8 +67,7 @@ export function FileUpload({ onFilesProcessed }: FileUploadProps) {
       return;
     }
 
-    setUploadedFiles(allFiles);
-    onFilesProcessed(allFiles);
+    handleFilesProcessed(allFiles);
   };
 
   const handleDrop = useCallback(
@@ -85,7 +81,7 @@ export function FileUpload({ onFilesProcessed }: FileUploadProps) {
         processFiles(files);
       }
     },
-    [uploadedFiles, onFilesProcessed]
+    [uploadedFiles, handleFilesProcessed]
   );
 
   const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -97,8 +93,7 @@ export function FileUpload({ onFilesProcessed }: FileUploadProps) {
 
   const removeFile = (index: number) => {
     const newFiles = uploadedFiles.filter((_, i) => i !== index);
-    setUploadedFiles(newFiles);
-    onFilesProcessed(newFiles);
+    handleFilesProcessed(newFiles);
   };
 
   return (

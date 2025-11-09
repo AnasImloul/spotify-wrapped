@@ -12,24 +12,18 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { ProcessedStats, StreamingHistoryEntry } from '@/types/spotify';
 import { formatNumber, msToMinutes } from '@/lib/utils';
 import { Music2, Trophy, ChevronLeft, ChevronRight, Search, X, TrendingUp, BarChart3 } from 'lucide-react';
 import { ItemTimeline } from './ItemTimeline';
 import { ArtistComparison } from './ArtistComparison';
 import { TrackComparison } from './TrackComparison';
-
-interface TopItemsProps {
-  stats: ProcessedStats;
-  streamingHistory: StreamingHistoryEntry[];
-  startDate: string;
-  endDate: string;
-  sortBy: 'time' | 'plays';
-}
+import { useSortedArtists, useSortedTracks } from '@/hooks';
 
 const ITEMS_PER_PAGE = 10;
 
-export function TopItems({ stats, streamingHistory, startDate, endDate, sortBy }: TopItemsProps) {
+export function TopItems() {
+  const sortedArtists = useSortedArtists();
+  const sortedTracks = useSortedTracks();
   const [artistPage, setArtistPage] = useState(1);
   const [trackPage, setTrackPage] = useState(1);
   const [artistSearch, setArtistSearch] = useState('');
@@ -47,23 +41,6 @@ export function TopItems({ stats, streamingHistory, startDate, endDate, sortBy }
   // Comparison modal state
   const [showComparison, setShowComparison] = useState(false);
   const [showTrackComparison, setShowTrackComparison] = useState(false);
-
-  // Sort artists and tracks based on global sortBy
-  const sortedArtists = useMemo(() => {
-    if (sortBy === 'plays') {
-      return [...stats.topArtists].sort((a, b) => b.playCount - a.playCount);
-    }
-    // Default: sort by time (totalTime in ms)
-    return [...stats.topArtists].sort((a, b) => b.totalTime - a.totalTime);
-  }, [stats.topArtists, sortBy]);
-
-  const sortedTracks = useMemo(() => {
-    if (sortBy === 'plays') {
-      return [...stats.topTracks].sort((a, b) => b.playCount - a.playCount);
-    }
-    // Default: sort by time (totalMs)
-    return [...stats.topTracks].sort((a, b) => b.totalMs - a.totalMs);
-  }, [stats.topTracks, sortBy]);
 
   // Configure Fuse.js for fuzzy search on artists
   const artistFuse = useMemo(
@@ -431,9 +408,6 @@ export function TopItems({ stats, streamingHistory, startDate, endDate, sortBy }
           itemName={timelineItem.name}
           itemType={timelineItem.type}
           artistName={timelineItem.artistName}
-          streamingHistory={streamingHistory}
-          startDate={startDate}
-          endDate={endDate}
           onClose={() => setTimelineItem(null)}
         />
       )}
@@ -441,18 +415,7 @@ export function TopItems({ stats, streamingHistory, startDate, endDate, sortBy }
       {/* Artist Comparison Modal */}
       {showComparison && (
         <ArtistComparison
-          key={`artist-comparison-${sortBy}`}
-          streamingHistory={streamingHistory}
-          startDate={startDate}
-          endDate={endDate}
           onClose={() => setShowComparison(false)}
-          availableArtists={sortedArtists.map((a, index) => ({
-            name: a.name,
-            playCount: a.playCount,
-            totalTime: a.totalTime,
-            totalMs: a.totalMs,
-            rank: index + 1
-          }))}
           initialArtists={sortedArtists.slice(0, 3).map(a => a.name)}
         />
       )}
@@ -460,18 +423,7 @@ export function TopItems({ stats, streamingHistory, startDate, endDate, sortBy }
       {/* Track Comparison Modal */}
       {showTrackComparison && (
         <TrackComparison
-          key={`track-comparison-${sortBy}`}
-          streamingHistory={streamingHistory}
-          startDate={startDate}
-          endDate={endDate}
           onClose={() => setShowTrackComparison(false)}
-          availableTracks={sortedTracks.map((t, index) => ({
-            name: t.name,
-            artist: t.artist,
-            playCount: t.playCount,
-            totalMs: t.totalMs,
-            rank: index + 1
-          }))}
           initialTracks={sortedTracks.slice(0, 3).map(t => ({ name: t.name, artist: t.artist }))}
         />
       )}

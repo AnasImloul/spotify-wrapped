@@ -13,22 +13,12 @@ import {
   ResponsiveContainer,
   Legend,
 } from 'recharts';
-import { StreamingHistoryEntry } from '@/types/spotify';
 import { msToMinutes, formatNumber } from '@/lib/utils';
+import { useSpotifyData, useDateRange, useSortedTracks } from '@/hooks';
 
 interface TrackComparisonProps {
-  streamingHistory: StreamingHistoryEntry[];
-  startDate: string;
-  endDate: string;
   onClose: () => void;
   initialTracks?: Array<{ name: string; artist: string }>;
-  availableTracks: Array<{ 
-    name: string; 
-    artist: string; 
-    playCount: number; 
-    totalMs: number; 
-    rank: number;
-  }>;
 }
 
 const COLORS = [
@@ -43,13 +33,12 @@ const COLORS = [
 ];
 
 export function TrackComparison({
-  streamingHistory,
-  startDate,
-  endDate,
   onClose,
   initialTracks = [],
-  availableTracks,
 }: TrackComparisonProps) {
+  const { streamingHistory } = useSpotifyData();
+  const { startDate, endDate } = useDateRange();
+  const sortedTracks = useSortedTracks();
   const [selectedTracks, setSelectedTracks] = useState<Array<{ name: string; artist: string }>>(
     initialTracks.slice(0, 5)
   );
@@ -74,19 +63,19 @@ export function TrackComparison({
   // Configure Fuse.js for fuzzy search
   const trackFuse = useMemo(
     () =>
-      new Fuse(availableTracks, {
+      new Fuse(sortedTracks, {
         keys: ['name', 'artist'],
         threshold: 0.3,
         distance: 100,
         minMatchCharLength: 1,
       }),
-    [availableTracks]
+    [sortedTracks]
   );
 
   // Filter and sort available tracks based on search
   const filteredTracks = useMemo(() => {
     // Filter out already selected tracks
-    const unselectedTracks = availableTracks.filter(
+    const unselectedTracks = sortedTracks.filter(
       track => !selectedTracks.some(t => t.name === track.name && t.artist === track.artist)
     );
 
@@ -101,7 +90,7 @@ export function TrackComparison({
       .map(result => result.item)
       .filter(track => !selectedTracks.some(t => t.name === track.name && t.artist === track.artist))
       .slice(0, 20);
-  }, [availableTracks, selectedTracks, searchTerm, trackFuse]);
+  }, [sortedTracks, selectedTracks, searchTerm, trackFuse]);
 
   // Calculate data for all selected tracks
   const chartData = useMemo(() => {

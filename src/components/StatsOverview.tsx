@@ -1,13 +1,14 @@
 import { Music, Headphones, Calendar, TrendingUp, Clock } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ProcessedStats } from '@/types/spotify';
 import { formatNumber, msToMinutes } from '@/lib/utils';
+import { useFilteredStats } from '@/hooks';
 
-interface StatsOverviewProps {
-  stats: ProcessedStats;
-}
+export function StatsOverview() {
+  const stats = useFilteredStats();
 
-export function StatsOverview({ stats }: StatsOverviewProps) {
+  if (!stats) {
+    return null;
+  }
   const totalMinutes = msToMinutes(stats.totalListeningTime * 60 * 60 * 1000);
   const totalHours = Math.round(totalMinutes / 60);
   const totalDays = Math.round(totalHours / 24);

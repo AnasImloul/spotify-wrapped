@@ -9,15 +9,12 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from 'recharts';
-import { StreamingHistoryEntry } from '@/types/spotify';
+import { useSpotifyData, useDateRange } from '@/hooks';
 
 interface ItemTimelineProps {
   itemName: string;
   itemType: 'artist' | 'track';
   artistName?: string; // For tracks
-  streamingHistory: StreamingHistoryEntry[];
-  startDate: string;
-  endDate: string;
   onClose: () => void;
 }
 
@@ -25,11 +22,10 @@ export function ItemTimeline({
   itemName,
   itemType,
   artistName,
-  streamingHistory,
-  startDate,
-  endDate,
   onClose,
 }: ItemTimelineProps) {
+  const { streamingHistory } = useSpotifyData();
+  const { startDate, endDate } = useDateRange();
   // Filter entries for this specific item
   const filteredEntries = streamingHistory.filter((entry) => {
     const entryDate = new Date(entry.endTime);

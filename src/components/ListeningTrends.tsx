@@ -1,5 +1,4 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ProcessedStats } from '@/types/spotify';
 import {
   XAxis,
   YAxis,
@@ -10,13 +9,12 @@ import {
   Line,
 } from 'recharts';
 import { Calendar } from 'lucide-react';
+import { useFilteredStats } from '@/hooks';
 
-interface ListeningTrendsProps {
-  stats: ProcessedStats;
-}
-
-export function ListeningTrends({ stats }: ListeningTrendsProps) {
-  if (!stats.listeningByMonth || stats.listeningByMonth.length === 0) {
+export function ListeningTrends() {
+  const stats = useFilteredStats();
+  
+  if (!stats || !stats.listeningByMonth || stats.listeningByMonth.length === 0) {
     return null;
   }
 

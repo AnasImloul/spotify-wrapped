@@ -1,24 +1,10 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { Calendar } from 'lucide-react';
 import { MonthPicker } from './MonthPicker';
+import { useDateRange } from '@/hooks';
 
-interface DateRangeSelectorProps {
-  startDate: string;
-  endDate: string;
-  minDate: string;
-  maxDate: string;
-  onStartDateChange: (date: string) => void;
-  onEndDateChange: (date: string) => void;
-}
-
-export function DateRangeSelector({
-  startDate,
-  endDate,
-  minDate,
-  maxDate,
-  onStartDateChange,
-  onEndDateChange,
-}: DateRangeSelectorProps) {
+export function DateRangeSelector() {
+  const { startDate, endDate, minDate, maxDate, setStartDate, setEndDate, resetToCurrentYear } = useDateRange();
   return (
     <Card className="border-green-500/30 bg-black/40 overflow-visible relative z-10">
       <CardContent className="p-6 overflow-visible">
@@ -33,7 +19,7 @@ export function DateRangeSelector({
               value={startDate}
               minDate={minDate}
               maxDate={maxDate}
-              onChange={onStartDateChange}
+              onChange={setStartDate}
               label="From"
             />
             
@@ -41,18 +27,13 @@ export function DateRangeSelector({
               value={endDate}
               minDate={minDate}
               maxDate={maxDate}
-              onChange={onEndDateChange}
+              onChange={setEndDate}
               label="To"
             />
           </div>
 
           <button
-            onClick={() => {
-              const now = new Date();
-              const currentYear = now.getFullYear();
-              onStartDateChange(`${currentYear}-01`);
-              onEndDateChange(`${currentYear}-12`);
-            }}
+            onClick={resetToCurrentYear}
             className="px-4 py-2.5 h-[42px] rounded-lg bg-gradient-to-r from-green-500/20 to-green-600/20 border border-green-500/30 text-green-300 hover:bg-gradient-to-r hover:from-green-500/30 hover:to-green-600/30 hover:border-green-500/40 transition-all duration-200 text-sm font-medium whitespace-nowrap self-start md:self-auto shadow-lg shadow-green-500/10"
           >
             Reset to Current Year
