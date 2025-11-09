@@ -9,6 +9,7 @@ interface DateRangeContextType {
   maxDate: string;
   setStartDate: (date: string) => void;
   setEndDate: (date: string) => void;
+  setDateRange: (start: string, end: string) => void;
   resetToCurrentYear: () => void;
   updateDateRangeFromFiles: (files: UploadedFile[]) => void;
 }
@@ -25,6 +26,12 @@ export function DateRangeProvider({ children }: DateRangeProviderProps) {
   const [endDate, setEndDate] = useState(`${currentYear}-12`);
   const [minDate, setMinDate] = useState('');
   const [maxDate, setMaxDate] = useState('');
+
+  // Batch update both dates at once to avoid double re-render
+  const setDateRange = (start: string, end: string) => {
+    setStartDate(start);
+    setEndDate(end);
+  };
 
   const resetToCurrentYear = () => {
     const now = new Date();
@@ -93,6 +100,7 @@ export function DateRangeProvider({ children }: DateRangeProviderProps) {
         maxDate,
         setStartDate,
         setEndDate,
+        setDateRange,
         resetToCurrentYear,
         updateDateRangeFromFiles,
       }}

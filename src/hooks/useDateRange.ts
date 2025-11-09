@@ -13,6 +13,7 @@ export function useDateRange() {
     maxDate: context.maxDate,
     setStartDate: context.setStartDate,
     setEndDate: context.setEndDate,
+    setDateRange: context.setDateRange,
     resetToCurrentYear: context.resetToCurrentYear,
     updateDateRangeFromFiles: context.updateDateRangeFromFiles,
   };

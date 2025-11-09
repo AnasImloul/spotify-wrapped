@@ -5,7 +5,7 @@ import { useDateRange } from '@/hooks';
 import { useMemo } from 'react';
 
 export function DateRangeSelector() {
-  const { startDate, endDate, minDate, maxDate, setStartDate, setEndDate, resetToCurrentYear } = useDateRange();
+  const { startDate, endDate, minDate, maxDate, setStartDate, setEndDate, setDateRange, resetToCurrentYear } = useDateRange();
   
   // Get available years from the data range
   const availableYears = useMemo(() => {
@@ -22,8 +22,8 @@ export function DateRangeSelector() {
   }, [minDate, maxDate]);
   
   const selectYear = (year: number) => {
-    setStartDate(`${year}-01`);
-    setEndDate(`${year}-12`);
+    // Use setDateRange to batch both state updates together
+    setDateRange(`${year}-01`, `${year}-12`);
   };
   
   // Check if a specific year is currently selected
