@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { X, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -12,6 +13,7 @@ interface SharedAnalyticsViewProps {
 }
 
 export function SharedAnalyticsView({ onClose, shareId }: SharedAnalyticsViewProps) {
+  const navigate = useNavigate();
   const [sharedData, setSharedData] = useState<ReturnType<typeof expandCompactData> | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -37,19 +39,12 @@ export function SharedAnalyticsView({ onClose, shareId }: SharedAnalyticsViewPro
   }
 
   const handleClose = () => {
-    // Clear URL parameter
-    const url = new URL(window.location.href);
-    url.searchParams.delete('share');
-    window.history.replaceState({}, '', url.toString());
     onClose();
   };
 
   const handleGetOwn = () => {
-    // Clear URL parameter and reload
-    const url = new URL(window.location.href);
-    url.searchParams.delete('share');
-    window.history.replaceState({}, '', url.toString());
-    window.location.reload();
+    // Navigate to home page
+    navigate('/');
   };
 
   return (

@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { StoryMode } from '../components/StoryMode';
+import { StoryMode } from '@/components/StoryMode';
 
 export default function StoryModePage() {
   const navigate = useNavigate();
