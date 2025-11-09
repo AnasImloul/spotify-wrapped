@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { X, Download } from 'lucide-react';
+import { X, Download, Mic2, Headphones } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -131,7 +131,8 @@ export function SharedAnalyticsView({ onClose, shareId }: SharedAnalyticsViewPro
           <Card className="bg-black/40 border-white/10">
             <CardHeader>
               <CardTitle className="text-2xl text-white flex items-center gap-2">
-                🎤 Top Artists
+                <Mic2 className="w-6 h-6 text-green-400" />
+                Top Artists
               </CardTitle>
               <CardDescription className="text-white/60">
                 Most listened artists
@@ -170,7 +171,8 @@ export function SharedAnalyticsView({ onClose, shareId }: SharedAnalyticsViewPro
           <Card className="bg-black/40 border-white/10">
             <CardHeader>
               <CardTitle className="text-2xl text-white flex items-center gap-2">
-                🎧 Top Tracks
+                <Headphones className="w-6 h-6 text-blue-400" />
+                Top Tracks
               </CardTitle>
               <CardDescription className="text-white/60">
                 Most played songs
