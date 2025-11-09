@@ -60,6 +60,21 @@ export function SharedAnalyticsView({ onClose }: SharedAnalyticsViewProps) {
             <div>
               <h1 className="text-2xl font-bold text-white">Shared Spotify Analytics</h1>
               <p className="text-sm text-green-400">Someone shared their music stats with you!</p>
+              {sharedData.dateRange && (
+                <p className="text-xs text-white/50 mt-1">
+                  {new Date(sharedData.dateRange.startDate).toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric',
+                  })}{' '}
+                  -{' '}
+                  {new Date(sharedData.dateRange.endDate).toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric',
+                  })}
+                </p>
+              )}
             </div>
             <div className="flex gap-2">
               <Button onClick={handleGetOwn} variant="outline" size="sm">

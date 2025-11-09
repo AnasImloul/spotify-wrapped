@@ -11,6 +11,7 @@ export interface CompactShareData {
   s: [number, number, number, number, number, number, string?, number?]; // stats array
   a: [string, number, number][]; // artists: [name, minutes, plays]
   t: [string, string, number, number][]; // tracks: [name, artist, minutes, plays]
+  dr?: [string, string]; // date range: [startDate, endDate] (ISO strings)
 }
 
 /**
@@ -24,7 +25,8 @@ export interface CompactShareData {
 export function encodeAnalyticsToUrl(
   stats: ProcessedStats,
   topArtists: any[],
-  topTracks: any[]
+  topTracks: any[],
+  dateRange?: { startDate: Date; endDate: Date }
 ): string {
   // Create compact array-based structure (no keys = smaller size)
   const compactData: CompactShareData = {
@@ -50,6 +52,7 @@ export function encodeAnalyticsToUrl(
       Math.round(track.totalMs / 60000), // ms to minutes
       track.playCount,
     ]),
+    dr: dateRange ? [dateRange.startDate.toISOString(), dateRange.endDate.toISOString()] : undefined,
   };
 
   // Encode to MessagePack binary format
@@ -120,6 +123,7 @@ export function expandCompactData(compact: CompactShareData): {
   };
   topArtists: { name: string; minutes: number; playCount: number }[];
   topTracks: { name: string; artist: string; minutes: number; playCount: number }[];
+  dateRange?: { startDate: string; endDate: string };
 } {
   const [tt, tc, ta, ut, ua, ad, mpd, mpa] = compact.s;
 
@@ -145,6 +149,7 @@ export function expandCompactData(compact: CompactShareData): {
       minutes,
       playCount,
     })),
+    dateRange: compact.dr ? { startDate: compact.dr[0], endDate: compact.dr[1] } : undefined,
   };
 }
 

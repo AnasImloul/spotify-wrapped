@@ -10,7 +10,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { useSpotifyData, useSortedArtists, useSortedTracks } from '@/hooks';
+import { useSpotifyData, useSortedArtists, useSortedTracks, useDateRange } from '@/hooks';
 import {
   encodeAnalyticsToUrl,
   generateCompactShareUrl,
@@ -36,6 +36,7 @@ export function ShareableLink({
   const { stats } = useSpotifyData();
   const sortedArtists = useSortedArtists();
   const sortedTracks = useSortedTracks();
+  const { startDate, endDate } = useDateRange();
 
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -47,7 +48,8 @@ export function ShareableLink({
   const encoded = encodeAnalyticsToUrl(
     stats,
     sortedArtists.slice(0, 10),
-    sortedTracks.slice(0, 10)
+    sortedTracks.slice(0, 10),
+    { startDate: new Date(startDate), endDate: new Date(endDate) }
   );
   const url = generateCompactShareUrl(encoded);
   const isSafe = isUrlSizeSafe(encoded);
@@ -67,6 +69,7 @@ export function ShareableLink({
     ],
     a: sortedArtists.slice(0, 10).map((a) => [a.name, Math.round(a.totalTime / 60000), a.playCount]),
     t: sortedTracks.slice(0, 10).map((t) => [t.name, t.artist, Math.round(t.totalMs / 60000), t.playCount]),
+    dr: [startDate, endDate],
   };
   const shareText = generateSummaryText(compactData as any);
 
