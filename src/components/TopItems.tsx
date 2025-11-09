@@ -441,6 +441,7 @@ export function TopItems({ stats, streamingHistory, startDate, endDate, sortBy }
       {/* Artist Comparison Modal */}
       {showComparison && (
         <ArtistComparison
+          key={`artist-comparison-${sortBy}`}
           streamingHistory={streamingHistory}
           startDate={startDate}
           endDate={endDate}
@@ -459,6 +460,7 @@ export function TopItems({ stats, streamingHistory, startDate, endDate, sortBy }
       {/* Track Comparison Modal */}
       {showTrackComparison && (
         <TrackComparison
+          key={`track-comparison-${sortBy}`}
           streamingHistory={streamingHistory}
           startDate={startDate}
           endDate={endDate}
