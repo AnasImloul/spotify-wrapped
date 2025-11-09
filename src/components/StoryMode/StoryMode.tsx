@@ -119,10 +119,10 @@ export function StoryMode({ onClose }: StoryModeProps) {
       {/* Story card container */}
       <div
         ref={swipeRef}
-        className="absolute inset-0 flex items-center justify-center"
+        className="absolute inset-0 flex items-center justify-center sm:px-4"
       >
-        {/* Card wrapper with responsive sizing - wider on desktop */}
-        <div className="relative w-full max-w-[360px] md:max-w-[440px] lg:max-w-[500px] h-full sm:h-[90vh] md:h-[85vh] lg:h-[80vh] sm:rounded-3xl overflow-hidden shadow-2xl">
+        {/* Card wrapper with responsive sizing - full width on mobile, constrained on desktop */}
+        <div className="relative w-full sm:max-w-[360px] md:max-w-[440px] lg:max-w-[500px] h-full sm:h-[90vh] md:h-[85vh] lg:h-[80vh] sm:rounded-3xl overflow-hidden shadow-2xl">
           {/* Current card */}
           <div className="w-full h-full">{cards[currentIndex]}</div>
 
