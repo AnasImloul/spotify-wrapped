@@ -10,25 +10,24 @@ function AppContent() {
   useEffect(() => {
     if (showStoryMode) {
       document.body.style.overflow = 'hidden';
-      document.body.style.height = '100vh';
     } else {
       document.body.style.overflow = '';
-      document.body.style.height = '';
     }
 
     return () => {
       document.body.style.overflow = '';
-      document.body.style.height = '';
     };
   }, [showStoryMode]);
 
-  return (
-    <div className={`min-h-screen bg-gradient-to-br from-slate-950 via-green-950 to-slate-950 ${showStoryMode ? 'overflow-hidden h-screen fixed inset-0' : ''}`}>
-      {/* Only show main content when Story Mode is closed */}
-      {!showStoryMode && <MainContent onShowStoryMode={() => setShowStoryMode(true)} />}
+  // When Story Mode is active, only render Story Mode (no parent wrapper)
+  if (showStoryMode) {
+    return <StoryMode onClose={() => setShowStoryMode(false)} />;
+  }
 
-      {/* Story Mode Modal */}
-      {showStoryMode && <StoryMode onClose={() => setShowStoryMode(false)} />}
+  // When Story Mode is closed, render main content with gradient background
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-green-950 to-slate-950">
+      <MainContent onShowStoryMode={() => setShowStoryMode(true)} />
     </div>
   );
 }
