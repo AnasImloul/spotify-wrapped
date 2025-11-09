@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { MainContent } from './components/MainContent';
 import { StoryMode } from './components/StoryMode';
-import { SpotifyDataProvider, DateRangeProvider, FilterProvider } from './contexts';
+import { SpotifyDataProvider, DateRangeProvider, FilterProvider, BrandingProvider } from './contexts';
 
 function AppContent() {
   const [showStoryMode, setShowStoryMode] = useState(false);
@@ -13,7 +13,6 @@ function AppContent() {
     } else {
       document.body.style.overflow = '';
     }
-
     return () => {
       document.body.style.overflow = '';
     };
@@ -37,7 +36,9 @@ function App() {
     <DateRangeProvider>
       <FilterProvider>
         <SpotifyDataProvider>
-          <AppContent />
+          <BrandingProvider>
+            <AppContent />
+          </BrandingProvider>
         </SpotifyDataProvider>
       </FilterProvider>
     </DateRangeProvider>

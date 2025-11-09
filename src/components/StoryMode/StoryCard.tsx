@@ -1,5 +1,6 @@
 import { ReactNode } from 'react';
 import { cn } from '@/lib/utils';
+import { useBranding } from '@/contexts';
 
 interface StoryCardProps {
   children: ReactNode;
@@ -13,6 +14,13 @@ interface StoryCardProps {
  */
 export function StoryCard({ children, className, gradient, exportId }: StoryCardProps) {
   const defaultGradient = 'from-green-500/20 via-blue-500/20 to-purple-500/20';
+  const { settings } = useBranding();
+  
+  const positionClasses = {
+    'bottom-left': 'bottom-4 left-4',
+    'bottom-right': 'bottom-4 right-4',
+    'bottom-center': 'bottom-4 left-1/2 -translate-x-1/2',
+  };
   
   return (
     <div
@@ -33,6 +41,20 @@ export function StoryCard({ children, className, gradient, exportId }: StoryCard
       <div className="relative z-10 w-full h-full flex flex-col items-center justify-center">
         {children}
       </div>
+      
+      {/* Watermark */}
+      {settings.showWatermark && (
+        <div
+          className={cn(
+            'absolute z-10 px-3 py-1 bg-black/20 backdrop-blur-sm rounded-full border border-white/10',
+            positionClasses[settings.watermarkPosition]
+          )}
+        >
+          <p className="text-white/60 text-[10px] font-medium whitespace-nowrap">
+            {settings.watermarkText}
+          </p>
+        </div>
+      )}
     </div>
   );
 }

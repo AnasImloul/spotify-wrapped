@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import { X, ChevronLeft, ChevronRight, Download } from 'lucide-react';
+import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useStoryData, useSwipeNavigation } from '@/hooks';
 import { TopArtistCard } from './cards/TopArtistCard';
@@ -9,7 +9,7 @@ import { ListeningStreakCard } from './cards/ListeningStreakCard';
 import { DiscoveryCard } from './cards/DiscoveryCard';
 import { TimeOfDayCard } from './cards/TimeOfDayCard';
 import { SummaryCard } from './cards/SummaryCard';
-import { exportElementAsImage } from '@/lib/export';
+import { ShareMenu } from './ShareMenu';
 import { cn } from '@/lib/utils';
 
 interface StoryModeProps {
@@ -18,7 +18,6 @@ interface StoryModeProps {
 
 export function StoryMode({ onClose }: StoryModeProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isExporting, setIsExporting] = useState(false);
   const storyData = useStoryData();
 
   const totalCards = 7; // Number of story cards
@@ -48,42 +47,29 @@ export function StoryMode({ onClose }: StoryModeProps) {
     return () => window.removeEventListener('keydown', handleEscape);
   }, [onClose]);
 
-  // Export current card as image
-  const handleExport = async () => {
-    if (isExporting || !storyData) return;
-
-    setIsExporting(true);
-    try {
-      const cardIds = [
-        'story-top-artist',
-        'story-top-track',
-        'story-total-time',
-        'story-streak',
-        'story-discovery',
-        'story-time-of-day',
-        'story-summary',
-      ];
-
-      const currentCardId = cardIds[currentIndex];
-      const element = document.getElementById(currentCardId);
-
-      if (element) {
-        await exportElementAsImage(
-          element,
-          `spotify-wrapped-${currentCardId}.png`,
-          { scale: 2, format: 'png' }
-        );
-      }
-    } catch (error) {
-      console.error('Failed to export image:', error);
-    } finally {
-      setIsExporting(false);
-    }
-  };
-
   if (!storyData) {
     return null;
   }
+
+  const cardIds = [
+    'story-top-artist',
+    'story-top-track',
+    'story-total-time',
+    'story-streak',
+    'story-discovery',
+    'story-time-of-day',
+    'story-summary',
+  ];
+
+  const cardNames = [
+    'Top Artist',
+    'Top Track',
+    'Total Time',
+    'Listening Streak',
+    'Discovery',
+    'Time of Day',
+    'Summary',
+  ];
 
   const cards = [
     storyData.topArtist && (
@@ -161,15 +147,14 @@ export function StoryMode({ onClose }: StoryModeProps) {
 
           {/* Top controls */}
           <div className="absolute top-4 right-4 z-20 flex gap-2">
-            <Button
+            <ShareMenu
+              elementId={cardIds[currentIndex]}
+              cardName={cardNames[currentIndex]}
+              storyData={storyData}
               variant="ghost"
               size="icon"
-              onClick={handleExport}
-              disabled={isExporting}
               className="bg-black/30 backdrop-blur-sm hover:bg-black/50 text-white border border-white/20"
-            >
-              <Download className="w-5 h-5" />
-            </Button>
+            />
             <Button
               variant="ghost"
               size="icon"
