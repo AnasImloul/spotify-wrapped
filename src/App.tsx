@@ -1,10 +1,21 @@
 import { useState, useEffect } from 'react';
 import { MainContent } from './components/MainContent';
 import { StoryMode } from './components/StoryMode';
+import { SharedAnalyticsView } from './components/SharedAnalyticsView';
 import { SpotifyDataProvider, DateRangeProvider, FilterProvider, BrandingProvider } from './contexts';
+import { getSharedDataFromUrl } from './lib/urlSharing';
 
 function AppContent() {
   const [showStoryMode, setShowStoryMode] = useState(false);
+  const [showSharedView, setShowSharedView] = useState(false);
+
+  // Check for shared data on mount
+  useEffect(() => {
+    const sharedData = getSharedDataFromUrl();
+    if (sharedData) {
+      setShowSharedView(true);
+    }
+  }, []);
 
   // Prevent body scrolling when Story Mode is active
   useEffect(() => {
@@ -17,6 +28,11 @@ function AppContent() {
       document.body.style.overflow = '';
     };
   }, [showStoryMode]);
+
+  // Show shared analytics view if URL contains shared data
+  if (showSharedView) {
+    return <SharedAnalyticsView onClose={() => setShowSharedView(false)} />;
+  }
 
   // When Story Mode is active, only render Story Mode (no parent wrapper)
   if (showStoryMode) {
