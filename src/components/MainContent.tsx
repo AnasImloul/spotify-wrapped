@@ -27,7 +27,7 @@ interface MainContentProps {
 }
 
 export function MainContent({ onShowStoryMode }: MainContentProps) {
-  const { stats } = useSpotifyData();
+  const { stats, isProcessing } = useSpotifyData();
   const { minDate, maxDate } = useDateRange();
   const { sortBy, setSortBy } = useFilterSettings();
   const [tourActive, setTourActive] = useState(false);
@@ -128,6 +128,22 @@ export function MainContent({ onShowStoryMode }: MainContentProps) {
 
         {/* File Upload */}
         <FileUpload />
+
+        {/* Loading State */}
+        {isProcessing && (
+          <div className="glass-card rounded-xl p-8 border border-green-500/30">
+            <div className="flex flex-col items-center justify-center space-y-4">
+              <div className="relative">
+                <div className="w-16 h-16 border-4 border-green-500/30 border-t-green-500 rounded-full animate-spin" />
+                <Music2 className="w-8 h-8 text-green-400 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+              </div>
+              <div className="text-center space-y-2">
+                <p className="text-lg font-semibold text-white">Processing your music data...</p>
+                <p className="text-sm text-white/60">This may take a moment depending on your listening history</p>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Date Range Selector */}
         {stats && minDate && maxDate && (

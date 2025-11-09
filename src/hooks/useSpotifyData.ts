@@ -10,6 +10,7 @@ export function useSpotifyData() {
     uploadedFiles: context.uploadedFiles,
     streamingHistory: context.streamingHistory,
     stats: context.stats,
+    isProcessing: context.isProcessing,
     handleFilesProcessed: context.handleFilesProcessed,
     clearData: context.clearData,
   };

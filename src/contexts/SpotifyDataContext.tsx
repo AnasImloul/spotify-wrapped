@@ -7,6 +7,7 @@ interface SpotifyDataContextType {
   uploadedFiles: UploadedFile[];
   streamingHistory: StreamingHistoryEntry[];
   stats: ProcessedStats | null;
+  isProcessing: boolean;
   handleFilesProcessed: (files: UploadedFile[]) => void;
   clearData: () => void;
 }
@@ -21,6 +22,7 @@ export function SpotifyDataProvider({ children }: SpotifyDataProviderProps) {
   const { startDate, endDate, updateDateRangeFromFiles } = useDateRangeContext();
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
   const [streamingHistory, setStreamingHistory] = useState<StreamingHistoryEntry[]>([]);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const handleFilesProcessed = (files: UploadedFile[]) => {
     setUploadedFiles(files);
@@ -36,10 +38,16 @@ export function SpotifyDataProvider({ children }: SpotifyDataProviderProps) {
   // Extract streaming history only when files change (not on date range change)
   useEffect(() => {
     if (uploadedFiles.length > 0) {
-      const history = getStreamingHistoryFromFiles(uploadedFiles);
-      setStreamingHistory(history);
+      setIsProcessing(true);
+      // Use setTimeout to allow UI to update before heavy processing
+      setTimeout(() => {
+        const history = getStreamingHistoryFromFiles(uploadedFiles);
+        setStreamingHistory(history);
+        setIsProcessing(false);
+      }, 0);
     } else {
       setStreamingHistory([]);
+      setIsProcessing(false);
     }
   }, [uploadedFiles]);
 
@@ -99,6 +107,7 @@ export function SpotifyDataProvider({ children }: SpotifyDataProviderProps) {
         uploadedFiles,
         streamingHistory,
         stats,
+        isProcessing,
         handleFilesProcessed,
         clearData,
       }}
