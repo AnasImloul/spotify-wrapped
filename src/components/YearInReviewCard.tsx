@@ -45,19 +45,72 @@ export function YearInReviewCard() {
 
   const handleDownload = async () => {
     const element = document.getElementById('year-in-review-card');
-    if (!element) return;
+    if (!element) {
+      console.error('Element not found');
+      return;
+    }
 
     try {
+      // Find the gradient text element and temporarily replace it with solid color
+      const gradientText = element.querySelector('.bg-clip-text');
+      let originalClasses = '';
+      
+      if (gradientText) {
+        originalClasses = gradientText.className;
+        // Replace gradient classes with solid green color
+        gradientText.className = gradientText.className
+          .replace('bg-gradient-to-r', '')
+          .replace('from-green-400', '')
+          .replace('to-blue-500', '')
+          .replace('bg-clip-text', '')
+          .replace('text-transparent', '')
+          .trim() + ' text-green-400';
+      }
+
+      // Hide decorative blur elements during capture
+      const blurElements = element.querySelectorAll('.blur-3xl');
+      blurElements.forEach(el => (el as HTMLElement).style.display = 'none');
+
+      // Remove truncate class temporarily to prevent text cutoff
+      const truncateElements = element.querySelectorAll('.truncate');
+      const originalTruncateClasses: string[] = [];
+      truncateElements.forEach((el, index) => {
+        originalTruncateClasses[index] = el.className;
+        el.className = el.className.replace('truncate', '').trim();
+      });
+
       const canvas = await html2canvas(element, {
-        backgroundColor: '#0a0a0a',
+        backgroundColor: '#0f172a',
         scale: 2,
+        useCORS: true,
+        allowTaint: false,
         logging: false,
       });
 
-      const link = document.createElement('a');
-      link.download = `spotify-wrapped-${summary?.year}.png`;
-      link.href = canvas.toDataURL('image/png');
-      link.click();
+      // Restore original classes and elements
+      if (gradientText) {
+        gradientText.className = originalClasses;
+      }
+      blurElements.forEach(el => (el as HTMLElement).style.display = '');
+      truncateElements.forEach((el, index) => {
+        el.className = originalTruncateClasses[index];
+      });
+
+      canvas.toBlob((blob) => {
+        if (!blob) {
+          console.error('Failed to create blob');
+          return;
+        }
+        
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `spotify-wrapped-${summary?.year}.png`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      }, 'image/png');
     } catch (error) {
       console.error('Failed to download image:', error);
     }
@@ -68,10 +121,49 @@ export function YearInReviewCard() {
     if (!element) return;
 
     try {
+      // Find the gradient text element and temporarily replace it with solid color
+      const gradientText = element.querySelector('.bg-clip-text');
+      let originalClasses = '';
+      
+      if (gradientText) {
+        originalClasses = gradientText.className;
+        // Replace gradient classes with solid green color
+        gradientText.className = gradientText.className
+          .replace('bg-gradient-to-r', '')
+          .replace('from-green-400', '')
+          .replace('to-blue-500', '')
+          .replace('bg-clip-text', '')
+          .replace('text-transparent', '')
+          .trim() + ' text-green-400';
+      }
+
+      // Hide decorative blur elements during capture
+      const blurElements = element.querySelectorAll('.blur-3xl');
+      blurElements.forEach(el => (el as HTMLElement).style.display = 'none');
+
+      // Remove truncate class temporarily to prevent text cutoff
+      const truncateElements = element.querySelectorAll('.truncate');
+      const originalTruncateClasses: string[] = [];
+      truncateElements.forEach((el, index) => {
+        originalTruncateClasses[index] = el.className;
+        el.className = el.className.replace('truncate', '').trim();
+      });
+
       const canvas = await html2canvas(element, {
-        backgroundColor: '#0a0a0a',
+        backgroundColor: '#0f172a',
         scale: 2,
+        useCORS: true,
+        allowTaint: false,
         logging: false,
+      });
+
+      // Restore original classes and elements
+      if (gradientText) {
+        gradientText.className = originalClasses;
+      }
+      blurElements.forEach(el => (el as HTMLElement).style.display = '');
+      truncateElements.forEach((el, index) => {
+        el.className = originalTruncateClasses[index];
       });
 
       canvas.toBlob(async (blob) => {
@@ -91,7 +183,7 @@ export function YearInReviewCard() {
           // Fallback to download
           handleDownload();
         }
-      });
+      }, 'image/png');
     } catch (error) {
       console.error('Failed to share:', error);
     }
@@ -135,7 +227,7 @@ export function YearInReviewCard() {
               {/* Total Time */}
               <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
                 <Clock className="w-8 h-8 text-green-400 mb-3" />
-                <p className="text-4xl font-bold text-white mb-1">
+                <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-1">
                   {formatNumber(summary.totalHours)}
                 </p>
                 <p className="text-sm text-white/60">Hours Listened</p>
@@ -144,7 +236,7 @@ export function YearInReviewCard() {
               {/* Total Tracks */}
               <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
                 <Music className="w-8 h-8 text-blue-400 mb-3" />
-                <p className="text-4xl font-bold text-white mb-1">
+                <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-1">
                   {formatNumber(summary.totalTracks)}
                 </p>
                 <p className="text-sm text-white/60">Different Songs</p>
@@ -153,7 +245,7 @@ export function YearInReviewCard() {
               {/* Total Artists */}
               <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
                 <Headphones className="w-8 h-8 text-purple-400 mb-3" />
-                <p className="text-4xl font-bold text-white mb-1">
+                <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-1">
                   {formatNumber(summary.totalArtists)}
                 </p>
                 <p className="text-sm text-white/60">Artists Explored</p>
@@ -162,7 +254,7 @@ export function YearInReviewCard() {
               {/* Daily Average */}
               <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
                 <Sparkles className="w-8 h-8 text-yellow-400 mb-3" />
-                <p className="text-4xl font-bold text-white mb-1">
+                <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-1">
                   {summary.avgDaily}
                 </p>
                 <p className="text-sm text-white/60">Min Per Day</p>

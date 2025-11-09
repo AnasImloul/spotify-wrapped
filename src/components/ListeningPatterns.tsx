@@ -50,14 +50,14 @@ export function ListeningPatterns() {
 
   // Data for average comparison chart
   const avgComparisonData = [
-    { name: 'Avg Weekday', minutes: avgWeekdayMinutes, color: '#1db954' },
+    { name: 'Avg Weekday', minutes: avgWeekdayMinutes, color: '#16a34a' },
     { name: 'Avg Weekend Day', minutes: avgWeekendMinutes, color: '#3b82f6' },
   ];
 
   // Data for time of day chart (averages per day)
   const timeOfDayData = [
-    { name: 'Morning\n(6AM-12PM)', shortName: 'Morning', minutes: avgMorningMinutes, color: '#1db954' },
-    { name: 'Afternoon\n(12PM-6PM)', shortName: 'Afternoon', minutes: avgAfternoonMinutes, color: '#1ed760' },
+    { name: 'Morning\n(6AM-12PM)', shortName: 'Morning', minutes: avgMorningMinutes, color: '#16a34a' },
+    { name: 'Afternoon\n(12PM-6PM)', shortName: 'Afternoon', minutes: avgAfternoonMinutes, color: '#10b981' },
     { name: 'Evening\n(6PM-12AM)', shortName: 'Evening', minutes: avgEveningMinutes, color: '#3b82f6' },
     { name: 'Late Night\n(12AM-6AM)', shortName: 'Late Night', minutes: avgLateNightMinutes, color: '#2563eb' },
   ];

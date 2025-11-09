@@ -209,7 +209,7 @@ export function MoodEnergyAnalysis() {
         {/* Dominant Profile */}
         <div className={`bg-gradient-to-br ${profile.color === 'text-yellow-400' ? 'from-yellow-500/20 to-orange-500/20' : profile.color === 'text-orange-400' ? 'from-orange-500/20 to-red-500/20' : profile.color === 'text-purple-400' ? 'from-purple-500/20 to-pink-500/20' : 'from-green-500/20 to-emerald-500/20'} rounded-xl p-6 border-2 ${profile.color === 'text-yellow-400' ? 'border-yellow-500/40' : profile.color === 'text-orange-400' ? 'border-orange-500/40' : profile.color === 'text-purple-400' ? 'border-purple-500/40' : 'border-green-500/40'}`}>
           <div className="flex items-center gap-4 mb-3">
-            <div className={`w-12 h-12 rounded-full bg-gradient-to-br ${profile.color === 'text-yellow-400' ? 'from-yellow-500 to-orange-500' : profile.color === 'text-orange-400' ? 'from-orange-500 to-red-500' : profile.color === 'text-purple-400' ? 'from-purple-500 to-pink-500' : 'from-green-500 to-emerald-500'} flex items-center justify-center shadow-lg`}>
+            <div className={`w-12 h-12 flex-shrink-0 rounded-full bg-gradient-to-br ${profile.color === 'text-yellow-400' ? 'from-yellow-500 to-orange-500' : profile.color === 'text-orange-400' ? 'from-orange-500 to-red-500' : profile.color === 'text-purple-400' ? 'from-purple-500 to-pink-500' : 'from-green-500 to-emerald-500'} flex items-center justify-center shadow-lg`}>
               <ProfileIcon className="w-6 h-6 text-white" />
             </div>
             <div>
