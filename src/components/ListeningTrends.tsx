@@ -13,7 +13,7 @@ import { useFilteredStats } from '@/hooks';
 
 export function ListeningTrends() {
   const stats = useFilteredStats();
-  
+
   if (!stats || !stats.listeningByMonth || stats.listeningByMonth.length === 0) {
     return null;
   }

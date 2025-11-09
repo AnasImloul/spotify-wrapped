@@ -3,10 +3,12 @@ import { FileUpload } from './components/FileUpload';
 import { DateRangeSelector } from './components/DateRangeSelector';
 import { StatsOverview } from './components/StatsOverview';
 import { TopItems } from './components/TopItems';
-import { ListeningTrends } from './components/ListeningTrends';
+import { ListeningHeatmap } from './components/ListeningHeatmap';
+import { MonthlyTrends } from './components/MonthlyTrends';
+import { ListeningPatterns } from './components/ListeningPatterns';
 import { StoryMode } from './components/StoryMode';
 import { ExportMenu } from './components/ExportMenu';
-import { Music2, BarChart3, Trophy, TrendingUp, Sparkles } from 'lucide-react';
+import { Music2, BarChart3, Trophy, Sparkles, Activity } from 'lucide-react';
 import { SpotifyDataProvider, DateRangeProvider, FilterProvider } from './contexts';
 import { useSpotifyData, useDateRange, useFilterSettings } from './hooks';
 import { Button } from './components/ui/button';
@@ -138,18 +140,21 @@ function AppContent() {
               </>
             )}
 
-            {stats.listeningByMonth && stats.listeningByMonth.length > 0 && (
-              <>
-                <div className="h-px bg-gradient-to-r from-transparent via-green-500/50 to-transparent" />
-                <div>
-                  <h3 className="text-3xl font-bold text-white mb-6 flex items-center gap-3">
-                    <TrendingUp className="w-8 h-8 text-green-400" />
-                    Your Listening Journey
-                  </h3>
-                  <ListeningTrends />
+            {/* Advanced Analytics Section */}
+            <>
+              <div className="h-px bg-gradient-to-r from-transparent via-green-500/50 to-transparent" />
+              <div>
+                <h3 className="text-3xl font-bold text-white mb-6 flex items-center gap-3">
+                  <Activity className="w-8 h-8 text-green-400" />
+                  Advanced Analytics
+                </h3>
+                <div className="space-y-8">
+                  <MonthlyTrends />
+                  <ListeningHeatmap />
+                  <ListeningPatterns />
                 </div>
-              </>
-            )}
+              </div>
+            </>
           </div>
         )}
 

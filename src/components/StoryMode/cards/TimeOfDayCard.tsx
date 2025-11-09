@@ -49,41 +49,41 @@ export function TimeOfDayCard({ timeOfDay, peakHour }: TimeOfDayCardProps) {
 
   return (
     <StoryCard gradient={config.gradient} exportId="story-time-of-day">
-      <div className="flex flex-col items-center text-center space-y-4 sm:space-y-6 lg:space-y-8 xl:space-y-10 px-4">
+      <div className="flex flex-col items-center text-center space-y-4 sm:space-y-6 px-4">
         {/* Icon */}
         <div className="relative">
           <div className={`absolute inset-0 bg-${timeOfDay === 'night' ? 'indigo' : 'orange'}-500/30 blur-3xl rounded-full`} />
-          <div className={`relative bg-gradient-to-br from-${timeOfDay === 'night' ? 'indigo' : 'yellow'}-400 to-${timeOfDay === 'night' ? 'purple' : 'orange'}-600 p-4 sm:p-6 lg:p-8 xl:p-10 rounded-full`}>
-            <Icon className="w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 xl:w-24 xl:h-24 text-white" />
+          <div className={`relative bg-gradient-to-br from-${timeOfDay === 'night' ? 'indigo' : 'yellow'}-400 to-${timeOfDay === 'night' ? 'purple' : 'orange'}-600 p-4 sm:p-6 rounded-full`}>
+            <Icon className="w-12 h-12 sm:w-16 sm:h-16 text-white" />
           </div>
         </div>
 
         {/* Label */}
         <div className="space-y-1 sm:space-y-2">
-          <p className={`${config.color} text-base sm:text-lg lg:text-xl xl:text-2xl font-medium tracking-wide uppercase`}>
+          <p className={`${config.color} text-base sm:text-lg font-medium tracking-wide uppercase`}>
             Your Listening Time
           </p>
-          <div className={`w-16 sm:w-20 lg:w-24 xl:w-28 h-0.5 sm:h-1 bg-gradient-to-r from-transparent via-${timeOfDay === 'night' ? 'indigo' : 'orange'}-400 to-transparent mx-auto`} />
+          <div className={`w-16 sm:w-20 h-0.5 sm:h-1 bg-gradient-to-r from-transparent via-${timeOfDay === 'night' ? 'indigo' : 'orange'}-400 to-transparent mx-auto`} />
         </div>
 
         {/* Time of day */}
-        <div className="space-y-2 sm:space-y-3 lg:space-y-4">
-          <h1 className="text-3xl sm:text-4xl lg:text-6xl xl:text-7xl font-bold text-white">
+        <div className="space-y-2 sm:space-y-3">
+          <h1 className="text-3xl sm:text-4xl font-bold text-white">
             {config.label}
           </h1>
         </div>
 
         {/* Peak hour */}
         <div className="space-y-2 sm:space-y-3">
-          <p className="text-white/70 text-base sm:text-lg lg:text-xl xl:text-2xl">Peak listening at</p>
-          <p className={`text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold ${config.color}`}>
+          <p className="text-white/70 text-base sm:text-lg">Peak listening at</p>
+          <p className={`text-3xl sm:text-4xl font-bold ${config.color}`}>
             {formatHour(peakHour)}
           </p>
         </div>
 
         {/* Description */}
-        <div className="px-4 sm:px-6 lg:px-8 xl:px-10 py-3 sm:py-4 lg:py-5 xl:py-6 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 max-w-md lg:max-w-lg xl:max-w-xl">
-          <p className={`${config.color} text-sm sm:text-base lg:text-lg xl:text-xl font-semibold`}>
+        <div className="px-4 sm:px-6 py-3 sm:py-4 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 max-w-md">
+          <p className={`${config.color} text-sm sm:text-base font-semibold`}>
             {config.description}
           </p>
         </div>

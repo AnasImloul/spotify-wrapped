@@ -136,7 +136,7 @@ export function StoryMode({ onClose }: StoryModeProps) {
         className="absolute inset-0 flex items-center justify-center"
       >
         {/* Card wrapper with responsive sizing - wider on desktop */}
-        <div className="relative w-full max-w-md md:max-w-lg lg:max-w-xl h-full sm:h-[90vh] md:h-[85vh] lg:h-[80vh] sm:rounded-3xl overflow-hidden shadow-2xl">
+        <div className="relative w-full max-w-[360px] md:max-w-[440px] lg:max-w-[500px] h-full sm:h-[90vh] md:h-[85vh] lg:h-[80vh] sm:rounded-3xl overflow-hidden shadow-2xl">
           {/* Current card */}
           <div className="w-full h-full">{cards[currentIndex]}</div>
 

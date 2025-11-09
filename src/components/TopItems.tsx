@@ -134,7 +134,7 @@ export function TopItems() {
   }, [trackPage]);
 
   return (
-    <div className="grid grid-cols-1 gap-6">
+    <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
       {/* Top Artists */}
       <Card className="overflow-hidden border-green-500/30">
         <CardHeader className="bg-gradient-to-r from-green-500/20 to-green-600/20 border-b border-green-500/20 space-y-3">
@@ -373,8 +373,8 @@ export function TopItems() {
                       </TableCell>
                       <TableCell className="font-medium max-w-[200px] text-white group-hover:text-green-300 transition-colors">
                         <div className="flex items-center gap-2">
-                          <span className="truncate">{track.name}</span>
-                          <TrendingUp className="w-4 h-4 text-blue-400/60 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
+                        <span className="truncate">{track.name}</span>
+                        <TrendingUp className="w-4 h-4 text-blue-400/60 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
                         </div>
                       </TableCell>
                       <TableCell className="text-sm text-white/60 max-w-[150px] truncate">

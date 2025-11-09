@@ -5,6 +5,27 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+export type TimeUnit = 'minutes' | 'hours';
+
+/**
+ * Format minutes into a human-readable string
+ * @param minutes - Total minutes
+ * @param unit - Display unit ('minutes' or 'hours')
+ */
+export function formatMinutes(minutes: number, unit: TimeUnit = 'minutes'): string {
+  if (unit === 'hours') {
+    const hours = Math.floor(minutes / 60);
+    const mins = Math.round(minutes % 60);
+    if (hours > 0) {
+      return mins > 0 ? `${formatNumber(hours)}h ${mins}m` : `${formatNumber(hours)}h`;
+    }
+    return `${mins}m`;
+  }
+  
+  // Default: minutes
+  return `${formatNumber(Math.round(minutes))} min`;
+}
+
 export function formatDuration(ms: number): string {
   const seconds = Math.floor(ms / 1000);
   const minutes = Math.floor(seconds / 60);
