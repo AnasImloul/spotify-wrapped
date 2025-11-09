@@ -150,39 +150,35 @@ export function FileUpload({ onSampleDataLoaded }: FileUploadProps = {}) {
           <p className="text-muted-foreground text-center mb-6 max-w-md">
             Upload <span className="font-mono">StreamingHistory_music_*.json</span> (standard) <strong>OR</strong> <span className="font-mono">Streaming_History_Audio_*.json</span> (extended) files from your Spotify data export. <span className="text-yellow-400 text-xs block mt-2">Warning: Do not mix both types to avoid duplicate data</span>
           </p>
-          <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-            <Button asChild variant="default" size="lg" className="flex-1 sm:flex-initial">
-              <label className="cursor-pointer">
-                <Upload className="mr-2 h-5 w-5" />
-                Choose Files
-                <input
-                  type="file"
-                  multiple
-                  accept=".json"
-                  onChange={handleFileInput}
-                  className="hidden"
-                />
-              </label>
-            </Button>
-            <Button
+          <div className="flex flex-row gap-3 justify-center items-center">
+            <label className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-11 px-6 cursor-pointer">
+              <Upload className="mr-2 h-5 w-5 flex-shrink-0" />
+              Choose Files
+              <input
+                type="file"
+                multiple
+                accept=".json"
+                onChange={handleFileInput}
+                className="hidden"
+              />
+            </label>
+            <button
               onClick={handleLoadSampleData}
-              variant="outline"
-              size="lg"
               disabled={loadingSample || uploadedFiles.length > 0}
-              className="flex-1 sm:flex-initial border-green-500/30 text-green-400 hover:bg-green-500/10"
+              className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-green-500/30 bg-background hover:bg-green-500/10 text-green-400 h-11 px-6"
             >
               {loadingSample ? (
                 <>
-                  <Sparkles className="mr-2 h-5 w-5 animate-spin" />
+                  <Sparkles className="mr-2 h-5 w-5 flex-shrink-0 animate-spin" />
                   Loading...
                 </>
               ) : (
                 <>
-                  <Play className="mr-2 h-5 w-5" />
-                  Try Sample Data
+                  <Play className="mr-2 h-5 w-5 flex-shrink-0" />
+                  Try Sample
                 </>
               )}
-            </Button>
+            </button>
           </div>
         </CardContent>
       </Card>
