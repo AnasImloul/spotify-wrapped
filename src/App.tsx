@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { MainContent } from './components/MainContent';
 import { StoryMode } from './components/StoryMode';
 import { SharedAnalyticsView } from './components/SharedAnalyticsView';
-import { SpotifyDataProvider, DateRangeProvider, FilterProvider, BrandingProvider } from './contexts';
+import { PWAInstallPrompt } from './components/PWAInstallPrompt';
+import { SpotifyDataProvider, DateRangeProvider, FilterProvider, BrandingProvider, ThemeProvider } from './contexts';
 import { getCompactDataFromUrl } from './lib/binaryEncoding';
 
 function AppContent() {
@@ -49,15 +50,20 @@ function AppContent() {
 
 function App() {
   return (
-    <DateRangeProvider>
-      <FilterProvider>
-        <SpotifyDataProvider>
-          <BrandingProvider>
-            <AppContent />
-          </BrandingProvider>
-        </SpotifyDataProvider>
-      </FilterProvider>
-    </DateRangeProvider>
+    <>
+      <PWAInstallPrompt />
+      <ThemeProvider>
+        <DateRangeProvider>
+          <FilterProvider>
+            <SpotifyDataProvider>
+              <BrandingProvider>
+                <AppContent />
+              </BrandingProvider>
+            </SpotifyDataProvider>
+          </FilterProvider>
+        </DateRangeProvider>
+      </ThemeProvider>
+    </>
   );
 }
 

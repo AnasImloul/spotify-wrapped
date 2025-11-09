@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { FileUpload } from './FileUpload';
 import { DateRangeSelector } from './DateRangeSelector';
 import { StatsOverview } from './StatsOverview';
@@ -5,11 +6,14 @@ import { TopItems } from './TopItems';
 import { ListeningHeatmap } from './ListeningHeatmap';
 import { MonthlyTrends } from './MonthlyTrends';
 import { ListeningPatterns } from './ListeningPatterns';
-import { ExportMenu } from './ExportMenu';
-import { ShareableLink } from './ShareableLink';
+import { ShareExportMenu } from './ShareExportMenu';
+import { WelcomeModal } from './WelcomeModal';
+import { OnboardingTour, mainTourSteps } from './OnboardingTour';
+import { ThemeToggle } from './ThemeToggle';
 import { Music2, BarChart3, Trophy, Sparkles, Activity } from 'lucide-react';
 import { useSpotifyData, useDateRange, useFilterSettings } from '@/hooks';
 import { Button } from './ui/button';
+import { isFeatureEnabled } from '@/lib/featureFlags';
 
 interface MainContentProps {
   onShowStoryMode: () => void;
@@ -19,9 +23,41 @@ export function MainContent({ onShowStoryMode }: MainContentProps) {
   const { stats } = useSpotifyData();
   const { minDate, maxDate } = useDateRange();
   const { sortBy, setSortBy } = useFilterSettings();
+  const [tourActive, setTourActive] = useState(false);
+
+  const handleStartTour = () => {
+    setTourActive(true);
+  };
+
+  const handleCompleteTour = () => {
+    setTourActive(false);
+    localStorage.setItem('tourCompleted', 'true');
+  };
+
+  const handleSkipTour = () => {
+    setTourActive(false);
+    localStorage.setItem('tourCompleted', 'true');
+  };
 
   return (
     <>
+      {/* Welcome Modal */}
+      <WelcomeModal
+        onClose={() => {}}
+        onTrySample={() => {
+          // Sample data loading is handled by FileUpload component
+        }}
+        onStartTour={handleStartTour}
+      />
+
+      {/* Onboarding Tour */}
+      <OnboardingTour
+        steps={mainTourSteps}
+        isActive={tourActive}
+        onComplete={handleCompleteTour}
+        onSkip={handleSkipTour}
+      />
+
       {/* Header */}
       <header className="border-b border-white/10 bg-black/20 backdrop-blur-lg sticky top-0 z-50">
         <div className="container mx-auto px-4 py-3 sm:py-4">
@@ -43,16 +79,21 @@ export function MainContent({ onShowStoryMode }: MainContentProps) {
             {/* Header Actions */}
             {stats && (
               <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
-                <ShareableLink size="sm" className="hidden md:flex" showIcon={true} />
+                {isFeatureEnabled('THEME_TOGGLE') && <ThemeToggle />}
+                <ShareExportMenu 
+                  variant="ghost" 
+                  size="sm" 
+                  className="text-white/80 hover:text-white hover:bg-white/10"
+                />
                 <Button
                   onClick={onShowStoryMode}
                   size="sm"
-                  className="bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-white border-0 px-2 sm:px-4"
+                  className="bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-white border-0 px-2 sm:px-4 shadow-lg shadow-green-500/20"
+                  data-tour="story-mode-button"
                 >
                   <Sparkles className="w-4 h-4 sm:mr-2" />
                   <span className="hidden sm:inline">Story</span>
                 </Button>
-                <ExportMenu variant="outline" size="sm" className="px-2 sm:px-4" />
               </div>
             )}
           </div>
@@ -81,7 +122,9 @@ export function MainContent({ onShowStoryMode }: MainContentProps) {
         {/* Date Range Selector */}
         {stats && minDate && maxDate && (
           <>
-            <DateRangeSelector />
+            <div data-tour="date-range">
+              <DateRangeSelector />
+            </div>
             
             {/* Global Sorting Selector */}
             <div>
@@ -121,7 +164,7 @@ export function MainContent({ onShowStoryMode }: MainContentProps) {
           <div className="space-y-12 animate-fade-in">
             <div className="h-px bg-gradient-to-r from-transparent via-green-500/50 to-transparent" />
             
-            <div>
+            <div data-tour="stats-overview">
               <h3 className="text-3xl font-bold text-white mb-6 flex items-center gap-3">
                 <BarChart3 className="w-8 h-8 text-green-400" />
                 Your Statistics
@@ -132,7 +175,7 @@ export function MainContent({ onShowStoryMode }: MainContentProps) {
             {(stats.topArtists.length > 0 || stats.topTracks.length > 0) && (
               <>
                 <div className="h-px bg-gradient-to-r from-transparent via-green-500/50 to-transparent" />
-                <div>
+                <div data-tour="top-items">
                   <h3 className="text-3xl font-bold text-white mb-6 flex items-center gap-3">
                     <Trophy className="w-8 h-8 text-green-400" />
                     Hall of Fame

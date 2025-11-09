@@ -1,15 +1,21 @@
 import React, { useCallback, useState } from 'react';
-import { Upload, FileJson, X } from 'lucide-react';
+import { Upload, FileJson, X, Play, Sparkles } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { detectFileType, UploadedFile } from '@/lib/dataProcessor';
 import { cn } from '@/lib/utils';
 import { useSpotifyData } from '@/hooks';
+import { getSampleDataAsFile, markSampleDataAsUsed } from '@/lib/sampleData';
 
-export function FileUpload() {
+interface FileUploadProps {
+  onSampleDataLoaded?: () => void;
+}
+
+export function FileUpload({ onSampleDataLoaded }: FileUploadProps = {}) {
   const { uploadedFiles, handleFilesProcessed } = useSpotifyData();
   const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [loadingSample, setLoadingSample] = useState(false);
 
   const handleDrag = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -96,8 +102,29 @@ export function FileUpload() {
     handleFilesProcessed(newFiles);
   };
 
+  const handleLoadSampleData = () => {
+    setError(null);
+    setLoadingSample(true);
+    
+    // Simulate loading delay for better UX
+    setTimeout(() => {
+      try {
+        const sampleFile = getSampleDataAsFile();
+        handleFilesProcessed([sampleFile]);
+        markSampleDataAsUsed();
+        if (onSampleDataLoaded) {
+          onSampleDataLoaded();
+        }
+      } catch (err) {
+        setError('Failed to load sample data. Please try again.');
+      } finally {
+        setLoadingSample(false);
+      }
+    }, 500);
+  };
+
   return (
-    <div className="w-full space-y-4">
+    <div className="w-full space-y-4" data-tour="file-upload">
       <Card
         className={cn(
           'border-2 border-dashed transition-all duration-200',
@@ -123,8 +150,8 @@ export function FileUpload() {
           <p className="text-muted-foreground text-center mb-6 max-w-md">
             Upload <span className="font-mono">StreamingHistory_music_*.json</span> (standard) <strong>OR</strong> <span className="font-mono">Streaming_History_Audio_*.json</span> (extended) files from your Spotify data export. <span className="text-yellow-400 text-xs block mt-2">Warning: Do not mix both types to avoid duplicate data</span>
           </p>
-          <div className="flex gap-4">
-            <Button asChild variant="default" size="lg">
+          <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+            <Button asChild variant="default" size="lg" className="flex-1 sm:flex-initial">
               <label className="cursor-pointer">
                 <Upload className="mr-2 h-5 w-5" />
                 Choose Files
@@ -136,6 +163,25 @@ export function FileUpload() {
                   className="hidden"
                 />
               </label>
+            </Button>
+            <Button
+              onClick={handleLoadSampleData}
+              variant="outline"
+              size="lg"
+              disabled={loadingSample || uploadedFiles.length > 0}
+              className="flex-1 sm:flex-initial border-green-500/30 text-green-400 hover:bg-green-500/10"
+            >
+              {loadingSample ? (
+                <>
+                  <Sparkles className="mr-2 h-5 w-5 animate-spin" />
+                  Loading...
+                </>
+              ) : (
+                <>
+                  <Play className="mr-2 h-5 w-5" />
+                  Try Sample Data
+                </>
+              )}
             </Button>
           </div>
         </CardContent>
