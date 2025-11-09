@@ -99,7 +99,7 @@ export function MonthlyTrends() {
           <ResponsiveContainer width="100%" height="100%">
             <LineChart
               data={trendsData}
-              margin={{ top: 5, right: 10, left: 0, bottom: 5 }}
+              margin={{ top: 5, right: 10, left: timeUnit === 'minutes' ? 10 : 0, bottom: 5 }}
             >
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
               <XAxis
@@ -113,14 +113,28 @@ export function MonthlyTrends() {
               />
               <YAxis
                 stroke="rgba(255,255,255,0.6)"
-                tick={{ fill: 'rgba(255,255,255,0.6)', fontSize: 12 }}
+                tick={{ fill: 'rgba(255,255,255,0.6)', fontSize: 11 }}
+                width={timeUnit === 'minutes' ? 55 : 45}
                 label={{
                   value: timeUnit === 'hours' ? 'Hours' : 'Minutes',
                   angle: -90,
                   position: 'insideLeft',
-                  style: { fill: 'rgba(255,255,255,0.6)', fontSize: 14 },
+                  style: { fill: 'rgba(255,255,255,0.6)', fontSize: 12 },
+                  offset: timeUnit === 'minutes' ? 10 : 0,
                 }}
-                tickFormatter={(value) => timeUnit === 'hours' ? `${formatNumber(Math.round(value / 60))}h` : `${formatNumber(Math.round(value))}m`}
+                tickFormatter={(value) => {
+                  if (timeUnit === 'hours') {
+                    return `${formatNumber(Math.round(value / 60))}h`;
+                  }
+                  // Compact format for large numbers
+                  const rounded = Math.round(value);
+                  if (rounded >= 10000) {
+                    return `${(rounded / 1000).toFixed(0)}k`;
+                  } else if (rounded >= 1000) {
+                    return `${(rounded / 1000).toFixed(1)}k`;
+                  }
+                  return `${rounded}`;
+                }}
               />
               <Tooltip content={<CustomTooltip />} />
               <Line

@@ -145,7 +145,7 @@ export function ListeningPatterns() {
 
           <div className="h-[200px]">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={avgComparisonData} margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
+              <BarChart data={avgComparisonData} margin={{ top: 20, right: 20, bottom: 20, left: timeUnit === 'minutes' ? 10 : 20 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
                 <XAxis
                   dataKey="name"
@@ -154,8 +154,21 @@ export function ListeningPatterns() {
                 />
                 <YAxis
                   stroke="rgba(255,255,255,0.6)"
-                  tick={{ fill: 'rgba(255,255,255,0.6)', fontSize: 12 }}
-                  tickFormatter={(value) => timeUnit === 'hours' ? `${formatNumber(Math.round(value / 60))}h` : `${formatNumber(Math.round(value))}m`}
+                  tick={{ fill: 'rgba(255,255,255,0.6)', fontSize: 11 }}
+                  width={timeUnit === 'minutes' ? 50 : 40}
+                  tickFormatter={(value) => {
+                    if (timeUnit === 'hours') {
+                      return `${formatNumber(Math.round(value / 60))}h`;
+                    }
+                    // Compact format for large numbers
+                    const rounded = Math.round(value);
+                    if (rounded >= 10000) {
+                      return `${(rounded / 1000).toFixed(0)}k`;
+                    } else if (rounded >= 1000) {
+                      return `${(rounded / 1000).toFixed(1)}k`;
+                    }
+                    return `${rounded}`;
+                  }}
                 />
                 <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(255,255,255,0.1)' }} />
                 <Bar dataKey="minutes" radius={[8, 8, 0, 0]}>
@@ -217,7 +230,7 @@ export function ListeningPatterns() {
           
           <div className="h-[250px]">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={timeOfDayData} margin={{ top: 20, right: 20, bottom: 40, left: 20 }}>
+              <BarChart data={timeOfDayData} margin={{ top: 20, right: 20, bottom: 40, left: timeUnit === 'minutes' ? 10 : 20 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
                 <XAxis
                   dataKey="name"
@@ -227,8 +240,21 @@ export function ListeningPatterns() {
                 />
                 <YAxis
                   stroke="rgba(255,255,255,0.6)"
-                  tick={{ fill: 'rgba(255,255,255,0.6)', fontSize: 12 }}
-                  tickFormatter={(value) => timeUnit === 'hours' ? `${formatNumber(Math.round(value / 60))}h` : `${formatNumber(Math.round(value))}m`}
+                  tick={{ fill: 'rgba(255,255,255,0.6)', fontSize: 11 }}
+                  width={timeUnit === 'minutes' ? 50 : 40}
+                  tickFormatter={(value) => {
+                    if (timeUnit === 'hours') {
+                      return `${formatNumber(Math.round(value / 60))}h`;
+                    }
+                    // Compact format for large numbers
+                    const rounded = Math.round(value);
+                    if (rounded >= 10000) {
+                      return `${(rounded / 1000).toFixed(0)}k`;
+                    } else if (rounded >= 1000) {
+                      return `${(rounded / 1000).toFixed(1)}k`;
+                    }
+                    return `${rounded}`;
+                  }}
                 />
                 <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(255,255,255,0.1)' }} />
                 <Bar dataKey="minutes" radius={[8, 8, 0, 0]}>
