@@ -3,7 +3,7 @@ import { X, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { getSharedDataFromUrl, clearShareFromUrl, type ShareableData } from '@/lib/urlSharing';
+import { getCompactDataFromUrl, expandCompactData } from '@/lib/binaryEncoding';
 import { formatNumber } from '@/lib/utils';
 
 interface SharedAnalyticsViewProps {
@@ -11,12 +11,15 @@ interface SharedAnalyticsViewProps {
 }
 
 export function SharedAnalyticsView({ onClose }: SharedAnalyticsViewProps) {
-  const [sharedData, setSharedData] = useState<ShareableData | null>(null);
+  const [sharedData, setSharedData] = useState<ReturnType<typeof expandCompactData> | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const data = getSharedDataFromUrl();
-    setSharedData(data);
+    const compactData = getCompactDataFromUrl();
+    if (compactData) {
+      const expanded = expandCompactData(compactData);
+      setSharedData(expanded);
+    }
     setLoading(false);
   }, []);
 
@@ -33,12 +36,18 @@ export function SharedAnalyticsView({ onClose }: SharedAnalyticsViewProps) {
   }
 
   const handleClose = () => {
-    clearShareFromUrl();
+    // Clear URL parameter
+    const url = new URL(window.location.href);
+    url.searchParams.delete('share');
+    window.history.replaceState({}, '', url.toString());
     onClose();
   };
 
   const handleGetOwn = () => {
-    clearShareFromUrl();
+    // Clear URL parameter and reload
+    const url = new URL(window.location.href);
+    url.searchParams.delete('share');
+    window.history.replaceState({}, '', url.toString());
     window.location.reload();
   };
 
@@ -73,7 +82,7 @@ export function SharedAnalyticsView({ onClose }: SharedAnalyticsViewProps) {
             <CardHeader className="pb-3">
               <CardDescription className="text-white/60">Total Listening Time</CardDescription>
               <CardTitle className="text-3xl text-green-400">
-                {formatNumber(Math.round(sharedData.s.tt))}h
+                {formatNumber(Math.round(sharedData.stats.totalListeningTime))}h
               </CardTitle>
             </CardHeader>
           </Card>
@@ -82,7 +91,7 @@ export function SharedAnalyticsView({ onClose }: SharedAnalyticsViewProps) {
             <CardHeader className="pb-3">
               <CardDescription className="text-white/60">Tracks Played</CardDescription>
               <CardTitle className="text-3xl text-blue-400">
-                {formatNumber(sharedData.s.tc)}
+                {formatNumber(sharedData.stats.totalTracks)}
               </CardTitle>
             </CardHeader>
           </Card>
@@ -91,7 +100,7 @@ export function SharedAnalyticsView({ onClose }: SharedAnalyticsViewProps) {
             <CardHeader className="pb-3">
               <CardDescription className="text-white/60">Artists Explored</CardDescription>
               <CardTitle className="text-3xl text-purple-400">
-                {formatNumber(sharedData.s.ua)}
+                {formatNumber(sharedData.stats.uniqueArtists)}
               </CardTitle>
             </CardHeader>
           </Card>
@@ -100,14 +109,14 @@ export function SharedAnalyticsView({ onClose }: SharedAnalyticsViewProps) {
             <CardHeader className="pb-3">
               <CardDescription className="text-white/60">Avg per Day</CardDescription>
               <CardTitle className="text-3xl text-orange-400">
-                {formatNumber(Math.round(sharedData.s.ad))}m
+                {formatNumber(Math.round(sharedData.stats.averageListeningPerDay))}m
               </CardTitle>
             </CardHeader>
           </Card>
         </div>
 
         {/* Top Artists */}
-        {sharedData.a && sharedData.a.length > 0 && (
+        {sharedData.topArtists && sharedData.topArtists.length > 0 && (
           <Card className="bg-black/40 border-white/10">
             <CardHeader>
               <CardTitle className="text-2xl text-white flex items-center gap-2">
@@ -119,7 +128,7 @@ export function SharedAnalyticsView({ onClose }: SharedAnalyticsViewProps) {
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                {sharedData.a.map((artist, index) => (
+                {sharedData.topArtists.map((artist, index) => (
                   <div
                     key={index}
                     className="flex items-center justify-between p-4 bg-white/5 rounded-lg border border-white/10 hover:bg-white/10 transition-colors"
@@ -129,14 +138,14 @@ export function SharedAnalyticsView({ onClose }: SharedAnalyticsViewProps) {
                         {index + 1}
                       </div>
                       <div className="min-w-0 flex-1">
-                        <p className="font-semibold text-white truncate">{artist.n}</p>
+                        <p className="font-semibold text-white truncate">{artist.name}</p>
                         <p className="text-sm text-white/60">
-                          {formatNumber(artist.p)} plays
+                          {formatNumber(artist.playCount)} plays
                         </p>
                       </div>
                     </div>
                     <Badge variant="secondary" className="flex-shrink-0">
-                      {formatNumber(artist.m)} min
+                      {formatNumber(artist.minutes)} min
                     </Badge>
                   </div>
                 ))}
@@ -146,7 +155,7 @@ export function SharedAnalyticsView({ onClose }: SharedAnalyticsViewProps) {
         )}
 
         {/* Top Tracks */}
-        {sharedData.t && sharedData.t.length > 0 && (
+        {sharedData.topTracks && sharedData.topTracks.length > 0 && (
           <Card className="bg-black/40 border-white/10">
             <CardHeader>
               <CardTitle className="text-2xl text-white flex items-center gap-2">
@@ -158,7 +167,7 @@ export function SharedAnalyticsView({ onClose }: SharedAnalyticsViewProps) {
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                {sharedData.t.map((track, index) => (
+                {sharedData.topTracks.map((track, index) => (
                   <div
                     key={index}
                     className="flex items-center justify-between p-4 bg-white/5 rounded-lg border border-white/10 hover:bg-white/10 transition-colors"
@@ -168,16 +177,16 @@ export function SharedAnalyticsView({ onClose }: SharedAnalyticsViewProps) {
                         {index + 1}
                       </div>
                       <div className="min-w-0 flex-1">
-                        <p className="font-semibold text-white truncate">{track.n}</p>
-                        <p className="text-sm text-white/60 truncate">{track.a}</p>
+                        <p className="font-semibold text-white truncate">{track.name}</p>
+                        <p className="text-sm text-white/60 truncate">{track.artist}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-3 flex-shrink-0">
                       <span className="text-sm text-white/40 hidden sm:inline">
-                        {formatNumber(track.p)} plays
+                        {formatNumber(track.playCount)} plays
                       </span>
                       <Badge variant="secondary">
-                        {formatNumber(track.m)} min
+                        {formatNumber(track.minutes)} min
                       </Badge>
                     </div>
                   </div>

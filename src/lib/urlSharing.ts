@@ -57,7 +57,7 @@ export function encodeDataToUrl(stats: ProcessedStats, topArtists: any[], topTra
     },
     a: topArtists.slice(0, 10).map((artist) => ({
       n: artist.name,
-      m: Math.round(artist.totalTime / 60), // Convert totalTime (seconds) to minutes
+      m: Math.round(artist.totalTime / 60000), // Convert totalTime (ms) to minutes
       p: artist.playCount,
     })),
     t: topTracks.slice(0, 10).map((track) => ({

@@ -3,7 +3,7 @@ import { MainContent } from './components/MainContent';
 import { StoryMode } from './components/StoryMode';
 import { SharedAnalyticsView } from './components/SharedAnalyticsView';
 import { SpotifyDataProvider, DateRangeProvider, FilterProvider, BrandingProvider } from './contexts';
-import { getSharedDataFromUrl } from './lib/urlSharing';
+import { getCompactDataFromUrl } from './lib/binaryEncoding';
 
 function AppContent() {
   const [showStoryMode, setShowStoryMode] = useState(false);
@@ -11,7 +11,7 @@ function AppContent() {
 
   // Check for shared data on mount
   useEffect(() => {
-    const sharedData = getSharedDataFromUrl();
+    const sharedData = getCompactDataFromUrl();
     if (sharedData) {
       setShowSharedView(true);
     }

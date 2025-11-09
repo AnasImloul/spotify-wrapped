@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, Copy, Check, AlertCircle, ExternalLink } from 'lucide-react';
+import { Link, Copy, Check, AlertCircle, ExternalLink, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -11,7 +11,13 @@ import {
 } from '@/components/ui/dialog';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useSpotifyData, useSortedArtists, useSortedTracks } from '@/hooks';
-import { generateShareableUrl, isUrlSizeSafe, generateUrlShareText } from '@/lib/urlSharing';
+import {
+  encodeAnalyticsToUrl,
+  generateCompactShareUrl,
+  isUrlSizeSafe,
+  generateSummaryText,
+  getCompactDataFromUrl,
+} from '@/lib/binaryEncoding';
 import { copyTextToClipboard } from '@/lib/social';
 
 interface ShareableLinkProps {
@@ -37,41 +43,32 @@ export function ShareableLink({
 
   if (!stats) return null;
 
-  // Generate URL
-  const { url, size: urlSize, encoded } = generateShareableUrl(
+  // Generate compact binary-encoded URL
+  const encoded = encodeAnalyticsToUrl(
     stats,
     sortedArtists.slice(0, 10),
     sortedTracks.slice(0, 10)
   );
-
-  const isSafe = isUrlSizeSafe(url);
+  const url = generateCompactShareUrl(encoded);
+  const isSafe = isUrlSizeSafe(encoded);
 
   // Generate shareable text
-  const shareText = generateUrlShareText({
-    v: 1,
-    s: {
-      tt: stats.totalListeningTime,
-      tc: stats.totalTracks,
-      ta: stats.totalArtists,
-      ut: stats.totalTracks,
-      ua: stats.totalArtists,
-      ad: stats.averageListeningPerDay,
-      mpd: stats.mostActiveDay,
-      mpa: stats.mostActiveDayMinutes,
-    },
-    a: sortedArtists.slice(0, 10).map((a) => ({
-      n: a.name,
-      m: Math.round(a.totalTime / 60),
-      p: a.playCount,
-    })),
-    t: sortedTracks.slice(0, 10).map((t) => ({
-      n: t.name,
-      a: t.artist,
-      m: Math.round(t.totalMs / 60000),
-      p: t.playCount,
-    })),
-    dr: undefined,
-  });
+  const compactData = getCompactDataFromUrl() || {
+    v: 2,
+    s: [
+      stats.totalListeningTime,
+      stats.totalTracks,
+      stats.totalArtists,
+      stats.totalTracks,
+      stats.totalArtists,
+      stats.averageListeningPerDay,
+      stats.mostActiveDay,
+      stats.mostActiveDayMinutes,
+    ],
+    a: sortedArtists.slice(0, 10).map((a) => [a.name, Math.round(a.totalTime / 60000), a.playCount]),
+    t: sortedTracks.slice(0, 10).map((t) => [t.name, t.artist, Math.round(t.totalMs / 60000), t.playCount]),
+  };
+  const shareText = generateSummaryText(compactData as any);
 
   const handleCopyUrl = async () => {
     try {
@@ -122,10 +119,18 @@ export function ShareableLink({
             <Alert variant="destructive">
               <AlertCircle className="h-4 w-4" />
               <AlertDescription>
-                Warning: This URL is {urlSize} characters long and may not work in all browsers. Consider sharing fewer items or using the image/PDF export instead.
+                Warning: This URL is {url.length} characters long and may not work in all browsers. Consider sharing fewer items or using the image/PDF export instead.
               </AlertDescription>
             </Alert>
           )}
+
+          {/* Binary Encoding Info */}
+          <Alert className="bg-green-500/10 border-green-500/20">
+            <Zap className="h-4 w-4 text-green-500" />
+            <AlertDescription className="text-green-400">
+              Using MessagePack binary encoding (40-50% smaller than JSON)
+            </AlertDescription>
+          </Alert>
 
           {/* URL Display */}
           <div className="space-y-2">
@@ -148,7 +153,7 @@ export function ShareableLink({
               </Button>
             </div>
             <p className="text-xs text-muted-foreground">
-              URL Length: {urlSize} characters {isSafe ? '✓ Safe' : '⚠️ May be too long'}
+              URL Length: {url.length} characters {isSafe ? '✓ Safe' : '⚠️ May be too long'}
             </p>
           </div>
 
@@ -188,10 +193,9 @@ export function ShareableLink({
             <summary className="cursor-pointer hover:text-foreground">Technical Details</summary>
             <div className="mt-2 space-y-1 pl-4">
               <p>• Includes: Top 10 artists, top 10 tracks, and overall statistics</p>
-              <p>• Compression: Pako (deflate algorithm)</p>
+              <p>• Compression: MessagePack + Pako (deflate)</p>
               <p>• Encoding: Base64 URL-safe</p>
               <p>• Data Size: {encoded.length} characters (compressed)</p>
-              <p>• Original Data: ~{Math.round((urlSize / encoded.length) * 100)}% of compressed size</p>
             </div>
           </details>
         </div>
