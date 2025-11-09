@@ -6,6 +6,7 @@ import { ListeningHeatmap } from './ListeningHeatmap';
 import { MonthlyTrends } from './MonthlyTrends';
 import { ListeningPatterns } from './ListeningPatterns';
 import { ExportMenu } from './ExportMenu';
+import { ShareableLink } from './ShareableLink';
 import { Music2, BarChart3, Trophy, Sparkles, Activity } from 'lucide-react';
 import { useSpotifyData, useDateRange, useFilterSettings } from '@/hooks';
 import { Button } from './ui/button';
@@ -42,6 +43,7 @@ export function MainContent({ onShowStoryMode }: MainContentProps) {
             {/* Header Actions */}
             {stats && (
               <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
+                <ShareableLink size="sm" className="hidden md:flex" showIcon={true} />
                 <Button
                   onClick={onShowStoryMode}
                   size="sm"
