@@ -148,8 +148,8 @@ export function generateShareableUrl(
   topTracks: any[]
 ): { url: string; size: number; encoded: string } {
   const encoded = encodeDataToUrl(stats, topArtists, topTracks);
-  const baseUrl = window.location.origin + window.location.pathname;
-  const url = `${baseUrl}?share=${encoded}`;
+  const baseUrl = window.location.origin;
+  const url = `${baseUrl}/share?share=${encoded}`;
 
   return {
     url,

@@ -103,8 +103,8 @@ export function decodeAnalyticsFromUrl(encoded: string): CompactShareData | null
  * Generate a shareable URL with compact binary encoding
  */
 export function generateCompactShareUrl(encoded: string): string {
-  const baseUrl = window.location.origin + window.location.pathname;
-  return `${baseUrl}?share=${encoded}`;
+  const baseUrl = window.location.origin;
+  return `${baseUrl}/share?share=${encoded}`;
 }
 
 /**
