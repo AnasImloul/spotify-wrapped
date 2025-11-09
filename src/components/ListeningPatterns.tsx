@@ -56,11 +56,37 @@ export function ListeningPatterns() {
 
   // Data for time of day chart (averages per day)
   const timeOfDayData = [
-    { name: 'Morning\n(6AM-12PM)', minutes: avgMorningMinutes, color: '#1db954' },
-    { name: 'Afternoon\n(12PM-6PM)', minutes: avgAfternoonMinutes, color: '#1ed760' },
-    { name: 'Evening\n(6PM-12AM)', minutes: avgEveningMinutes, color: '#3b82f6' },
-    { name: 'Late Night\n(12AM-6AM)', minutes: avgLateNightMinutes, color: '#2563eb' },
+    { name: 'Morning\n(6AM-12PM)', shortName: 'Morning', minutes: avgMorningMinutes, color: '#1db954' },
+    { name: 'Afternoon\n(12PM-6PM)', shortName: 'Afternoon', minutes: avgAfternoonMinutes, color: '#1ed760' },
+    { name: 'Evening\n(6PM-12AM)', shortName: 'Evening', minutes: avgEveningMinutes, color: '#3b82f6' },
+    { name: 'Late Night\n(12AM-6AM)', shortName: 'Late Night', minutes: avgLateNightMinutes, color: '#2563eb' },
   ];
+
+  // Custom X-axis tick for responsive labels
+  const CustomXAxisTick = ({ x, y, payload }: any) => {
+    const isMobile = window.innerWidth < 640; // sm breakpoint
+    const entry = timeOfDayData.find(d => d.name === payload.value);
+    const displayText = isMobile && entry ? entry.shortName : payload.value;
+    
+    return (
+      <g transform={`translate(${x},${y})`}>
+        <text
+          x={0}
+          y={0}
+          dy={10}
+          textAnchor="middle"
+          fill="rgba(255,255,255,0.6)"
+          fontSize={isMobile ? 10 : 11}
+        >
+          {displayText.split('\n').map((line: string, index: number) => (
+            <tspan x={0} dy={index === 0 ? 0 : 12} key={index}>
+              {line}
+            </tspan>
+          ))}
+        </text>
+      </g>
+    );
+  };
 
   // Custom tooltip
   const CustomTooltip = ({ active, payload }: any) => {
@@ -237,7 +263,7 @@ export function ListeningPatterns() {
                 <XAxis
                   dataKey="name"
                   stroke="rgba(255,255,255,0.6)"
-                  tick={{ fill: 'rgba(255,255,255,0.6)', fontSize: 11 }}
+                  tick={<CustomXAxisTick />}
                   interval={0}
                 />
                 <YAxis
