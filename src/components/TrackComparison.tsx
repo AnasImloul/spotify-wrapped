@@ -14,7 +14,6 @@ import {
   Legend,
 } from 'recharts';
 import { StreamingHistoryEntry } from '@/types/spotify';
-import { sortTracks } from '@/lib/sorting';
 import { msToMinutes, formatNumber } from '@/lib/utils';
 
 interface TrackComparisonProps {
@@ -91,9 +90,9 @@ export function TrackComparison({
       track => !selectedTracks.some(t => t.name === track.name && t.artist === track.artist)
     );
 
-    // If no search term, return sorted by the centralized sorting logic (by time)
+    // If no search term, return already-sorted list (respects global sortBy setting)
     if (!searchTerm.trim()) {
-      return sortTracks(unselectedTracks).slice(0, 20);
+      return unselectedTracks.slice(0, 20);
     }
 
     // Use fuzzy search

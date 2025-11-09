@@ -14,7 +14,6 @@ import {
   Legend,
 } from 'recharts';
 import { StreamingHistoryEntry } from '@/types/spotify';
-import { sortArtists } from '@/lib/sorting';
 import { msToMinutes, formatNumber } from '@/lib/utils';
 
 interface ArtistComparisonProps {
@@ -85,9 +84,9 @@ export function ArtistComparison({
       artist => !selectedArtists.includes(artist.name)
     );
 
-    // If no search term, return sorted by the centralized sorting logic (by time)
+    // If no search term, return already-sorted list (respects global sortBy setting)
     if (!searchTerm.trim()) {
-      return sortArtists(unselectedArtists).slice(0, 20);
+      return unselectedArtists.slice(0, 20);
     }
 
     // Use fuzzy search
