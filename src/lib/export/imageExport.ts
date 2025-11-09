@@ -20,6 +20,8 @@ export async function elementToCanvas(
     useCORS: true,
     allowTaint: true,
     logging: false,
+    foreignObjectRendering: true, // Better gradient text rendering
+    imageTimeout: 0,
   });
 }
 
