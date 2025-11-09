@@ -156,7 +156,16 @@ export function expandCompactData(compact: CompactShareData): {
 /**
  * Get compact analytics data from current URL
  */
-export function getCompactDataFromUrl(): CompactShareData | null {
+/**
+ * Get compact data from URL (supports both query param and path param)
+ */
+export function getCompactDataFromUrl(encodedId?: string): CompactShareData | null {
+  // If encoded ID is provided directly, use it
+  if (encodedId) {
+    return decodeAnalyticsFromUrl(encodedId);
+  }
+  
+  // Otherwise, check query params for backward compatibility
   const params = new URLSearchParams(window.location.search);
   const shareParam = params.get('share');
 

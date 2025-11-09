@@ -5,37 +5,24 @@ import { StoryMode } from './components/StoryMode';
 import { SharedAnalyticsView } from './components/SharedAnalyticsView';
 import { PWAInstallPrompt } from './components/PWAInstallPrompt';
 import { SpotifyDataProvider, DateRangeProvider, FilterProvider, BrandingProvider, ThemeProvider } from './contexts';
-import { getCompactDataFromUrl } from './lib/binaryEncoding';
 
 function SharedViewWrapper() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-  // Redirect if no ID in URL
-  useEffect(() => {
-    if (!id) {
-      navigate('/', { replace: true });
-    }
-  }, [id, navigate]);
+  if (!id) {
+    navigate('/', { replace: true });
+    return null;
+  }
 
-  // Create a temporary URL with the ID as query param for the existing decoder
-  useEffect(() => {
-    if (id) {
-      // Temporarily set the search params for the existing decoder
-      const url = new URL(window.location.href);
-      url.searchParams.set('share', id);
-      window.history.replaceState({}, '', url.pathname + url.search);
-    }
-  }, [id]);
-
-  return <SharedAnalyticsView onClose={() => navigate('/')} />;
+  return <SharedAnalyticsView onClose={() => navigate('/')} shareId={id} />;
 }
 
 function AppRoutes() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Check for old-style query param and redirect to new route
+  // Redirect old query param format to new path format for backward compatibility
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const shareId = params.get('share');

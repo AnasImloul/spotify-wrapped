@@ -8,20 +8,21 @@ import { formatNumber } from '@/lib/utils';
 
 interface SharedAnalyticsViewProps {
   onClose: () => void;
+  shareId?: string;
 }
 
-export function SharedAnalyticsView({ onClose }: SharedAnalyticsViewProps) {
+export function SharedAnalyticsView({ onClose, shareId }: SharedAnalyticsViewProps) {
   const [sharedData, setSharedData] = useState<ReturnType<typeof expandCompactData> | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const compactData = getCompactDataFromUrl();
+    const compactData = getCompactDataFromUrl(shareId);
     if (compactData) {
       const expanded = expandCompactData(compactData);
       setSharedData(expanded);
     }
     setLoading(false);
-  }, []);
+  }, [shareId]);
 
   if (loading) {
     return (
