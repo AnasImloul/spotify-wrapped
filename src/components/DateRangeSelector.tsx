@@ -2,9 +2,35 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Calendar } from 'lucide-react';
 import { MonthPicker } from './MonthPicker';
 import { useDateRange } from '@/hooks';
+import { useMemo } from 'react';
 
 export function DateRangeSelector() {
   const { startDate, endDate, minDate, maxDate, setStartDate, setEndDate, resetToCurrentYear } = useDateRange();
+  
+  // Get available years from the data range
+  const availableYears = useMemo(() => {
+    if (!minDate || !maxDate) return [];
+    
+    const minYear = parseInt(minDate.split('-')[0]);
+    const maxYear = parseInt(maxDate.split('-')[0]);
+    
+    const years: number[] = [];
+    for (let year = maxYear; year >= minYear; year--) {
+      years.push(year);
+    }
+    return years;
+  }, [minDate, maxDate]);
+  
+  const selectYear = (year: number) => {
+    setStartDate(`${year}-01`);
+    setEndDate(`${year}-12`);
+  };
+  
+  // Check if a specific year is currently selected
+  const isYearSelected = (year: number) => {
+    return startDate === `${year}-01` && endDate === `${year}-12`;
+  };
+  
   return (
     <Card className="border-green-500/30 bg-black/40 overflow-visible relative z-10">
       <CardContent className="p-4 sm:p-6 overflow-visible">
@@ -13,6 +39,38 @@ export function DateRangeSelector() {
             <Calendar className="w-5 h-5 text-green-400 flex-shrink-0" />
             <span className="font-semibold text-sm sm:text-base">Filter by Date Range:</span>
           </div>
+          
+          {/* Year shortcuts */}
+          {availableYears.length > 0 && (
+            <div className="flex flex-col gap-2">
+              <p className="text-xs text-white/60">Quick select:</p>
+              <div className="flex flex-wrap gap-2">
+                {availableYears.map((year) => (
+                  <button
+                    key={year}
+                    onClick={() => selectYear(year)}
+                    className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 ${
+                      isYearSelected(year)
+                        ? 'bg-gradient-to-r from-green-500 to-green-600 text-white border border-green-400 shadow-lg shadow-green-500/20'
+                        : 'bg-white/5 text-white/70 border border-white/10 hover:bg-white/10 hover:text-white hover:border-white/20'
+                    }`}
+                  >
+                    {year}
+                  </button>
+                ))}
+                <button
+                  onClick={resetToCurrentYear}
+                  className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 ${
+                    startDate === minDate && endDate === maxDate
+                      ? 'bg-gradient-to-r from-green-500 to-green-600 text-white border border-green-400 shadow-lg shadow-green-500/20'
+                      : 'bg-white/5 text-white/70 border border-white/10 hover:bg-white/10 hover:text-white hover:border-white/20'
+                  }`}
+                >
+                  All Years
+                </button>
+              </div>
+            </div>
+          )}
           
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full">
             <MonthPicker
@@ -31,13 +89,6 @@ export function DateRangeSelector() {
               label="To"
             />
           </div>
-
-          <button
-            onClick={resetToCurrentYear}
-            className="w-full sm:w-auto px-4 py-2.5 rounded-lg bg-gradient-to-r from-green-500/20 to-green-600/20 border border-green-500/30 text-green-300 hover:bg-gradient-to-r hover:from-green-500/30 hover:to-green-600/30 hover:border-green-500/40 transition-all duration-200 text-sm font-medium shadow-lg shadow-green-500/10"
-          >
-            Reset to Full Range
-          </button>
         </div>
         
         <p className="text-xs text-white/40 mt-4 flex items-start sm:items-center gap-2">
