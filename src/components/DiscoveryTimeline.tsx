@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -10,8 +10,9 @@ import { cn } from '@/lib/utils';
 // CONFIGURABLE THRESHOLDS - Easy to adjust
 const DISCOVERY_CONFIG = {
   MIN_WEEKS_DURATION: 4,        // Minimum weeks to track (4 weeks = 1 month)
-  MIN_PLAYS_PER_WEEK: 1,        // Minimum plays per week
+  MIN_PLAYS_PER_WEEK: 3,        // Minimum plays per week
   MIN_TOTAL_PLAYS: 5,           // Minimum total plays in the period
+  MIN_STREAM_DURATION_MS: 60000, // Minimum stream duration (60000ms = 1 minute)
 };
 
 interface DiscoveryItem {
@@ -27,7 +28,8 @@ interface DiscoveryItem {
 export function DiscoveryTimeline() {
   const { streamingHistory, stats } = useSpotifyData();
   const [expandedMonths, setExpandedMonths] = useState<Set<string>>(new Set());
-  const [showType, setShowType] = useState<'all' | 'artists' | 'tracks'>('all');
+  const [showType, setShowType] = useState<'artists' | 'tracks'>('artists');
+  const [selectedYear, setSelectedYear] = useState<string>('all');
 
   const discoveryData = useMemo(() => {
     if (!streamingHistory || streamingHistory.length === 0) return [];
@@ -47,6 +49,11 @@ export function DiscoveryTimeline() {
     );
 
     sortedHistory.forEach(entry => {
+      // Only consider streams that meet minimum duration
+      if (entry.msPlayed < DISCOVERY_CONFIG.MIN_STREAM_DURATION_MS) {
+        return; // Skip this entry
+      }
+
       const artistKey = `artist:${entry.artistName}`;
       const trackKey = `track:${entry.trackName}|||${entry.artistName}`;
       const date = new Date(entry.endTime);
@@ -120,15 +127,35 @@ export function DiscoveryTimeline() {
     return qualifiedItems.sort((a, b) => b.firstPlayed.getTime() - a.firstPlayed.getTime());
   }, [streamingHistory]);
 
-  // Group by month
+  // Get available years from discovery data
+  const availableYears = useMemo(() => {
+    const years = new Set<string>();
+    discoveryData.forEach(item => {
+      years.add(item.firstPlayed.getFullYear().toString());
+    });
+    return Array.from(years).sort((a, b) => parseInt(b) - parseInt(a));
+  }, [discoveryData]);
+
+  // Set default year to current year if available
+  useEffect(() => {
+    const currentYear = new Date().getFullYear().toString();
+    if (availableYears.length > 0 && selectedYear === 'all') {
+      const defaultYear = availableYears.includes(currentYear) ? currentYear : availableYears[0];
+      setSelectedYear(defaultYear);
+    }
+  }, [availableYears]);
+
+  // Group by month and filter by year
   const groupedByMonth = useMemo(() => {
     const grouped = new Map<string, DiscoveryItem[]>();
 
     discoveryData
       .filter(item => {
-        if (showType === 'all') return true;
-        if (showType === 'artists') return item.type === 'artist';
-        return item.type === 'track';
+        // Filter by type
+        const typeMatch = showType === 'artists' ? item.type === 'artist' : item.type === 'track';
+        // Filter by year
+        const yearMatch = selectedYear === 'all' || item.firstPlayed.getFullYear().toString() === selectedYear;
+        return typeMatch && yearMatch;
       })
       .forEach(item => {
         if (!grouped.has(item.monthYear)) {
@@ -137,13 +164,35 @@ export function DiscoveryTimeline() {
         grouped.get(item.monthYear)!.push(item);
       });
 
+    // Sort items within each month by play count (most played first)
+    grouped.forEach((items) => {
+      items.sort((a, b) => b.totalPlays - a.totalPlays);
+    });
+
     return Array.from(grouped.entries())
       .sort((a, b) => {
         const dateA = new Date(a[0]);
         const dateB = new Date(b[0]);
         return dateB.getTime() - dateA.getTime();
       });
-  }, [discoveryData, showType]);
+  }, [discoveryData, showType, selectedYear]);
+
+  // Calculate totals based on current filters
+  const totalArtists = useMemo(() => {
+    return discoveryData.filter(d => {
+      const typeMatch = d.type === 'artist';
+      const yearMatch = selectedYear === 'all' || d.firstPlayed.getFullYear().toString() === selectedYear;
+      return typeMatch && yearMatch;
+    }).length;
+  }, [discoveryData, selectedYear]);
+
+  const totalTracks = useMemo(() => {
+    return discoveryData.filter(d => {
+      const typeMatch = d.type === 'track';
+      const yearMatch = selectedYear === 'all' || d.firstPlayed.getFullYear().toString() === selectedYear;
+      return typeMatch && yearMatch;
+    }).length;
+  }, [discoveryData, selectedYear]);
 
   const toggleMonth = (monthYear: string) => {
     const newExpanded = new Set(expandedMonths);
@@ -164,7 +213,7 @@ export function DiscoveryTimeline() {
             Discovery Timeline
           </CardTitle>
           <CardDescription className="text-white/60">
-            Artists and tracks you listened to consistently (at least {DISCOVERY_CONFIG.MIN_PLAYS_PER_WEEK}x/week for {DISCOVERY_CONFIG.MIN_WEEKS_DURATION}+ weeks)
+            Artists and tracks you listened to consistently (at least {DISCOVERY_CONFIG.MIN_PLAYS_PER_WEEK}x/week for {DISCOVERY_CONFIG.MIN_WEEKS_DURATION}+ weeks, minimum {DISCOVERY_CONFIG.MIN_STREAM_DURATION_MS / 1000}s per stream)
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -178,9 +227,6 @@ export function DiscoveryTimeline() {
     );
   }
 
-  const totalArtists = discoveryData.filter(d => d.type === 'artist').length;
-  const totalTracks = discoveryData.filter(d => d.type === 'track').length;
-
   return (
     <Card className="bg-black/40 border-white/10">
       <CardHeader>
@@ -191,7 +237,7 @@ export function DiscoveryTimeline() {
               Discovery Timeline
             </CardTitle>
             <CardDescription className="text-white/60 mt-2">
-              Artists and tracks you listened to consistently (at least {DISCOVERY_CONFIG.MIN_PLAYS_PER_WEEK}x/week for {DISCOVERY_CONFIG.MIN_WEEKS_DURATION}+ weeks)
+              Artists and tracks you listened to consistently (at least {DISCOVERY_CONFIG.MIN_PLAYS_PER_WEEK}x/week for {DISCOVERY_CONFIG.MIN_WEEKS_DURATION}+ weeks, minimum {DISCOVERY_CONFIG.MIN_STREAM_DURATION_MS / 1000}s per stream)
             </CardDescription>
             <div className="flex gap-2 mt-3">
               <Badge variant="secondary" className="bg-gradient-to-r from-green-500/20 to-emerald-500/20 text-white border-green-500/30">
@@ -205,50 +251,74 @@ export function DiscoveryTimeline() {
             </div>
           </div>
 
-          {/* Type Filter */}
-          <div className="flex gap-2">
-            <Button
-              variant={showType === 'all' ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setShowType('all')}
-              className={cn(
-                'gap-2',
-                showType === 'all'
-                  ? 'bg-purple-500 hover:bg-purple-600 text-white'
-                  : 'text-white/70 hover:text-white border-white/20 hover:bg-white/10'
-              )}
-            >
-              <Sparkles className="h-4 w-4" />
-              All
-            </Button>
-            <Button
-              variant={showType === 'artists' ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setShowType('artists')}
-              className={cn(
-                'gap-2',
-                showType === 'artists'
-                  ? 'bg-green-500 hover:bg-green-600 text-white'
-                  : 'text-white/70 hover:text-white border-white/20 hover:bg-white/10'
-              )}
-            >
-              <Headphones className="h-4 w-4" />
-              Artists
-            </Button>
-            <Button
-              variant={showType === 'tracks' ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setShowType('tracks')}
-              className={cn(
-                'gap-2',
-                showType === 'tracks'
-                  ? 'bg-blue-500 hover:bg-blue-600 text-white'
-                  : 'text-white/70 hover:text-white border-white/20 hover:bg-white/10'
-              )}
-            >
-              <Music className="h-4 w-4" />
-              Tracks
-            </Button>
+          {/* Filters */}
+          <div className="flex gap-4 flex-wrap">
+            {/* Type Filter */}
+            <div className="flex gap-2">
+              <Button
+                variant={showType === 'artists' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setShowType('artists')}
+                className={cn(
+                  'gap-2',
+                  showType === 'artists'
+                    ? 'bg-green-500 hover:bg-green-600 text-white'
+                    : 'text-white/70 hover:text-white border-white/20 hover:bg-white/10'
+                )}
+              >
+                <Headphones className="h-4 w-4" />
+                Artists
+              </Button>
+              <Button
+                variant={showType === 'tracks' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setShowType('tracks')}
+                className={cn(
+                  'gap-2',
+                  showType === 'tracks'
+                    ? 'bg-blue-500 hover:bg-blue-600 text-white'
+                    : 'text-white/70 hover:text-white border-white/20 hover:bg-white/10'
+                )}
+              >
+                <Music className="h-4 w-4" />
+                Tracks
+              </Button>
+            </div>
+
+            {/* Year Filter */}
+            {availableYears.length > 1 && (
+              <div className="flex gap-2">
+                <Button
+                  variant={selectedYear === 'all' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setSelectedYear('all')}
+                  className={cn(
+                    'gap-2',
+                    selectedYear === 'all'
+                      ? 'bg-purple-500 hover:bg-purple-600 text-white'
+                      : 'text-white/70 hover:text-white border-white/20 hover:bg-white/10'
+                  )}
+                >
+                  <Calendar className="h-4 w-4" />
+                  All Years
+                </Button>
+                {availableYears.map(year => (
+                  <Button
+                    key={year}
+                    variant={selectedYear === year ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setSelectedYear(year)}
+                    className={cn(
+                      selectedYear === year
+                        ? 'bg-purple-500 hover:bg-purple-600 text-white'
+                        : 'text-white/70 hover:text-white border-white/20 hover:bg-white/10'
+                    )}
+                  >
+                    {year}
+                  </Button>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </CardHeader>
@@ -259,7 +329,7 @@ export function DiscoveryTimeline() {
             <p>No discoveries found in selected category</p>
           </div>
         ) : (
-          <div className="space-y-4 max-h-[600px] overflow-y-auto custom-scrollbar pr-2">
+          <div className="space-y-4 max-h-[600px] overflow-y-auto custom-scrollbar pr-2" style={{ paddingLeft: '5px' }}>
             {groupedByMonth.map(([monthYear, items]) => {
               const isExpanded = expandedMonths.has(monthYear);
               const displayItems = isExpanded ? items : items.slice(0, 5);
@@ -268,7 +338,7 @@ export function DiscoveryTimeline() {
               return (
                 <div
                   key={monthYear}
-                  className="border-l-2 border-purple-500/30 pl-6 relative"
+                  className="border-l-2 border-purple-500/30 pl-3 relative"
                 >
                   {/* Timeline dot */}
                   <div className="absolute left-0 top-1.5 w-3 h-3 bg-purple-500 rounded-full -translate-x-[7px] ring-4 ring-black/40" />
@@ -290,10 +360,10 @@ export function DiscoveryTimeline() {
                       <div
                         key={`${item.type}-${item.name}-${index}`}
                         className={cn(
-                          'rounded-lg p-3 border-2 transition-all duration-200 hover:scale-[1.02] cursor-pointer',
+                          'rounded-lg p-3 border-2 transition-all duration-200',
                           item.type === 'artist'
-                            ? 'bg-gradient-to-br from-green-500/10 to-emerald-600/10 border-green-500/20 hover:border-green-500/40'
-                            : 'bg-gradient-to-br from-blue-500/10 to-cyan-600/10 border-blue-500/20 hover:border-blue-500/40'
+                            ? 'bg-gradient-to-br from-green-500/10 to-emerald-600/10 border-green-500/20 hover:border-green-500/40 hover:bg-green-500/5'
+                            : 'bg-gradient-to-br from-blue-500/10 to-cyan-600/10 border-blue-500/20 hover:border-blue-500/40 hover:bg-blue-500/5'
                         )}
                       >
                         <div className="flex items-start justify-between gap-3">
