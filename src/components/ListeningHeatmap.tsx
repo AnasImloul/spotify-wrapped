@@ -335,55 +335,58 @@ export function ListeningHeatmap({ timeUnit = 'hours' }: ListeningHeatmapProps) 
                   </div>
                 </div>
 
-                <div className="flex gap-1 min-w-max">
-                  {/* Day labels */}
-                  <div className="flex flex-col gap-1 justify-start pt-5 flex-shrink-0">
-                    {['Mon', 'Wed', 'Fri'].map((day) => (
-                      <div
-                        key={day}
-                        className="h-3 flex items-center text-[10px] text-white/60"
-                        style={{ marginBottom: '6px' }}
-                      >
-                        {day}
-                      </div>
-                    ))}
-                  </div>
+                {/* Center wrapper */}
+                <div className="flex justify-center w-full">
+                  <div className="flex gap-1 min-w-max">
+                    {/* Day labels */}
+                    <div className="flex flex-col gap-1 justify-start pt-5 flex-shrink-0">
+                      {['Mon', 'Wed', 'Fri'].map((day) => (
+                        <div
+                          key={day}
+                          className="h-3 flex items-center text-[10px] text-white/60"
+                          style={{ marginBottom: '6px' }}
+                        >
+                          {day}
+                        </div>
+                      ))}
+                    </div>
 
-                  {/* Calendar grid - each column is a week */}
-                  <div className="flex gap-1">
-                    {calendarData.weeks.map((week, weekIndex) => (
-                      <div key={weekIndex} className="flex flex-col gap-1">
-                        {week.map((day, dayIndex) => {
-                          // Check if this is the first day of a month
-                          const isFirstOfMonth = day.date.getDate() === 1;
-                          const monthLabel = isFirstOfMonth ? MONTHS[day.date.getMonth()] : null;
-                          
-                          return (
-                            <div key={`${weekIndex}-${dayIndex}`} className="relative">
-                              {/* Month label above first day of month */}
-                              {dayIndex === 0 && monthLabel && (
-                                <div className="absolute -top-4 left-0 text-[10px] text-white/60 whitespace-nowrap">
-                                  {monthLabel}
-                                </div>
-                              )}
-                              <div
-                                className={`w-3 h-3 rounded-sm ${
-                                  day.dateKey ? getColor(day.minutes, calendarData.maxValue) : 'bg-transparent'
-                                } ${day.dateKey ? 'transition-all hover:scale-150 hover:z-50 hover:ring-1 hover:ring-white/50 cursor-pointer' : ''}`}
-                                onMouseEnter={day.dateKey ? (e) => handleMouseEnter(e, (
-                                  <>
-                                    {formatDate(day.date)}
-                                    <br />
-                                    {formatMinutes(day.minutes, timeUnit)}
-                                  </>
-                                )) : undefined}
-                                onMouseLeave={day.dateKey ? handleMouseLeave : undefined}
-                              />
-                            </div>
-                          );
-                        })}
-                      </div>
-                    ))}
+                    {/* Calendar grid - each column is a week */}
+                    <div className="flex gap-1">
+                      {calendarData.weeks.map((week, weekIndex) => (
+                        <div key={weekIndex} className="flex flex-col gap-1">
+                          {week.map((day, dayIndex) => {
+                            // Check if this is the first day of a month
+                            const isFirstOfMonth = day.date.getDate() === 1;
+                            const monthLabel = isFirstOfMonth ? MONTHS[day.date.getMonth()] : null;
+                            
+                            return (
+                              <div key={`${weekIndex}-${dayIndex}`} className="relative">
+                                {/* Month label above first day of month */}
+                                {dayIndex === 0 && monthLabel && (
+                                  <div className="absolute -top-4 left-0 text-[10px] text-white/60 whitespace-nowrap">
+                                    {monthLabel}
+                                  </div>
+                                )}
+                                <div
+                                  className={`w-3 h-3 rounded-sm ${
+                                    day.dateKey ? getColor(day.minutes, calendarData.maxValue) : 'bg-transparent'
+                                  } ${day.dateKey ? 'transition-all hover:scale-150 hover:z-50 hover:ring-1 hover:ring-white/50 cursor-pointer' : ''}`}
+                                  onMouseEnter={day.dateKey ? (e) => handleMouseEnter(e, (
+                                    <>
+                                      {formatDate(day.date)}
+                                      <br />
+                                      {formatMinutes(day.minutes, timeUnit)}
+                                    </>
+                                  )) : undefined}
+                                  onMouseLeave={day.dateKey ? handleMouseLeave : undefined}
+                                />
+                              </div>
+                            );
+                          })}
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
