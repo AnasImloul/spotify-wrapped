@@ -79,8 +79,8 @@ export function MonthlyTrends() {
               onClick={() => setTimeUnit('minutes')}
               className={timeUnit === 'minutes' ? 'bg-green-500 hover:bg-green-600' : ''}
             >
-              <Clock className="w-4 h-4 sm:mr-2" />
-              <span className="hidden sm:inline">Minutes</span>
+              <Clock className="w-4 h-4 mr-1 sm:mr-2" />
+              <span className="text-xs sm:text-sm">min</span>
             </Button>
             <Button
               variant={timeUnit === 'hours' ? 'default' : 'outline'}
@@ -88,8 +88,8 @@ export function MonthlyTrends() {
               onClick={() => setTimeUnit('hours')}
               className={timeUnit === 'hours' ? 'bg-green-500 hover:bg-green-600' : ''}
             >
-              <Clock className="w-4 h-4 sm:mr-2" />
-              <span className="hidden sm:inline">Hours</span>
+              <Clock className="w-4 h-4 mr-1 sm:mr-2" />
+              <span className="text-xs sm:text-sm">hr</span>
             </Button>
           </div>
         </div>
