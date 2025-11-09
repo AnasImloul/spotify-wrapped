@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, ReactNode, useMemo } from 'react';
 import { UploadedFile, ProcessedStats, StreamingHistoryEntry } from '@/types/spotify';
-import { parseUploadedFiles, getStreamingHistoryFromFiles } from '@/lib/dataProcessor';
+import { getStreamingHistoryFromFiles, processStreamingHistory } from '@/lib/dataProcessor';
 import { useDateRangeContext } from './DateRangeContext';
 
 interface SpotifyDataContextType {
@@ -74,7 +74,6 @@ export function SpotifyDataProvider({ children }: SpotifyDataProviderProps) {
     
     console.time('Stats calculation');
     // Process the already-filtered history
-    const { processStreamingHistory } = require('@/lib/dataProcessor');
     const processedStats = processStreamingHistory(filteredHistory, startDate, endDate);
     console.timeEnd('Stats calculation');
     
