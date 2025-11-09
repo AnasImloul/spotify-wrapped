@@ -38,41 +38,41 @@ export function SummaryCard({ totalTracks, uniqueArtists, uniqueTracks, dateRang
         </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3 md:gap-4 w-full">
-          <div className="space-y-2 sm:space-y-2.5 p-4 sm:p-5 md:p-6 bg-white/5 backdrop-blur-md rounded-xl border border-white/10">
+        <div className="grid grid-cols-3 gap-2 sm:gap-3 md:gap-4 w-full">
+          <div className="space-y-1.5 sm:space-y-2 md:space-y-2.5 p-3 sm:p-5 md:p-6 bg-white/5 backdrop-blur-md rounded-xl border border-white/10">
             <div className="flex justify-center">
-              <div className="bg-green-500/20 p-2 sm:p-2.5 md:p-3 rounded-full">
-                <Music className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-green-400" />
+              <div className="bg-green-500/20 p-1.5 sm:p-2.5 md:p-3 rounded-full">
+                <Music className="w-4 h-4 sm:w-6 sm:h-6 md:w-7 md:h-7 text-green-400" />
               </div>
             </div>
-            <p className="text-2xl sm:text-3xl md:text-4xl font-bold text-white whitespace-nowrap">
+            <p className="text-lg sm:text-3xl md:text-4xl font-bold text-white">
               {formatNumber(totalTracks)}
             </p>
-            <p className="text-white/60 text-xs sm:text-sm md:text-base uppercase tracking-wider">Songs Played</p>
+            <p className="text-white/60 text-[10px] sm:text-sm md:text-base uppercase tracking-wider leading-tight">Songs</p>
           </div>
 
-          <div className="space-y-2 sm:space-y-2.5 p-4 sm:p-5 md:p-6 bg-white/5 backdrop-blur-md rounded-xl border border-white/10">
+          <div className="space-y-1.5 sm:space-y-2 md:space-y-2.5 p-3 sm:p-5 md:p-6 bg-white/5 backdrop-blur-md rounded-xl border border-white/10">
             <div className="flex justify-center">
-              <div className="bg-blue-500/20 p-2 sm:p-2.5 md:p-3 rounded-full">
-                <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-blue-400" />
+              <div className="bg-blue-500/20 p-1.5 sm:p-2.5 md:p-3 rounded-full">
+                <TrendingUp className="w-4 h-4 sm:w-6 sm:h-6 md:w-7 md:h-7 text-blue-400" />
               </div>
             </div>
-            <p className="text-2xl sm:text-3xl md:text-4xl font-bold text-white whitespace-nowrap">
+            <p className="text-lg sm:text-3xl md:text-4xl font-bold text-white">
               {formatNumber(uniqueArtists)}
             </p>
-            <p className="text-white/60 text-xs sm:text-sm md:text-base uppercase tracking-wider">Artists</p>
+            <p className="text-white/60 text-[10px] sm:text-sm md:text-base uppercase tracking-wider leading-tight">Artists</p>
           </div>
 
-          <div className="space-y-2 sm:space-y-2.5 p-4 sm:p-5 md:p-6 bg-white/5 backdrop-blur-md rounded-xl border border-white/10">
+          <div className="space-y-1.5 sm:space-y-2 md:space-y-2.5 p-3 sm:p-5 md:p-6 bg-white/5 backdrop-blur-md rounded-xl border border-white/10">
             <div className="flex justify-center">
-              <div className="bg-purple-500/20 p-2 sm:p-2.5 md:p-3 rounded-full">
-                <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-purple-400" />
+              <div className="bg-purple-500/20 p-1.5 sm:p-2.5 md:p-3 rounded-full">
+                <Sparkles className="w-4 h-4 sm:w-6 sm:h-6 md:w-7 md:h-7 text-purple-400" />
               </div>
             </div>
-            <p className="text-2xl sm:text-3xl md:text-4xl font-bold text-white whitespace-nowrap">
+            <p className="text-lg sm:text-3xl md:text-4xl font-bold text-white">
               {formatNumber(uniqueTracks)}
             </p>
-            <p className="text-white/60 text-xs sm:text-sm md:text-base uppercase tracking-wider">Unique Tracks</p>
+            <p className="text-white/60 text-[10px] sm:text-sm md:text-base uppercase tracking-wider leading-tight">Tracks</p>
           </div>
         </div>
 
