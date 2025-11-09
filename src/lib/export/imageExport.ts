@@ -12,22 +12,23 @@ export async function elementToCanvas(
     height: number;
   }>
 ): Promise<HTMLCanvasElement> {
+  // Get the actual bounding box of the element
+  const rect = element.getBoundingClientRect();
+  
   return html2canvas(element, {
     scale: options?.scale || 2,
     backgroundColor: options?.backgroundColor || '#000000',
-    width: options?.width,
-    height: options?.height,
+    width: options?.width || rect.width,
+    height: options?.height || rect.height,
     useCORS: true,
     allowTaint: true,
     logging: false,
     foreignObjectRendering: true, // Better gradient text rendering
     imageTimeout: 0,
-    scrollX: 0,
-    scrollY: 0,
-    windowWidth: element.scrollWidth,
-    windowHeight: element.scrollHeight,
-    x: 0,
-    y: 0,
+    scrollX: -window.scrollX,
+    scrollY: -window.scrollY,
+    windowWidth: document.documentElement.scrollWidth,
+    windowHeight: document.documentElement.scrollHeight,
   });
 }
 
