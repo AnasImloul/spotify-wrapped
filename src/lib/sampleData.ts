@@ -72,8 +72,8 @@ const sampleTracks: { [artist: string]: string[] } = {
  */
 export function generateSampleData(): StreamingHistoryEntry[] {
   const entries: StreamingHistoryEntry[] = [];
-  const startDate = new Date('2024-01-01');
-  const endDate = new Date('2024-11-09');
+  const startDate = new Date('2022-01-01');
+  const endDate = new Date('2024-12-31');
   
   // Generate listening patterns with realistic genre preferences
   const artistWeights: { [artist: string]: number } = {};
