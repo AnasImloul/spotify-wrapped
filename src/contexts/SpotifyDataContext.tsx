@@ -45,14 +45,54 @@ export function SpotifyDataProvider({ children }: SpotifyDataProviderProps) {
 
   // Memoize stats calculation - only recalculate when dependencies actually change
   const stats = useMemo(() => {
-    if (uploadedFiles.length === 0) {
+    if (streamingHistory.length === 0) {
       return null;
     }
+    
+    // Filter streaming history by date range
+    const filteredHistory = streamingHistory.filter((entry) => {
+      if (!startDate || !endDate) return true;
+      
+      const entryDate = new Date(entry.endTime);
+      const entryYearMonth = `${entryDate.getFullYear()}-${String(entryDate.getMonth() + 1).padStart(2, '0')}`;
+      
+      return entryYearMonth >= startDate && entryYearMonth <= endDate;
+    });
+    
+    if (filteredHistory.length === 0) {
+      return {
+        totalListeningTime: 0,
+        totalTracks: 0,
+        totalArtists: 0,
+        topGenres: [],
+        listeningByMonth: [],
+        topArtists: [],
+        topTracks: [],
+        averageListeningPerDay: 0,
+      };
+    }
+    
     console.time('Stats calculation');
-    const processedStats = parseUploadedFiles(uploadedFiles, startDate, endDate);
+    // Process the already-filtered history
+    const { processStreamingHistory } = require('@/lib/dataProcessor');
+    const processedStats = processStreamingHistory(filteredHistory, startDate, endDate);
     console.timeEnd('Stats calculation');
-    return processedStats;
-  }, [uploadedFiles, startDate, endDate]);
+    
+    return {
+      totalListeningTime: processedStats.totalListeningTime || 0,
+      totalTracks: processedStats.totalTracks || 0,
+      totalArtists: processedStats.totalArtists || 0,
+      topArtistName: processedStats.topArtistName,
+      topTrackName: processedStats.topTrackName,
+      topGenres: processedStats.topGenres || [],
+      listeningByMonth: processedStats.listeningByMonth || [],
+      topArtists: processedStats.topArtists || [],
+      topTracks: processedStats.topTracks || [],
+      averageListeningPerDay: processedStats.averageListeningPerDay || 0,
+      mostActiveDay: processedStats.mostActiveDay,
+      mostActiveDayMinutes: processedStats.mostActiveDayMinutes,
+    };
+  }, [streamingHistory, startDate, endDate]);
 
   return (
     <SpotifyDataContext.Provider
