@@ -134,24 +134,25 @@ export function TopItems() {
   }, [trackPage]);
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div className="grid grid-cols-1 gap-6">
       {/* Top Artists */}
       <Card className="overflow-hidden border-green-500/30">
         <CardHeader className="bg-gradient-to-r from-green-500/20 to-green-600/20 border-b border-green-500/20 space-y-3">
-          <div className="flex items-center justify-between">
-            <CardTitle className="flex items-center gap-2 text-white">
-              <Trophy className="w-5 h-5 text-green-400" />
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <CardTitle className="flex items-center gap-2 text-white text-lg sm:text-xl">
+              <Trophy className="w-5 h-5 text-green-400 flex-shrink-0" />
               Your Top Artists
             </CardTitle>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setShowComparison(true)}
-                className="text-green-400 hover:text-green-300 hover:bg-green-500/10 gap-2"
+                className="text-green-400 hover:text-green-300 hover:bg-green-500/10 gap-2 text-xs sm:text-sm"
               >
                 <BarChart3 className="h-4 w-4" />
-                Compare Artists
+                <span className="hidden sm:inline">Compare Artists</span>
+                <span className="sm:hidden">Compare</span>
               </Button>
               <div className="w-px h-6 bg-white/10" />
               <Button
@@ -212,14 +213,14 @@ export function TopItems() {
             )}
           </div>
         </CardHeader>
-        <CardContent className="p-0">
+        <CardContent className="p-0 overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow className="border-white/10 hover:bg-transparent">
                 <TableHead className="w-12 text-white/60">#</TableHead>
-                <TableHead className="text-white/60">Artist</TableHead>
+                <TableHead className="text-white/60 min-w-[150px]">Artist</TableHead>
                 <TableHead className="text-right text-white/60">Plays</TableHead>
-                <TableHead className="text-right text-white/60">Minutes</TableHead>
+                <TableHead className="text-right text-white/60 min-w-[100px]">Minutes</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -237,18 +238,17 @@ export function TopItems() {
                       </TableCell>
                       <TableCell className="font-medium text-white group-hover:text-green-300 transition-colors">
                         <div className="flex items-center gap-2">
-                          <Music2 className="w-4 h-4 text-green-400" />
                           <span className="truncate">{artist.name}</span>
                           <TrendingUp className="w-4 h-4 text-green-400/60 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
                         </div>
                       </TableCell>
-                      <TableCell className="text-right">
-                        <Badge variant="outline" className="border-green-500/30 text-green-300">
+                      <TableCell className="text-right align-top pt-4">
+                        <Badge variant="outline" className="border-green-500/30 text-green-300 inline-flex whitespace-nowrap">
                           {formatNumber(artist.playCount)}
                         </Badge>
                       </TableCell>
-                      <TableCell className="text-right">
-                        <Badge variant="secondary" className="bg-green-500/20 text-green-300 border-green-500/30">
+                      <TableCell className="text-right align-top pt-4">
+                        <Badge variant="secondary" className="bg-green-500/20 text-green-300 border-green-500/30 inline-flex whitespace-nowrap">
                           {formatNumber(msToMinutes(artist.totalMs))} min
                         </Badge>
                       </TableCell>
@@ -270,20 +270,21 @@ export function TopItems() {
       {/* Top Tracks */}
       <Card className="overflow-hidden border-blue-500/30">
         <CardHeader className="bg-gradient-to-r from-blue-500/20 to-blue-600/20 border-b border-blue-500/20 space-y-3">
-          <div className="flex items-center justify-between">
-            <CardTitle className="flex items-center gap-2 text-white">
-              <Music2 className="w-5 h-5 text-blue-400" />
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <CardTitle className="flex items-center gap-2 text-white text-lg sm:text-xl">
+              <Music2 className="w-5 h-5 text-blue-400 flex-shrink-0" />
               Your Top Tracks
             </CardTitle>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setShowTrackComparison(true)}
-                className="text-blue-400 hover:text-blue-300 hover:bg-blue-500/10 gap-2"
+                className="text-blue-400 hover:text-blue-300 hover:bg-blue-500/10 gap-2 text-xs sm:text-sm"
               >
                 <BarChart3 className="h-4 w-4" />
-                Compare Tracks
+                <span className="hidden sm:inline">Compare Tracks</span>
+                <span className="sm:hidden">Compare</span>
               </Button>
               <div className="w-px h-6 bg-white/10" />
               <Button
@@ -344,15 +345,15 @@ export function TopItems() {
             )}
           </div>
         </CardHeader>
-        <CardContent className="p-0">
+        <CardContent className="p-0 overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow className="border-white/10 hover:bg-transparent">
                 <TableHead className="w-12 text-white/60">#</TableHead>
-                <TableHead className="text-white/60">Track</TableHead>
-                <TableHead className="text-white/60">Artist</TableHead>
+                <TableHead className="text-white/60 min-w-[150px]">Track</TableHead>
+                <TableHead className="text-white/60 min-w-[120px]">Artist</TableHead>
                 <TableHead className="text-right text-white/60">Plays</TableHead>
-                <TableHead className="text-right text-white/60">Minutes</TableHead>
+                <TableHead className="text-right text-white/60 min-w-[100px]">Minutes</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -370,20 +371,22 @@ export function TopItems() {
                       <TableCell className="font-bold text-white/40">
                         {actualIndex + 1}
                       </TableCell>
-                      <TableCell className="font-medium max-w-[200px] text-white group-hover:text-green-300 transition-colors flex items-center gap-2">
-                        <span className="truncate">{track.name}</span>
-                        <TrendingUp className="w-4 h-4 text-blue-400/60 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
+                      <TableCell className="font-medium max-w-[200px] text-white group-hover:text-green-300 transition-colors">
+                        <div className="flex items-center gap-2">
+                          <span className="truncate">{track.name}</span>
+                          <TrendingUp className="w-4 h-4 text-blue-400/60 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
+                        </div>
                       </TableCell>
                       <TableCell className="text-sm text-white/60 max-w-[150px] truncate">
                         {track.artist}
                       </TableCell>
-                      <TableCell className="text-right">
-                        <Badge variant="outline" className="border-blue-500/30 text-blue-300">
+                      <TableCell className="text-right align-top pt-4">
+                        <Badge variant="outline" className="border-blue-500/30 text-blue-300 inline-flex whitespace-nowrap">
                           {formatNumber(track.playCount)}
                         </Badge>
                       </TableCell>
-                      <TableCell className="text-right">
-                        <Badge variant="secondary" className="bg-blue-500/20 text-blue-300 border-blue-500/30">
+                      <TableCell className="text-right align-top pt-4">
+                        <Badge variant="secondary" className="bg-blue-500/20 text-blue-300 border-blue-500/30 inline-flex whitespace-nowrap">
                           {formatNumber(msToMinutes(track.totalMs))} min
                         </Badge>
                       </TableCell>

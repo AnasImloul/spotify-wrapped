@@ -8,7 +8,7 @@ export function StatsOverview() {
 
   if (!stats) {
     return null;
-  }
+}
   const totalMinutes = msToMinutes(stats.totalListeningTime * 60 * 60 * 1000);
   const totalHours = Math.round(totalMinutes / 60);
   const totalDays = Math.round(totalHours / 24);

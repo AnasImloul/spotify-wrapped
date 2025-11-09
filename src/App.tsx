@@ -1,34 +1,56 @@
+import { useState } from 'react';
 import { FileUpload } from './components/FileUpload';
 import { DateRangeSelector } from './components/DateRangeSelector';
 import { StatsOverview } from './components/StatsOverview';
 import { TopItems } from './components/TopItems';
 import { ListeningTrends } from './components/ListeningTrends';
-import { Music2, BarChart3, Trophy, TrendingUp } from 'lucide-react';
+import { StoryMode } from './components/StoryMode';
+import { ExportMenu } from './components/ExportMenu';
+import { Music2, BarChart3, Trophy, TrendingUp, Sparkles } from 'lucide-react';
 import { SpotifyDataProvider, DateRangeProvider, FilterProvider } from './contexts';
 import { useSpotifyData, useDateRange, useFilterSettings } from './hooks';
+import { Button } from './components/ui/button';
 
 function AppContent() {
   const { stats } = useSpotifyData();
   const { minDate, maxDate } = useDateRange();
   const { sortBy, setSortBy } = useFilterSettings();
+  const [showStoryMode, setShowStoryMode] = useState(false);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-green-950 to-slate-950">
       {/* Header */}
       <header className="border-b border-white/10 bg-black/20 backdrop-blur-lg sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center shadow-lg">
-              <Music2 className="w-6 h-6 text-white" />
+        <div className="container mx-auto px-4 py-3 sm:py-4">
+          <div className="flex items-center justify-between gap-2 sm:gap-4">
+            <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center shadow-lg flex-shrink-0">
+                <Music2 className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+              </div>
+              <div className="min-w-0">
+                <h1 className="text-lg sm:text-2xl font-bold text-white truncate">
+                  Spotify Wrapped
+                </h1>
+                <p className="text-xs sm:text-sm text-green-400 hidden xs:block truncate">
+                  Your Year in Music, Visualized
+                </p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-2xl font-bold text-white">
-                Spotify Wrapped
-              </h1>
-              <p className="text-sm text-green-400">
-                Your Year in Music, Visualized
-              </p>
-            </div>
+            
+            {/* Header Actions */}
+            {stats && (
+              <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
+                <Button
+                  onClick={() => setShowStoryMode(true)}
+                  size="sm"
+                  className="bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-white border-0 px-2 sm:px-4"
+                >
+                  <Sparkles className="w-4 h-4 sm:mr-2" />
+                  <span className="hidden sm:inline">Story</span>
+                </Button>
+                <ExportMenu variant="outline" size="sm" className="px-2 sm:px-4" />
+              </div>
+            )}
           </div>
         </div>
       </header>
@@ -209,6 +231,9 @@ function AppContent() {
           </div>
         </div>
       </footer>
+
+      {/* Story Mode Modal */}
+      {showStoryMode && <StoryMode onClose={() => setShowStoryMode(false)} />}
     </div>
   );
 }

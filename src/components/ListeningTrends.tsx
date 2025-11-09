@@ -35,25 +35,29 @@ export function ListeningTrends() {
         </CardTitle>
       </CardHeader>
       <CardContent className="pt-6">
-        <div className="h-[400px] w-full">
+        <div className="h-[300px] sm:h-[400px] w-full">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={monthlyData}>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255, 255, 255, 0.1)" />
               <XAxis
                 dataKey="month"
                 className="text-xs"
-                tick={{ fill: 'rgba(255, 255, 255, 0.6)' }}
+                tick={{ fill: 'rgba(255, 255, 255, 0.6)', fontSize: 10 }}
                 stroke="rgba(255, 255, 255, 0.2)"
+                angle={-45}
+                textAnchor="end"
+                height={60}
               />
               <YAxis
                 className="text-xs"
-                tick={{ fill: 'rgba(255, 255, 255, 0.6)' }}
+                tick={{ fill: 'rgba(255, 255, 255, 0.6)', fontSize: 10 }}
                 stroke="rgba(255, 255, 255, 0.2)"
+                width={50}
                 label={{
                   value: 'Minutes',
                   angle: -90,
                   position: 'insideLeft',
-                  style: { fill: 'rgba(255, 255, 255, 0.6)' },
+                  style: { fill: 'rgba(255, 255, 255, 0.6)', fontSize: 10 },
                 }}
               />
               <Tooltip
@@ -62,6 +66,7 @@ export function ListeningTrends() {
                   border: '1px solid rgba(255, 255, 255, 0.2)',
                   borderRadius: '8px',
                   backdropFilter: 'blur(10px)',
+                  fontSize: '12px',
                 }}
                 labelStyle={{ color: 'rgba(255, 255, 255, 0.9)' }}
                 itemStyle={{ color: '#1DB954' }}
@@ -71,9 +76,9 @@ export function ListeningTrends() {
                 type="monotone"
                 dataKey="minutes"
                 stroke="#1DB954"
-                strokeWidth={3}
-                dot={{ fill: '#1DB954', r: 4 }}
-                activeDot={{ r: 6, fill: '#1ed760' }}
+                strokeWidth={2}
+                dot={{ fill: '#1DB954', r: 2 }}
+                activeDot={{ r: 4, fill: '#1ed760' }}
               />
             </LineChart>
           </ResponsiveContainer>

@@ -121,7 +121,7 @@ export function FileUpload() {
             Drop your streaming history files here
           </h3>
           <p className="text-muted-foreground text-center mb-6 max-w-md">
-            Upload <span className="font-mono">StreamingHistory_music_*.json</span> (standard) <strong>OR</strong> <span className="font-mono">Streaming_History_Audio_*.json</span> (extended) files from your Spotify data export. <span className="text-yellow-400 text-xs block mt-2">⚠️ Do not mix both types to avoid duplicate data</span>
+            Upload <span className="font-mono">StreamingHistory_music_*.json</span> (standard) <strong>OR</strong> <span className="font-mono">Streaming_History_Audio_*.json</span> (extended) files from your Spotify data export. <span className="text-yellow-400 text-xs block mt-2">Warning: Do not mix both types to avoid duplicate data</span>
           </p>
           <div className="flex gap-4">
             <Button asChild variant="default" size="lg">
@@ -160,12 +160,12 @@ export function FileUpload() {
               {uploadedFiles.map((file, index) => (
                 <div
                   key={index}
-                  className="flex items-center justify-between p-3 bg-white/5 rounded-md border border-white/10"
+                  className="flex items-start sm:items-center justify-between p-3 bg-white/5 rounded-md border border-white/10 gap-3"
                 >
-                  <div className="flex items-center gap-3">
-                    <FileJson className="w-4 h-4 text-green-400" />
-                    <div>
-                      <p className="text-sm font-medium text-white">{file.name}</p>
+                  <div className="flex items-start sm:items-center gap-3 flex-1 min-w-0">
+                    <FileJson className="w-4 h-4 text-green-400 flex-shrink-0 mt-0.5 sm:mt-0" />
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-medium text-white break-words">{file.name}</p>
                       <p className="text-xs text-white/60 capitalize">
                         {file.type === 'extended' ? 'Extended Streaming' : 'Standard Streaming'}
                       </p>
@@ -175,6 +175,7 @@ export function FileUpload() {
                     variant="ghost"
                     size="icon"
                     onClick={() => removeFile(index)}
+                    className="flex-shrink-0"
                   >
                     <X className="w-4 h-4" />
                   </Button>

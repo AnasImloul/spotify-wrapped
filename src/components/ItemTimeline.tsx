@@ -148,15 +148,16 @@ export function ItemTimeline({
                       <XAxis
                         dataKey="month"
                         stroke="rgba(255,255,255,0.5)"
-                        style={{ fontSize: '11px' }}
+                        style={{ fontSize: '10px' }}
                         angle={-45}
                         textAnchor="end"
                         height={60}
                       />
                       <YAxis
                         stroke="rgba(255,255,255,0.5)"
-                        style={{ fontSize: '11px' }}
-                        label={{ value: 'Minutes', angle: -90, position: 'insideLeft', fill: 'rgba(255,255,255,0.7)', style: { fontSize: '11px' } }}
+                        style={{ fontSize: '10px' }}
+                        width={45}
+                        label={{ value: 'Minutes', angle: -90, position: 'insideLeft', fill: 'rgba(255,255,255,0.7)', style: { fontSize: '10px' } }}
                       />
                       <Tooltip
                         contentStyle={{
@@ -164,7 +165,7 @@ export function ItemTimeline({
                           border: '1px solid rgba(29, 185, 84, 0.3)',
                           borderRadius: '8px',
                           color: 'white',
-                          fontSize: '12px'
+                          fontSize: '11px'
                         }}
                         formatter={(value: number, name: string) => {
                           const dataPoint = chartData.find(d => d.minutes === value || d.plays === value);
@@ -178,9 +179,9 @@ export function ItemTimeline({
                         type="monotone"
                         dataKey="minutes"
                         stroke="#1DB954"
-                        strokeWidth={2.5}
-                        dot={{ fill: '#1DB954', r: 3 }}
-                        activeDot={{ r: 5 }}
+                        strokeWidth={2}
+                        dot={{ fill: '#1DB954', r: 2 }}
+                        activeDot={{ r: 4 }}
                       />
                     </LineChart>
                   </ResponsiveContainer>
