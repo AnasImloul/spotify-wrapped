@@ -30,6 +30,12 @@ export function FileUpload({ onSampleDataLoaded }: FileUploadProps = {}) {
 
   const processFiles = async (files: FileList) => {
     setError(null);
+    
+    // Collapse immediately when files are selected
+    if (files.length > 0) {
+      setIsCollapsed(true);
+    }
+    
     const newFiles: UploadedFile[] = [];
 
     for (let i = 0; i < files.length; i++) {
