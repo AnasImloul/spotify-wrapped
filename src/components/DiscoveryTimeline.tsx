@@ -287,7 +287,7 @@ export function DiscoveryTimeline() {
 
             {/* Year Filter */}
             {availableYears.length > 1 && (
-              <div className="flex gap-2">
+              <div className="flex gap-2 flex-wrap">
                 <Button
                   variant={selectedYear === 'all' ? 'default' : 'outline'}
                   size="sm"
