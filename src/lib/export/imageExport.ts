@@ -12,24 +12,48 @@ export async function elementToCanvas(
     height: number;
   }>
 ): Promise<HTMLCanvasElement> {
-  // Get the actual bounding box of the element
-  const rect = element.getBoundingClientRect();
+  // Clone the element to avoid capturing unwanted parts
+  const clone = element.cloneNode(true) as HTMLElement;
   
-  return html2canvas(element, {
-    scale: options?.scale || 2,
-    backgroundColor: options?.backgroundColor || '#000000',
-    width: options?.width || rect.width,
-    height: options?.height || rect.height,
-    useCORS: true,
-    allowTaint: true,
-    logging: false,
-    foreignObjectRendering: true, // Better gradient text rendering
-    imageTimeout: 0,
-    scrollX: -window.scrollX,
-    scrollY: -window.scrollY,
-    windowWidth: document.documentElement.scrollWidth,
-    windowHeight: document.documentElement.scrollHeight,
-  });
+  // Create a temporary container
+  const container = document.createElement('div');
+  container.style.position = 'fixed';
+  container.style.top = '0';
+  container.style.left = '0';
+  container.style.width = `${element.offsetWidth}px`;
+  container.style.height = `${element.offsetHeight}px`;
+  container.style.overflow = 'hidden';
+  container.style.zIndex = '-9999';
+  container.style.pointerEvents = 'none';
+  
+  // Apply the same computed styles to the clone
+  const computedStyle = window.getComputedStyle(element);
+  clone.style.width = `${element.offsetWidth}px`;
+  clone.style.height = `${element.offsetHeight}px`;
+  clone.style.margin = '0';
+  clone.style.padding = computedStyle.padding;
+  
+  container.appendChild(clone);
+  document.body.appendChild(container);
+  
+  try {
+    const canvas = await html2canvas(clone, {
+      scale: options?.scale || 2,
+      backgroundColor: options?.backgroundColor || '#000000',
+      width: options?.width || element.offsetWidth,
+      height: options?.height || element.offsetHeight,
+      useCORS: true,
+      allowTaint: true,
+      logging: false,
+      foreignObjectRendering: true,
+      imageTimeout: 0,
+    });
+    
+    return canvas;
+  } finally {
+    // Clean up
+    document.body.removeChild(container);
+  }
 }
 
 /**
