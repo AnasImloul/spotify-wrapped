@@ -10,7 +10,14 @@ import { ShareExportMenu } from './ShareExportMenu';
 import { WelcomeModal } from './WelcomeModal';
 import { OnboardingTour, mainTourSteps } from './OnboardingTour';
 import { ThemeToggle } from './ThemeToggle';
-import { Music2, BarChart3, Trophy, Sparkles, Activity } from 'lucide-react';
+import { QuickStatsCarousel } from './QuickStatsCarousel';
+import { PersonalRecords } from './PersonalRecords';
+import { ListeningStreak } from './ListeningStreak';
+import { DiscoveryTimeline } from './DiscoveryTimeline';
+import { YearInReviewCard } from './YearInReviewCard';
+import { MoodEnergyAnalysis } from './MoodEnergyAnalysis';
+import { YearOverYearComparison } from './YearOverYearComparison';
+import { Music2, BarChart3, Trophy, Sparkles, Activity, Flame } from 'lucide-react';
 import { useSpotifyData, useDateRange, useFilterSettings } from '@/hooks';
 import { Button } from './ui/button';
 import { isFeatureEnabled } from '@/lib/featureFlags';
@@ -103,7 +110,7 @@ export function MainContent({ onShowStoryMode }: MainContentProps) {
       {/* Main Content */}
       <main className="container mx-auto px-4 py-12 space-y-12">
         {/* Hero Section */}
-        <div className="text-center space-y-4 mb-12">
+          <div className="text-center space-y-4 mb-12">
           <h2 className="text-4xl md:text-6xl font-bold text-white mb-4">
             Discover Your{' '}
             <span className="animated-gradient">
@@ -111,8 +118,11 @@ export function MainContent({ onShowStoryMode }: MainContentProps) {
             </span>
           </h2>
           <p className="text-lg text-white/70 max-w-2xl mx-auto">
-            Upload your Spotify data export to explore your listening patterns,
-            discover your most-played content, and visualize your musical journey.
+            Upload your Spotify data export to dive deep into your listening history,
+            uncover patterns, and visualize your complete musical journey.
+          </p>
+          <p className="text-sm text-white/50 max-w-xl mx-auto">
+            Perfect for your annual music review - discover insights from months or years of listening data
           </p>
         </div>
 
@@ -124,6 +134,11 @@ export function MainContent({ onShowStoryMode }: MainContentProps) {
           <>
             <div data-tour="date-range">
               <DateRangeSelector />
+            </div>
+
+            {/* Quick Stats Carousel - Instant Gratification */}
+            <div className="animate-fade-in">
+              <QuickStatsCarousel />
             </div>
             
             {/* Global Sorting Selector */}
@@ -187,7 +202,74 @@ export function MainContent({ onShowStoryMode }: MainContentProps) {
 
             {/* Advanced Analytics Section */}
             <>
+            <div className="h-px bg-gradient-to-r from-transparent via-green-500/50 to-transparent" />
+            
+            {/* Personal Records Section */}
+            <div>
+              <h3 className="text-3xl font-bold text-white mb-6 flex items-center gap-3">
+                <Trophy className="w-8 h-8 text-yellow-400" />
+                Personal Records
+              </h3>
+              <PersonalRecords />
+            </div>
+
+            <div className="h-px bg-gradient-to-r from-transparent via-green-500/50 to-transparent" />
+
+            {/* Year in Review Card */}
+            <div>
+              <h3 className="text-3xl font-bold text-white mb-6 flex items-center gap-3">
+                <Trophy className="w-8 h-8 text-yellow-400" />
+                Your Year in Review
+              </h3>
+              <YearInReviewCard />
+            </div>
+
+            <div className="h-px bg-gradient-to-r from-transparent via-green-500/50 to-transparent" />
+
+              {/* Listening Consistency */}
+              <div>
+                <h3 className="text-3xl font-bold text-white mb-6 flex items-center gap-3">
+                  <Flame className="w-8 h-8 text-orange-400" />
+                  Listening Consistency
+                </h3>
+                <ListeningStreak />
+              </div>
+
               <div className="h-px bg-gradient-to-r from-transparent via-green-500/50 to-transparent" />
+
+              {/* Discovery Timeline */}
+              <div>
+                <h3 className="text-3xl font-bold text-white mb-6 flex items-center gap-3">
+                  <Sparkles className="w-8 h-8 text-purple-400" />
+                  Discovery Journey
+                </h3>
+                <DiscoveryTimeline />
+              </div>
+
+              <div className="h-px bg-gradient-to-r from-transparent via-green-500/50 to-transparent" />
+
+              {/* Mood & Energy Analysis */}
+              <div>
+                <h3 className="text-3xl font-bold text-white mb-6 flex items-center gap-3">
+                  <Sparkles className="w-8 h-8 text-yellow-400" />
+                  Mood & Energy
+                </h3>
+                <MoodEnergyAnalysis />
+              </div>
+
+              <div className="h-px bg-gradient-to-r from-transparent via-green-500/50 to-transparent" />
+
+              {/* Year-over-Year Comparison */}
+              <div>
+                <h3 className="text-3xl font-bold text-white mb-6 flex items-center gap-3">
+                  <BarChart3 className="w-8 h-8 text-blue-400" />
+                  Year-over-Year Analysis
+                </h3>
+                <YearOverYearComparison />
+              </div>
+
+              <div className="h-px bg-gradient-to-r from-transparent via-green-500/50 to-transparent" />
+
               <div>
                 <h3 className="text-3xl font-bold text-white mb-6 flex items-center gap-3">
                   <Activity className="w-8 h-8 text-green-400" />

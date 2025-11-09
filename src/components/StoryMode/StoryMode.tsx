@@ -146,7 +146,7 @@ export function StoryMode({ onClose }: StoryModeProps) {
           </div>
 
           {/* Top controls */}
-          <div className="absolute top-4 right-4 z-20 flex gap-2">
+          <div className="absolute top-12 right-4 z-20 flex gap-2">
             <ShareMenu
               elementId={cardIds[currentIndex]}
               cardName={cardNames[currentIndex]}
@@ -187,15 +187,6 @@ export function StoryMode({ onClose }: StoryModeProps) {
                 <ChevronRight className="w-6 h-6" />
               </Button>
             )}
-          </div>
-
-          {/* Card counter */}
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20">
-            <div className="bg-black/30 backdrop-blur-sm px-4 py-2 rounded-full border border-white/20">
-              <p className="text-white text-sm font-medium">
-                {currentIndex + 1} / {cards.length}
-              </p>
-            </div>
           </div>
         </div>
       </div>
