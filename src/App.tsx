@@ -8,17 +8,17 @@ function App() {
     <>
       <PWAInstallPrompt />
       <BrowserRouter>
-        <ThemeProvider>
-          <DateRangeProvider>
-            <FilterProvider>
-              <SpotifyDataProvider>
-                <BrandingProvider>
+      <ThemeProvider>
+        <DateRangeProvider>
+          <FilterProvider>
+            <SpotifyDataProvider>
+              <BrandingProvider>
                   <AppRoutes />
-                </BrandingProvider>
-              </SpotifyDataProvider>
-            </FilterProvider>
-          </DateRangeProvider>
-        </ThemeProvider>
+              </BrandingProvider>
+            </SpotifyDataProvider>
+          </FilterProvider>
+        </DateRangeProvider>
+      </ThemeProvider>
       </BrowserRouter>
     </>
   );

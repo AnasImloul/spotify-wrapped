@@ -164,80 +164,80 @@ export function FileUpload({ onSampleDataLoaded }: FileUploadProps = {}) {
       ) : (
         <>
           {/* Expanded state - show upload zone */}
-          <Card
+      <Card
+        className={cn(
+          'border-2 border-dashed transition-all duration-200',
+          isDragging
+            ? 'border-primary bg-primary/5 scale-105'
+            : 'border-muted-foreground/25 hover:border-primary/50'
+        )}
+        onDragEnter={handleDrag}
+        onDragLeave={handleDrag}
+        onDragOver={handleDrag}
+        onDrop={handleDrop}
+      >
+        <CardContent className="flex flex-col items-center justify-center py-12 px-6">
+          <Upload
             className={cn(
-              'border-2 border-dashed transition-all duration-200',
-              isDragging
-                ? 'border-primary bg-primary/5 scale-105'
-                : 'border-muted-foreground/25 hover:border-primary/50'
+              'w-16 h-16 mb-4 transition-colors',
+              isDragging ? 'text-primary' : 'text-muted-foreground'
             )}
-            onDragEnter={handleDrag}
-            onDragLeave={handleDrag}
-            onDragOver={handleDrag}
-            onDrop={handleDrop}
-          >
-            <CardContent className="flex flex-col items-center justify-center py-12 px-6">
-              <Upload
-                className={cn(
-                  'w-16 h-16 mb-4 transition-colors',
-                  isDragging ? 'text-primary' : 'text-muted-foreground'
-                )}
+          />
+          <h3 className="text-2xl font-semibold mb-2">
+            Drop your streaming history files here
+          </h3>
+          <p className="text-muted-foreground text-center mb-6 max-w-md">
+            Upload <span className="font-mono">StreamingHistory_music_*.json</span> (standard) <strong>OR</strong> <span className="font-mono">Streaming_History_Audio_*.json</span> (extended) files from your Spotify data export. <span className="text-yellow-400 text-xs block mt-2">Warning: Do not mix both types to avoid duplicate data</span>
+          </p>
+          <div className="flex flex-row gap-3 justify-center items-center">
+            <label className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-11 px-6 cursor-pointer">
+              <Upload className="mr-2 h-5 w-5 flex-shrink-0" />
+              Choose Files
+              <input
+                type="file"
+                multiple
+                accept=".json"
+                onChange={handleFileInput}
+                className="hidden"
               />
-              <h3 className="text-2xl font-semibold mb-2">
-                Drop your streaming history files here
-              </h3>
-              <p className="text-muted-foreground text-center mb-6 max-w-md">
-                Upload <span className="font-mono">StreamingHistory_music_*.json</span> (standard) <strong>OR</strong> <span className="font-mono">Streaming_History_Audio_*.json</span> (extended) files from your Spotify data export. <span className="text-yellow-400 text-xs block mt-2">Warning: Do not mix both types to avoid duplicate data</span>
-              </p>
-              <div className="flex flex-row gap-3 justify-center items-center">
-                <label className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-11 px-6 cursor-pointer">
-                  <Upload className="mr-2 h-5 w-5 flex-shrink-0" />
-                  Choose Files
-                  <input
-                    type="file"
-                    multiple
-                    accept=".json"
-                    onChange={handleFileInput}
-                    className="hidden"
-                  />
-                </label>
-                <button
-                  onClick={handleLoadSampleData}
-                  disabled={loadingSample || uploadedFiles.length > 0}
-                  className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-green-500/30 bg-background hover:bg-green-500/10 text-green-400 h-11 px-6"
-                >
-                  {loadingSample ? (
-                    <>
-                      <Sparkles className="mr-2 h-5 w-5 flex-shrink-0 animate-spin" />
-                      Loading...
-                    </>
-                  ) : (
-                    <>
-                      <Play className="mr-2 h-5 w-5 flex-shrink-0" />
-                      Try Sample
-                    </>
-                  )}
-                </button>
-              </div>
-            </CardContent>
-          </Card>
+            </label>
+            <button
+              onClick={handleLoadSampleData}
+              disabled={loadingSample || uploadedFiles.length > 0}
+              className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-green-500/30 bg-background hover:bg-green-500/10 text-green-400 h-11 px-6"
+            >
+              {loadingSample ? (
+                <>
+                  <Sparkles className="mr-2 h-5 w-5 flex-shrink-0 animate-spin" />
+                  Loading...
+                </>
+              ) : (
+                <>
+                  <Play className="mr-2 h-5 w-5 flex-shrink-0" />
+                  Try Sample
+                </>
+              )}
+            </button>
+          </div>
+        </CardContent>
+      </Card>
 
-          {error && (
-            <Card className="border-destructive bg-destructive/5">
-              <CardContent className="p-4">
-                <p className="text-destructive text-sm">{error}</p>
-              </CardContent>
-            </Card>
-          )}
+      {error && (
+        <Card className="border-destructive bg-destructive/5">
+          <CardContent className="p-4">
+            <p className="text-destructive text-sm">{error}</p>
+          </CardContent>
+        </Card>
+      )}
 
-          {uploadedFiles.length > 0 && (
-            <Card className="border-green-500/30">
-              <CardContent className="p-6">
+      {uploadedFiles.length > 0 && (
+        <Card className="border-green-500/30">
+          <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h4 className="font-semibold flex items-center gap-2 text-white">
-                    <FileJson className="w-5 h-5 text-green-400" />
-                    Uploaded Files ({uploadedFiles.length})
-                  </h4>
+              <FileJson className="w-5 h-5 text-green-400" />
+              Uploaded Files ({uploadedFiles.length})
+            </h4>
                   <Button
                     variant="ghost"
                     size="sm"
@@ -248,34 +248,34 @@ export function FileUpload({ onSampleDataLoaded }: FileUploadProps = {}) {
                     Collapse
                   </Button>
                 </div>
-                <div className="space-y-2">
-                  {uploadedFiles.map((file, index) => (
-                    <div
-                      key={index}
-                      className="flex items-start sm:items-center justify-between p-3 bg-white/5 rounded-md border border-white/10 gap-3"
-                    >
-                      <div className="flex items-start sm:items-center gap-3 flex-1 min-w-0">
-                        <FileJson className="w-4 h-4 text-green-400 flex-shrink-0 mt-0.5 sm:mt-0" />
-                        <div className="min-w-0 flex-1">
-                          <p className="text-sm font-medium text-white break-words">{file.name}</p>
-                          <p className="text-xs text-white/60 capitalize">
-                            {file.type === 'extended' ? 'Extended Streaming' : 'Standard Streaming'}
-                          </p>
-                        </div>
-                      </div>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => removeFile(index)}
-                        className="flex-shrink-0"
-                      >
-                        <X className="w-4 h-4" />
-                      </Button>
+            <div className="space-y-2">
+              {uploadedFiles.map((file, index) => (
+                <div
+                  key={index}
+                  className="flex items-start sm:items-center justify-between p-3 bg-white/5 rounded-md border border-white/10 gap-3"
+                >
+                  <div className="flex items-start sm:items-center gap-3 flex-1 min-w-0">
+                    <FileJson className="w-4 h-4 text-green-400 flex-shrink-0 mt-0.5 sm:mt-0" />
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-medium text-white break-words">{file.name}</p>
+                      <p className="text-xs text-white/60 capitalize">
+                        {file.type === 'extended' ? 'Extended Streaming' : 'Standard Streaming'}
+                      </p>
                     </div>
-                  ))}
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => removeFile(index)}
+                    className="flex-shrink-0"
+                  >
+                    <X className="w-4 h-4" />
+                  </Button>
                 </div>
-              </CardContent>
-            </Card>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
           )}
         </>
       )}

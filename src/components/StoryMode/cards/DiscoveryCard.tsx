@@ -21,42 +21,42 @@ export function DiscoveryCard({ uniqueArtists, uniqueTracks }: DiscoveryCardProp
         {/* Icon */}
         <div className="relative">
           <div className="absolute inset-0 bg-pink-500/30 blur-3xl rounded-full" />
-          <div className="relative bg-gradient-to-br from-pink-400 to-purple-600 p-4 sm:p-6 rounded-full">
-            <Sparkles className="w-12 h-12 sm:w-16 sm:h-16 text-white" />
+          <div className="relative bg-gradient-to-br from-pink-400 to-purple-600 p-5 sm:p-6 md:p-7 rounded-full">
+            <Sparkles className="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 text-white" />
           </div>
         </div>
 
         {/* Label */}
         <div className="space-y-1 sm:space-y-2">
-          <p className="text-pink-300 text-base sm:text-lg font-medium tracking-wide uppercase">
+          <p className="text-pink-300 text-lg sm:text-xl md:text-2xl font-medium tracking-wide uppercase">
             Your Musical Universe
           </p>
-          <div className="w-16 sm:w-20 h-0.5 sm:h-1 bg-gradient-to-r from-transparent via-pink-400 to-transparent mx-auto" />
+          <div className="w-20 sm:w-24 md:w-28 h-0.5 sm:h-1 bg-gradient-to-r from-transparent via-pink-400 to-transparent mx-auto" />
         </div>
 
         {/* Stats Grid */}
         <div className="space-y-6 sm:space-y-8">
           <div className="text-center">
-            <p className="text-pink-200 text-sm sm:text-base mb-2 sm:mb-3 uppercase tracking-wider">Artists Explored</p>
-            <h2 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-pink-300 to-rose-400 bg-clip-text text-transparent">
+            <p className="text-pink-200 text-base sm:text-lg md:text-xl mb-2 sm:mb-3 uppercase tracking-wider">Artists Explored</p>
+            <h2 className="text-5xl sm:text-6xl md:text-7xl font-bold bg-gradient-to-r from-pink-300 to-rose-400 bg-clip-text text-transparent">
               {formatNumber(animatedArtists)}
             </h2>
           </div>
 
-          <div className="w-24 sm:w-28 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent mx-auto" />
+          <div className="w-28 sm:w-32 md:w-36 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent mx-auto" />
 
           <div className="text-center">
-            <p className="text-purple-200 text-sm sm:text-base mb-2 sm:mb-3 uppercase tracking-wider">Tracks Discovered</p>
-            <h2 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-purple-300 to-pink-400 bg-clip-text text-transparent">
+            <p className="text-purple-200 text-base sm:text-lg md:text-xl mb-2 sm:mb-3 uppercase tracking-wider">Tracks Discovered</p>
+            <h2 className="text-5xl sm:text-6xl md:text-7xl font-bold bg-gradient-to-r from-purple-300 to-pink-400 bg-clip-text text-transparent">
               {formatNumber(animatedTracks)}
             </h2>
           </div>
         </div>
 
         {/* Badge */}
-        <div className="px-4 sm:px-6 py-3 sm:py-4 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20">
-          <p className="text-pink-300 text-sm sm:text-base font-semibold flex items-center gap-2">
-            <Users className="w-4 h-4 sm:w-5 sm:h-5" />
+        <div className="px-5 sm:px-6 md:px-7 py-3 sm:py-4 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20">
+          <p className="text-pink-300 text-base sm:text-lg md:text-xl font-semibold flex items-center gap-2">
+            <Users className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7" />
             Music Explorer
           </p>
         </div>

@@ -110,7 +110,7 @@ export function MainContent({ onShowStoryMode }: MainContentProps) {
       {/* Main Content */}
       <main className="container mx-auto px-4 py-12 space-y-12">
         {/* Hero Section */}
-          <div className="text-center space-y-4 mb-12">
+        <div className="text-center space-y-4 mb-12">
           <h2 className="text-4xl md:text-6xl font-bold text-white mb-4">
             Discover Your{' '}
             <span className="animated-gradient">
@@ -202,7 +202,7 @@ export function MainContent({ onShowStoryMode }: MainContentProps) {
 
             {/* Advanced Analytics Section */}
             <>
-            <div className="h-px bg-gradient-to-r from-transparent via-green-500/50 to-transparent" />
+              <div className="h-px bg-gradient-to-r from-transparent via-green-500/50 to-transparent" />
             
             {/* Personal Records Section */}
             <div>
