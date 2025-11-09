@@ -22,6 +22,12 @@ export async function elementToCanvas(
     logging: false,
     foreignObjectRendering: true, // Better gradient text rendering
     imageTimeout: 0,
+    scrollX: 0,
+    scrollY: 0,
+    windowWidth: element.scrollWidth,
+    windowHeight: element.scrollHeight,
+    x: 0,
+    y: 0,
   });
 }
 
