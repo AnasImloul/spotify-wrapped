@@ -104,7 +104,7 @@ export function decodeAnalyticsFromUrl(encoded: string): CompactShareData | null
  */
 export function generateCompactShareUrl(encoded: string): string {
   const baseUrl = window.location.origin;
-  return `${baseUrl}/share?share=${encoded}`;
+  return `${baseUrl}/share/${encoded}`;
 }
 
 /**

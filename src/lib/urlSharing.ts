@@ -149,7 +149,7 @@ export function generateShareableUrl(
 ): { url: string; size: number; encoded: string } {
   const encoded = encodeDataToUrl(stats, topArtists, topTracks);
   const baseUrl = window.location.origin;
-  const url = `${baseUrl}/share?share=${encoded}`;
+  const url = `${baseUrl}/share/${encoded}`;
 
   return {
     url,

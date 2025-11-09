@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { BrowserRouter, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useNavigate, useLocation, useParams } from 'react-router-dom';
 import { MainContent } from './components/MainContent';
 import { StoryMode } from './components/StoryMode';
 import { SharedAnalyticsView } from './components/SharedAnalyticsView';
@@ -7,17 +7,42 @@ import { PWAInstallPrompt } from './components/PWAInstallPrompt';
 import { SpotifyDataProvider, DateRangeProvider, FilterProvider, BrandingProvider, ThemeProvider } from './contexts';
 import { getCompactDataFromUrl } from './lib/binaryEncoding';
 
+function SharedViewWrapper() {
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+
+  // Redirect if no ID in URL
+  useEffect(() => {
+    if (!id) {
+      navigate('/', { replace: true });
+    }
+  }, [id, navigate]);
+
+  // Create a temporary URL with the ID as query param for the existing decoder
+  useEffect(() => {
+    if (id) {
+      // Temporarily set the search params for the existing decoder
+      const url = new URL(window.location.href);
+      url.searchParams.set('share', id);
+      window.history.replaceState({}, '', url.pathname + url.search);
+    }
+  }, [id]);
+
+  return <SharedAnalyticsView onClose={() => navigate('/')} />;
+}
+
 function AppRoutes() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Check for shared data on mount and redirect to /share if present
+  // Check for old-style query param and redirect to new route
   useEffect(() => {
-    const sharedData = getCompactDataFromUrl();
-    if (sharedData && location.pathname !== '/share') {
-      navigate('/share', { replace: true });
+    const params = new URLSearchParams(location.search);
+    const shareId = params.get('share');
+    if (shareId && !location.pathname.startsWith('/share/')) {
+      navigate(`/share/${shareId}`, { replace: true });
     }
-  }, []);
+  }, [location, navigate]);
 
   // Prevent body scrolling when Story Mode is active
   useEffect(() => {
@@ -49,10 +74,10 @@ function AppRoutes() {
         element={<StoryMode onClose={() => navigate('/')} />} 
       />
       
-      {/* Shared analytics view */}
+      {/* Shared analytics view with ID parameter */}
       <Route 
-        path="/share" 
-        element={<SharedAnalyticsView onClose={() => navigate('/')} />} 
+        path="/share/:id" 
+        element={<SharedViewWrapper />} 
       />
     </Routes>
   );
