@@ -80,7 +80,8 @@ export function MonthlyTrends() {
               className={timeUnit === 'minutes' ? 'bg-green-500 hover:bg-green-600' : ''}
             >
               <Clock className="w-4 h-4 mr-1 sm:mr-2" />
-              <span className="text-xs sm:text-sm">min</span>
+              <span className="sm:hidden">min</span>
+              <span className="hidden sm:inline">Minutes</span>
             </Button>
             <Button
               variant={timeUnit === 'hours' ? 'default' : 'outline'}
@@ -89,7 +90,8 @@ export function MonthlyTrends() {
               className={timeUnit === 'hours' ? 'bg-green-500 hover:bg-green-600' : ''}
             >
               <Clock className="w-4 h-4 mr-1 sm:mr-2" />
-              <span className="text-xs sm:text-sm">hr</span>
+              <span className="sm:hidden">hr</span>
+              <span className="hidden sm:inline">Hours</span>
             </Button>
           </div>
         </div>
