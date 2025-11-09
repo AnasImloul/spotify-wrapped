@@ -22,8 +22,16 @@ export function DateRangeSelector() {
   }, [minDate, maxDate]);
   
   const selectYear = (year: number) => {
+    // Clamp to actual data boundaries for the selected year
+    const yearStart = `${year}-01`;
+    const yearEnd = `${year}-12`;
+    
+    // Ensure we don't go outside the actual data range
+    const clampedStart = yearStart < minDate ? minDate : yearStart;
+    const clampedEnd = yearEnd > maxDate ? maxDate : yearEnd;
+    
     // Use setDateRange to batch both state updates together
-    setDateRange(`${year}-01`, `${year}-12`);
+    setDateRange(clampedStart, clampedEnd);
   };
   
   // Check if a specific year is currently selected
