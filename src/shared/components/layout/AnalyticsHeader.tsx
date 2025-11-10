@@ -3,9 +3,11 @@
  * Main header with branding and actions
  */
 
+import { useState } from 'react';
 import { Music2, Sparkles } from 'lucide-react';
-import { NavLink } from 'react-router-dom';
-import { Button } from '@/shared/components/ui';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { Button, ConfirmModal } from '@/shared/components/ui';
+import { useSpotifyData } from '@/shared/hooks';
 
 interface AnalyticsHeaderProps {
   hasData: boolean;
@@ -14,25 +16,60 @@ interface AnalyticsHeaderProps {
 }
 
 export function AnalyticsHeader({ hasData, onShowStoryMode, renderShareMenu }: AnalyticsHeaderProps) {
+  const navigate = useNavigate();
+  const { clearData } = useSpotifyData();
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+
+  const handleLogoClick = () => {
+    if (hasData) {
+      // Show confirmation modal if data exists
+      setShowConfirmModal(true);
+    } else {
+      // Just navigate if no data
+      navigate('/');
+    }
+  };
+
+  const handleConfirmClear = () => {
+    clearData();
+    navigate('/');
+  };
+
   return (
-    <header className="border-b border-white/10 bg-black/20 backdrop-blur-lg sticky top-0 z-50">
-      <div className="container mx-auto px-4 py-3 sm:py-4">
-        <div className="flex items-center justify-between gap-2 sm:gap-4">
-          <div className="flex items-center gap-4 sm:gap-6 min-w-0 flex-1">
-            {/* Logo */}
-            <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center shadow-lg">
-                <Music2 className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
-              </div>
-              <div className="hidden md:block">
-                <h1 className="text-lg sm:text-2xl font-bold text-white">
-                  Spotify Wrapped
-                </h1>
-                <p className="text-xs sm:text-sm text-green-400 hidden xs:block">
-                  Your Year in Music, Visualized
-                </p>
-              </div>
-            </div>
+    <>
+      <ConfirmModal
+        open={showConfirmModal}
+        onOpenChange={setShowConfirmModal}
+        onConfirm={handleConfirmClear}
+        title="Clear All Data?"
+        description="This will remove all uploaded files and analytics data. You'll need to upload your files again to view your stats."
+        confirmText="Clear Data"
+        cancelText="Cancel"
+        variant="warning"
+      />
+
+      <header className="border-b border-white/10 bg-black/20 backdrop-blur-lg sticky top-0 z-50">
+        <div className="container mx-auto px-4 py-3 sm:py-4">
+          <div className="flex items-center justify-between gap-2 sm:gap-4">
+            <div className="flex items-center gap-4 sm:gap-6 min-w-0 flex-1">
+              {/* Logo */}
+              <button
+                onClick={handleLogoClick}
+                className="flex items-center gap-2 sm:gap-3 flex-shrink-0 hover:opacity-80 transition-opacity"
+                title={hasData ? "Clear data and start over" : "Go to home"}
+              >
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center shadow-lg">
+                  <Music2 className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+                </div>
+                <div className="hidden md:block text-left">
+                  <h1 className="text-lg sm:text-2xl font-bold text-white">
+                    Spotify Wrapped
+                  </h1>
+                  <p className="text-xs sm:text-sm text-green-400 hidden xs:block">
+                    Your Year in Music, Visualized
+                  </p>
+                </div>
+              </button>
 
             {/* Tab Navigation */}
             {hasData && (
@@ -106,9 +143,10 @@ export function AnalyticsHeader({ hasData, onShowStoryMode, renderShareMenu }: A
               </Button>
             </div>
           )}
+          </div>
         </div>
-      </div>
-    </header>
+      </header>
+    </>
   );
 }
 
