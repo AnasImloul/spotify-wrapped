@@ -35,7 +35,7 @@ export default function UploadPage() {
     StorageService.setTourCompleted();
   };
 
-  // Redirect to analytics only when NEW data has just finished processing
+  // Redirect to analytics when data has finished processing
   useEffect(() => {
     // Only redirect if processing just finished (was true, now false) and we have stats
     if (previousProcessingRef.current && !isProcessing && stats) {
