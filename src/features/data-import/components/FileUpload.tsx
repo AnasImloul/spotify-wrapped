@@ -1,5 +1,5 @@
-import React, { useCallback, useState, useEffect } from 'react';
-import { Upload, FileJson, X, Play, Sparkles, ChevronDown, ChevronUp } from 'lucide-react';
+import React, { useCallback, useState } from 'react';
+import { Upload, FileJson, X, Play, Sparkles } from 'lucide-react';
 import { Card, CardContent } from '@/shared/components/ui/card';
 import { Button } from '@/shared/components/ui/button';
 import { detectFileType, UploadedFile } from '@/shared/services';
@@ -16,7 +16,6 @@ export function FileUpload({ onSampleDataLoaded }: FileUploadProps = {}) {
   const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loadingSample, setLoadingSample] = useState(false);
-  const [isCollapsed, setIsCollapsed] = useState(false);
 
   const handleDrag = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -30,11 +29,6 @@ export function FileUpload({ onSampleDataLoaded }: FileUploadProps = {}) {
 
   const processFiles = async (files: FileList) => {
     setError(null);
-    
-    // Collapse immediately when files are selected
-    if (files.length > 0) {
-      setIsCollapsed(true);
-    }
     
     const newFiles: UploadedFile[] = [];
 
@@ -130,46 +124,8 @@ export function FileUpload({ onSampleDataLoaded }: FileUploadProps = {}) {
     }, 500);
   };
 
-  // Auto-collapse when files are uploaded
-  useEffect(() => {
-    if (uploadedFiles.length > 0) {
-      setIsCollapsed(true);
-    }
-  }, [uploadedFiles.length]);
-
   return (
     <div className="w-full space-y-4" data-tour="file-upload">
-      {/* Collapsed state - show summary with expand option */}
-      {isCollapsed && uploadedFiles.length > 0 ? (
-        <Card className="border-green-500/30 bg-green-500/5">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between gap-4">
-              <div className="flex items-center gap-3">
-                <FileJson className="w-5 h-5 text-green-400" />
-                <div>
-                  <p className="font-semibold text-white">
-                    {uploadedFiles.length} file{uploadedFiles.length !== 1 ? 's' : ''} uploaded
-                  </p>
-                  <p className="text-xs text-white/60">
-                    Click to manage files or upload more
-                  </p>
-                </div>
-              </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setIsCollapsed(false)}
-                className="text-white/70 hover:text-white"
-              >
-                <ChevronDown className="w-4 h-4 mr-1" />
-                Manage Files
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      ) : (
-        <>
-          {/* Expanded state - show upload zone */}
       <Card
         className={cn(
           'border-2 border-dashed transition-all duration-200',
@@ -239,21 +195,10 @@ export function FileUpload({ onSampleDataLoaded }: FileUploadProps = {}) {
       {uploadedFiles.length > 0 && (
         <Card className="border-green-500/30">
           <CardContent className="p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h4 className="font-semibold flex items-center gap-2 text-white">
+            <h4 className="font-semibold flex items-center gap-2 text-white mb-4">
               <FileJson className="w-5 h-5 text-green-400" />
               Uploaded Files ({uploadedFiles.length})
             </h4>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setIsCollapsed(true)}
-                    className="text-white/70 hover:text-white"
-                  >
-                    <ChevronUp className="w-4 h-4 mr-1" />
-                    Collapse
-                  </Button>
-                </div>
             <div className="space-y-2">
               {uploadedFiles.map((file, index) => (
                 <div
@@ -282,8 +227,6 @@ export function FileUpload({ onSampleDataLoaded }: FileUploadProps = {}) {
             </div>
           </CardContent>
         </Card>
-          )}
-        </>
       )}
     </div>
   );

@@ -34,3 +34,4 @@ export function getMonthFromYearMonth(yearMonth: string): number {
   return parseInt(yearMonth.split('-')[1], 10);
 }
 
+

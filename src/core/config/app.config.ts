@@ -21,3 +21,4 @@ export const appConfig = {
   animationDuration: 300,
 } as const;
 
+
