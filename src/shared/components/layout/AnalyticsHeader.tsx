@@ -45,7 +45,6 @@ export function AnalyticsHeader({ hasData, onShowStoryMode, renderShareMenu }: A
         description="This will remove all uploaded files and analytics data. You'll need to upload your files again to view your stats."
         confirmText="Clear Data"
         cancelText="Cancel"
-        variant="warning"
       />
 
       <header className="border-b border-white/10 bg-black/20 backdrop-blur-lg sticky top-0 z-50">
