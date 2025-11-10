@@ -23,12 +23,6 @@ export default function OverviewPage() {
   const { minDate, maxDate } = useDateRange();
   const { sortBy, setSortBy } = useFilterSettings();
 
-  // Redirect to upload page if no data
-  if (!stats) {
-    navigate('/');
-    return null;
-  }
-
   return (
     <AnalyticsLayout>
       {/* Header */}

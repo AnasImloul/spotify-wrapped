@@ -11,6 +11,7 @@ import DeepDivePage from '@/pages/analytics/DeepDivePage';
 import StoryModePage from '@/pages/StoryModePage';
 import SharedViewPage from '@/pages/SharedViewPage';
 import LegacyShareRedirectPage from '@/pages/LegacyShareRedirectPage';
+import ProtectedRoute from './ProtectedRoute';
 
 export default function AppRoutes() {
   return (
@@ -18,20 +19,26 @@ export default function AppRoutes() {
       {/* Upload page */}
       <Route path="/" element={<UploadPage />} />
 
-      {/* Analytics pages */}
-      <Route path="/analytics/overview" element={<OverviewPage />} />
-      <Route path="/analytics/insights" element={<InsightsPage />} />
-      <Route path="/analytics/deep-dive" element={<DeepDivePage />} />
-      <Route path="/analytics" element={<Navigate to="/analytics/overview" replace />} />
+      {/* Protected routes - all require data */}
+      <Route element={<ProtectedRoute />}>
+        {/* Analytics pages */}
+        <Route path="/analytics/overview" element={<OverviewPage />} />
+        <Route path="/analytics/insights" element={<InsightsPage />} />
+        <Route path="/analytics/deep-dive" element={<DeepDivePage />} />
+        <Route path="/analytics" element={<Navigate to="/analytics/overview" replace />} />
 
-      {/* Story Mode */}
-      <Route path="/story" element={<StoryModePage />} />
+        {/* Story Mode */}
+        <Route path="/story" element={<StoryModePage />} />
+      </Route>
 
       {/* Shared analytics view with path parameter */}
       <Route path="/share/:id" element={<SharedViewPage />} />
 
       {/* Backward compatibility: redirect old query param format */}
       <Route path="/share" element={<LegacyShareRedirectPage />} />
+
+      {/* Catch all unmatched routes - redirect to upload page */}
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }

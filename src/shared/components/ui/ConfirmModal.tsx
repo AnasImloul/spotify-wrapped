@@ -39,7 +39,7 @@ export function ConfirmModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md bg-gradient-to-br from-slate-950 via-green-950/50 to-slate-950 border-green-500/30 backdrop-blur-xl">
+      <DialogContent className="sm:max-w-md bg-slate-950/90 border-green-500/30 backdrop-blur-xl">
         <DialogHeader>
           <div className="flex items-center gap-3 mb-2">
             <div className="w-10 h-10 rounded-full flex items-center justify-center bg-green-500/20 border border-green-500/30">

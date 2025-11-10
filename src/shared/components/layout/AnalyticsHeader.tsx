@@ -4,10 +4,11 @@
  */
 
 import { useState } from 'react';
-import { Music2, Sparkles } from 'lucide-react';
+import { Music2, Sparkles, HelpCircle } from 'lucide-react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { Button, ConfirmModal } from '@/shared/components/ui';
 import { useSpotifyData } from '@/shared/hooks';
+import { InstructionsModal } from './InstructionsModal';
 
 interface AnalyticsHeaderProps {
   hasData: boolean;
@@ -19,6 +20,7 @@ export function AnalyticsHeader({ hasData, onShowStoryMode, renderShareMenu }: A
   const navigate = useNavigate();
   const { clearData } = useSpotifyData();
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [showInstructionsModal, setShowInstructionsModal] = useState(false);
 
   const handleLogoClick = () => {
     if (hasData) {
@@ -45,6 +47,11 @@ export function AnalyticsHeader({ hasData, onShowStoryMode, renderShareMenu }: A
         description="This will remove all uploaded files and analytics data. You'll need to upload your files again to view your stats."
         confirmText="Clear Data"
         cancelText="Cancel"
+      />
+      
+      <InstructionsModal
+        open={showInstructionsModal}
+        onOpenChange={setShowInstructionsModal}
       />
 
       <header className="border-b border-white/10 bg-black/20 backdrop-blur-lg sticky top-0 z-50">
@@ -128,7 +135,7 @@ export function AnalyticsHeader({ hasData, onShowStoryMode, renderShareMenu }: A
           </div>
           
           {/* Header Actions */}
-          {hasData && (
+          {hasData ? (
             <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
               {renderShareMenu?.()}
               <Button
@@ -139,6 +146,19 @@ export function AnalyticsHeader({ hasData, onShowStoryMode, renderShareMenu }: A
               >
                 <Sparkles className="w-4 h-4 sm:mr-2" />
                 <span className="hidden sm:inline">Story</span>
+              </Button>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <Button
+                onClick={() => setShowInstructionsModal(true)}
+                size="sm"
+                variant="outline"
+                className="bg-green-500/10 hover:bg-green-500/20 text-green-400 border-green-500/30 hover:border-green-500/50 px-3 sm:px-4"
+              >
+                <HelpCircle className="w-4 h-4 sm:mr-2" />
+                <span className="hidden sm:inline">How to Get Your Data</span>
+                <span className="sm:hidden">Help</span>
               </Button>
             </div>
           )}

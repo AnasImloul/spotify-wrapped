@@ -18,12 +18,6 @@ export default function DeepDivePage() {
   const navigate = useNavigate();
   const { stats } = useSpotifyData();
 
-  // Redirect to upload page if no data
-  if (!stats) {
-    navigate('/');
-    return null;
-  }
-
   return (
     <AnalyticsLayout>
       {/* Header */}
