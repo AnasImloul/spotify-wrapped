@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/components/ui/card';
+import { Card, CardContent } from '@/shared/components/ui/card';
 import { Flame, Calendar, TrendingUp } from 'lucide-react';
 import { useSpotifyData } from '@/shared/hooks';
 import { formatNumber } from '@/shared/utils';
@@ -69,35 +69,26 @@ export function ListeningStreak() {
 
   return (
     <Card className="bg-black/40 border-white/10">
-      <CardHeader>
-        <CardTitle className="text-2xl font-bold text-white flex items-center gap-3">
-          <Flame className="w-7 h-7 text-orange-400" />
-          Listening Consistency
-        </CardTitle>
-        <CardDescription className="text-white/60">
-          Your historical listening patterns and active days
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
+      <CardContent className="pt-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Longest Streak */}
-          <div className="bg-gradient-to-br from-orange-500/20 to-red-600/20 border-2 border-orange-500/30 rounded-lg p-6 text-center">
-            <Flame className="w-8 h-8 text-orange-400 mx-auto mb-3" />
+          <div className="bg-gradient-to-br from-amber-500/20 to-yellow-600/20 border-2 border-amber-500/30 rounded-lg p-6 text-center hover:scale-105 transition-all duration-300">
+            <Flame className="w-8 h-8 text-amber-400 mx-auto mb-3" />
             <p className="text-4xl font-bold text-white mb-2">{streakData.longestStreak}</p>
             <p className="text-sm text-white/70 font-medium">Best Streak</p>
             <p className="text-xs text-white/50 mt-1">Consecutive days</p>
           </div>
 
           {/* Total Active Days */}
-          <div className="bg-gradient-to-br from-blue-500/20 to-cyan-600/20 border-2 border-blue-500/30 rounded-lg p-6 text-center">
-            <Calendar className="w-8 h-8 text-blue-400 mx-auto mb-3" />
+          <div className="bg-gradient-to-br from-teal-500/20 to-cyan-600/20 border-2 border-teal-500/30 rounded-lg p-6 text-center hover:scale-105 transition-all duration-300">
+            <Calendar className="w-8 h-8 text-teal-400 mx-auto mb-3" />
             <p className="text-4xl font-bold text-white mb-2">{formatNumber(streakData.totalActiveDays)}</p>
             <p className="text-sm text-white/70 font-medium">Active Days</p>
             <p className="text-xs text-white/50 mt-1">Days with activity</p>
           </div>
 
           {/* Average per Active Day */}
-          <div className="bg-gradient-to-br from-green-500/20 to-emerald-600/20 border-2 border-green-500/30 rounded-lg p-6 text-center">
+          <div className="bg-gradient-to-br from-green-500/20 to-emerald-600/20 border-2 border-green-500/30 rounded-lg p-6 text-center hover:scale-105 transition-all duration-300">
             <TrendingUp className="w-8 h-8 text-green-400 mx-auto mb-3" />
             <p className="text-4xl font-bold text-white mb-2">{formatNumber(streakData.avgMinutesPerActiveDay)}</p>
             <p className="text-sm text-white/70 font-medium">Avg Minutes</p>
@@ -105,8 +96,8 @@ export function ListeningStreak() {
           </div>
 
           {/* Most Active Day */}
-          <div className="bg-gradient-to-br from-purple-500/20 to-pink-600/20 border-2 border-purple-500/30 rounded-lg p-6 text-center">
-            <TrendingUp className="w-8 h-8 text-purple-400 mx-auto mb-3" />
+          <div className="bg-gradient-to-br from-emerald-400/20 to-teal-500/20 border-2 border-emerald-400/30 rounded-lg p-6 text-center hover:scale-105 transition-all duration-300">
+            <TrendingUp className="w-8 h-8 text-emerald-300 mx-auto mb-3" />
             <p className="text-4xl font-bold text-white mb-2">{formatNumber(streakData.maxMinutes)}</p>
             <p className="text-sm text-white/70 font-medium">Peak Day</p>
             <p className="text-xs text-white/50 mt-1">

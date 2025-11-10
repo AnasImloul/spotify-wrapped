@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/components/ui/card';
-import { Sun, Moon, Sunrise, Sunset, Zap, Heart, Coffee, Music } from 'lucide-react';
+import { Card, CardContent } from '@/shared/components/ui/card';
+import { Sun, Moon, Sunrise, Sunset, Zap, Heart, Coffee, Music, Sparkles } from 'lucide-react';
 import { useSpotifyData } from '@/shared/hooks';
 import { cn } from '@/shared/utils';
 
@@ -124,9 +124,10 @@ export function MoodEnergyAnalysis() {
       time: '6 AM - 12 PM',
       icon: Sunrise,
       mood: moodProfile.morningMood,
-      color: 'from-yellow-500 to-orange-500',
-      bgColor: 'from-yellow-500/20 to-orange-500/20',
-      borderColor: 'border-yellow-500/40',
+      color: 'from-amber-400 to-yellow-500',
+      bgColor: 'from-amber-400/20 to-yellow-500/20',
+      borderColor: 'border-amber-400/35',
+      iconColor: 'text-amber-300',
       description: 'Energetic & Fresh',
     },
     {
@@ -135,9 +136,10 @@ export function MoodEnergyAnalysis() {
       time: '12 PM - 6 PM',
       icon: Sun,
       mood: moodProfile.afternoonMood,
-      color: 'from-orange-500 to-red-500',
-      bgColor: 'from-orange-500/20 to-red-500/20',
-      borderColor: 'border-orange-500/40',
+      color: 'from-yellow-500 to-amber-600',
+      bgColor: 'from-yellow-500/20 to-amber-600/20',
+      borderColor: 'border-yellow-500/35',
+      iconColor: 'text-yellow-300',
       description: 'Focused & Productive',
     },
     {
@@ -146,9 +148,10 @@ export function MoodEnergyAnalysis() {
       time: '6 PM - 12 AM',
       icon: Sunset,
       mood: moodProfile.eveningMood,
-      color: 'from-purple-500 to-pink-500',
-      bgColor: 'from-purple-500/20 to-pink-500/20',
-      borderColor: 'border-purple-500/40',
+      color: 'from-teal-400 to-cyan-500',
+      bgColor: 'from-teal-400/20 to-cyan-500/20',
+      borderColor: 'border-teal-400/35',
+      iconColor: 'text-teal-300',
       description: 'Relaxed & Chill',
     },
     {
@@ -157,9 +160,10 @@ export function MoodEnergyAnalysis() {
       time: '12 AM - 6 AM',
       icon: Moon,
       mood: moodProfile.nightMood,
-      color: 'from-blue-500 to-indigo-500',
-      bgColor: 'from-blue-500/20 to-indigo-500/20',
-      borderColor: 'border-blue-500/40',
+      color: 'from-slate-500 to-indigo-600',
+      bgColor: 'from-slate-500/20 to-indigo-600/20',
+      borderColor: 'border-slate-500/35',
+      iconColor: 'text-slate-300',
       description: 'Calm & Introspective',
     },
   ];
@@ -169,25 +173,37 @@ export function MoodEnergyAnalysis() {
       title: 'Energetic Listener',
       description: 'You used music to fuel your energy and start your days strong',
       icon: Zap,
-      color: 'text-yellow-400',
+      color: 'text-amber-400',
+      bgGradient: 'from-amber-500/20 to-yellow-500/20',
+      borderColor: 'border-amber-500/40',
+      iconGradient: 'from-amber-500 to-yellow-500',
     },
     focused: {
       title: 'Focused Listener',
       description: 'Music helped you stay productive and concentrate during this period',
       icon: Coffee,
-      color: 'text-orange-400',
+      color: 'text-yellow-400',
+      bgGradient: 'from-yellow-500/20 to-amber-600/20',
+      borderColor: 'border-yellow-500/40',
+      iconGradient: 'from-yellow-500 to-amber-600',
     },
     relaxed: {
       title: 'Relaxed Listener',
       description: 'You wound down with music, using it to relax and unwind',
       icon: Heart,
-      color: 'text-purple-400',
+      color: 'text-teal-400',
+      bgGradient: 'from-teal-500/20 to-cyan-500/20',
+      borderColor: 'border-teal-500/40',
+      iconGradient: 'from-teal-500 to-cyan-500',
     },
     varied: {
       title: 'Balanced Listener',
       description: 'You enjoyed music at all times throughout your listening history',
       icon: Music,
       color: 'text-green-400',
+      bgGradient: 'from-green-500/20 to-emerald-500/20',
+      borderColor: 'border-green-500/40',
+      iconGradient: 'from-green-500 to-emerald-500',
     },
   };
 
@@ -196,20 +212,18 @@ export function MoodEnergyAnalysis() {
 
   return (
     <Card className="bg-black/40 border-white/10">
-      <CardHeader>
-        <CardTitle className="text-2xl font-bold text-white flex items-center gap-3">
-          <Zap className="w-7 h-7 text-yellow-400" />
-          Mood & Energy Profile
-        </CardTitle>
-        <CardDescription className="text-white/60">
-          Understand when you listened to music most throughout your history
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent className="pt-6 space-y-6">
         {/* Dominant Profile */}
-        <div className={`bg-gradient-to-br ${profile.color === 'text-yellow-400' ? 'from-yellow-500/20 to-orange-500/20' : profile.color === 'text-orange-400' ? 'from-orange-500/20 to-red-500/20' : profile.color === 'text-purple-400' ? 'from-purple-500/20 to-pink-500/20' : 'from-green-500/20 to-emerald-500/20'} rounded-xl p-6 border-2 ${profile.color === 'text-yellow-400' ? 'border-yellow-500/40' : profile.color === 'text-orange-400' ? 'border-orange-500/40' : profile.color === 'text-purple-400' ? 'border-purple-500/40' : 'border-green-500/40'}`}>
+        <div className={cn(
+          'bg-gradient-to-br rounded-xl p-6 border-2 hover:scale-[1.01] transition-all duration-300',
+          profile.bgGradient,
+          profile.borderColor
+        )}>
           <div className="flex items-center gap-4 mb-3">
-            <div className={`w-12 h-12 flex-shrink-0 rounded-full bg-gradient-to-br ${profile.color === 'text-yellow-400' ? 'from-yellow-500 to-orange-500' : profile.color === 'text-orange-400' ? 'from-orange-500 to-red-500' : profile.color === 'text-purple-400' ? 'from-purple-500 to-pink-500' : 'from-green-500 to-emerald-500'} flex items-center justify-center shadow-lg`}>
+            <div className={cn(
+              'w-12 h-12 flex-shrink-0 rounded-full bg-gradient-to-br flex items-center justify-center shadow-lg',
+              profile.iconGradient
+            )}>
               <ProfileIcon className="w-6 h-6 text-white" />
             </div>
             <div>
@@ -228,11 +242,11 @@ export function MoodEnergyAnalysis() {
               <div
                 key={period.id}
                 className={cn(
-                  'rounded-xl p-4 border-2 transition-all duration-300 hover:scale-105',
+                  'rounded-xl p-4 border-2 transition-all duration-300 hover:scale-105 cursor-pointer',
                   `bg-gradient-to-br ${period.bgColor} ${period.borderColor}`
                 )}
               >
-                <Icon className="w-8 h-8 text-white mb-3" />
+                <Icon className={cn('w-8 h-8 mb-3', period.iconColor)} />
                 <h4 className="font-bold text-white mb-1">{period.label}</h4>
                 <p className="text-xs text-white/60 mb-2">{period.time}</p>
                 <p className="text-sm text-white/80 mb-2">{period.description}</p>
@@ -245,14 +259,14 @@ export function MoodEnergyAnalysis() {
         {/* Insights */}
         <div>
           <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-            <Sparkles className="w-5 h-5 text-purple-400" />
+            <Sparkles className="w-5 h-5 text-teal-400" />
             Your Listening Insights
           </h3>
           <div className="space-y-3">
             {moodProfile.insights.map((insight, index) => (
               <div
                 key={index}
-                className="bg-white/5 rounded-lg p-4 border border-white/10 hover:bg-white/10 transition-all duration-200"
+                className="bg-white/5 rounded-lg p-4 border border-white/10 hover:bg-white/10 hover:border-teal-500/20 transition-all duration-200"
               >
                 <p className="text-white/90">{insight}</p>
               </div>
@@ -264,6 +278,4 @@ export function MoodEnergyAnalysis() {
   );
 }
 
-// Import Sparkles for the component
-import { Sparkles } from 'lucide-react';
 

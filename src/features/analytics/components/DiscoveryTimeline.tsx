@@ -1,5 +1,5 @@
 import { useMemo, useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/components/ui/card';
+import { Card, CardContent } from '@/shared/components/ui/card';
 import { Button } from '@/shared/components/ui/button';
 import { Badge } from '@/shared/components/ui/badge';
 import { Sparkles, Calendar, Music, Headphones, TrendingUp, ChevronDown, ChevronUp } from 'lucide-react';
@@ -207,16 +207,7 @@ export function DiscoveryTimeline() {
   if (!stats || discoveryData.length === 0) {
     return (
       <Card className="bg-black/40 border-white/10">
-        <CardHeader>
-          <CardTitle className="text-2xl font-bold text-white flex items-center gap-3">
-            <Sparkles className="w-7 h-7 text-purple-400" />
-            Discovery Timeline
-          </CardTitle>
-          <CardDescription className="text-white/60">
-            Artists and tracks you listened to consistently (at least {DISCOVERY_CONFIG.MIN_PLAYS_PER_WEEK}x/week for {DISCOVERY_CONFIG.MIN_WEEKS_DURATION}+ weeks, minimum {DISCOVERY_CONFIG.MIN_STREAM_DURATION_MS / 1000}s per stream)
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
+        <CardContent className="pt-6">
           <div className="text-center py-12 text-white/40">
             <Sparkles className="w-12 h-12 mx-auto mb-3 opacity-50" />
             <p>No consistently listened music found in your history</p>
@@ -229,17 +220,10 @@ export function DiscoveryTimeline() {
 
   return (
     <Card className="bg-black/40 border-white/10">
-      <CardHeader>
-        <div className="flex items-start justify-between gap-4 flex-wrap">
+      <CardContent className="pt-6">
+        <div className="flex items-start justify-between gap-4 flex-wrap mb-6">
           <div>
-            <CardTitle className="text-2xl font-bold text-white flex items-center gap-3">
-              <Sparkles className="w-7 h-7 text-purple-400" />
-              Discovery Timeline
-            </CardTitle>
-            <CardDescription className="text-white/60 mt-2">
-              Artists and tracks you listened to consistently (at least {DISCOVERY_CONFIG.MIN_PLAYS_PER_WEEK}x/week for {DISCOVERY_CONFIG.MIN_WEEKS_DURATION}+ weeks, minimum {DISCOVERY_CONFIG.MIN_STREAM_DURATION_MS / 1000}s per stream)
-            </CardDescription>
-            <div className="flex gap-2 mt-3">
+            <div className="flex gap-2">
               <Badge variant="secondary" className="bg-gradient-to-r from-green-500/20 to-emerald-500/20 text-white border-green-500/30">
                 <Headphones className="w-3 h-3 mr-1" />
                 {formatNumber(totalArtists)} Artists
@@ -321,8 +305,6 @@ export function DiscoveryTimeline() {
             )}
           </div>
         </div>
-      </CardHeader>
-      <CardContent>
         {groupedByMonth.length === 0 ? (
           <div className="text-center py-12 text-white/40">
             <Sparkles className="w-12 h-12 mx-auto mb-3 opacity-50" />

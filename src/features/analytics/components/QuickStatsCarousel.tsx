@@ -29,28 +29,28 @@ export function QuickStatsCarousel() {
       label: 'Songs Played',
       value: formatNumber(stats.totalTracks),
       subtitle: 'Unique tracks',
-      gradient: 'from-blue-500 to-cyan-600',
+      gradient: 'from-emerald-400 to-green-500',
     },
     {
       icon: Headphones,
       label: 'Artists Explored',
       value: formatNumber(stats.totalArtists),
       subtitle: 'Different artists',
-      gradient: 'from-purple-500 to-pink-600',
+      gradient: 'from-green-600 to-emerald-700',
     },
     {
       icon: Trophy,
       label: 'Top Artist',
       value: stats.topArtists[0]?.name || 'N/A',
       subtitle: `${formatNumber(stats.topArtists[0]?.playCount || 0)} plays`,
-      gradient: 'from-yellow-500 to-orange-600',
+      gradient: 'from-emerald-500 to-green-600',
     },
     {
       icon: TrendingUp,
       label: 'Daily Average',
       value: `${Math.round(stats.averageListeningPerDay || 0)} min`,
       subtitle: 'Every single day',
-      gradient: 'from-red-500 to-rose-600',
+      gradient: 'from-green-400 to-emerald-500',
     },
   ];
 

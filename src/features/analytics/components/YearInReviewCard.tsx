@@ -1,10 +1,8 @@
 import { useMemo } from 'react';
 import { Card, CardContent } from '@/shared/components/ui/card';
-import { Button } from '@/shared/components/ui/button';
-import { Download, Share2, Music, Headphones, Clock, Trophy, Sparkles } from 'lucide-react';
+import { Music, Headphones, Clock, Trophy, Sparkles } from 'lucide-react';
 import { useFilteredStats, useDateRange } from '@/shared/hooks';
 import { formatNumber, msToMinutes } from '@/shared/utils';
-import html2canvas from 'html2canvas';
 
 export function YearInReviewCard() {
   const stats = useFilteredStats();
@@ -42,152 +40,6 @@ export function YearInReviewCard() {
       avgDaily: Math.round(stats.averageListeningPerDay || 0),
     };
   }, [stats, startDate, endDate]);
-
-  const handleDownload = async () => {
-    const element = document.getElementById('year-in-review-card');
-    if (!element) {
-      console.error('Element not found');
-      return;
-    }
-
-    try {
-      // Find the gradient text element and temporarily replace it with solid color
-      const gradientText = element.querySelector('.bg-clip-text');
-      let originalClasses = '';
-      
-      if (gradientText) {
-        originalClasses = gradientText.className;
-        // Replace gradient classes with solid green color
-        gradientText.className = gradientText.className
-          .replace('bg-gradient-to-r', '')
-          .replace('from-green-400', '')
-          .replace('to-blue-500', '')
-          .replace('bg-clip-text', '')
-          .replace('text-transparent', '')
-          .trim() + ' text-green-400';
-      }
-
-      // Hide decorative blur elements during capture
-      const blurElements = element.querySelectorAll('.blur-3xl');
-      blurElements.forEach(el => (el as HTMLElement).style.display = 'none');
-
-      // Remove truncate class temporarily to prevent text cutoff
-      const truncateElements = element.querySelectorAll('.truncate');
-      const originalTruncateClasses: string[] = [];
-      truncateElements.forEach((el, index) => {
-        originalTruncateClasses[index] = el.className;
-        el.className = el.className.replace('truncate', '').trim();
-      });
-
-      const canvas = await html2canvas(element, {
-        backgroundColor: '#0f172a',
-        scale: 2,
-        useCORS: true,
-        allowTaint: false,
-        logging: false,
-      });
-
-      // Restore original classes and elements
-      if (gradientText) {
-        gradientText.className = originalClasses;
-      }
-      blurElements.forEach(el => (el as HTMLElement).style.display = '');
-      truncateElements.forEach((el, index) => {
-        el.className = originalTruncateClasses[index];
-      });
-
-      canvas.toBlob((blob) => {
-        if (!blob) {
-          console.error('Failed to create blob');
-          return;
-        }
-        
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = `spotify-wrapped-${summary?.year}.png`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
-      }, 'image/png');
-    } catch (error) {
-      console.error('Failed to download image:', error);
-    }
-  };
-
-  const handleShare = async () => {
-    const element = document.getElementById('year-in-review-card');
-    if (!element) return;
-
-    try {
-      // Find the gradient text element and temporarily replace it with solid color
-      const gradientText = element.querySelector('.bg-clip-text');
-      let originalClasses = '';
-      
-      if (gradientText) {
-        originalClasses = gradientText.className;
-        // Replace gradient classes with solid green color
-        gradientText.className = gradientText.className
-          .replace('bg-gradient-to-r', '')
-          .replace('from-green-400', '')
-          .replace('to-blue-500', '')
-          .replace('bg-clip-text', '')
-          .replace('text-transparent', '')
-          .trim() + ' text-green-400';
-      }
-
-      // Hide decorative blur elements during capture
-      const blurElements = element.querySelectorAll('.blur-3xl');
-      blurElements.forEach(el => (el as HTMLElement).style.display = 'none');
-
-      // Remove truncate class temporarily to prevent text cutoff
-      const truncateElements = element.querySelectorAll('.truncate');
-      const originalTruncateClasses: string[] = [];
-      truncateElements.forEach((el, index) => {
-        originalTruncateClasses[index] = el.className;
-        el.className = el.className.replace('truncate', '').trim();
-      });
-
-      const canvas = await html2canvas(element, {
-        backgroundColor: '#0f172a',
-        scale: 2,
-        useCORS: true,
-        allowTaint: false,
-        logging: false,
-      });
-
-      // Restore original classes and elements
-      if (gradientText) {
-        gradientText.className = originalClasses;
-      }
-      blurElements.forEach(el => (el as HTMLElement).style.display = '');
-      truncateElements.forEach((el, index) => {
-        el.className = originalTruncateClasses[index];
-      });
-
-      canvas.toBlob(async (blob) => {
-        if (!blob) return;
-
-        const file = new File([blob], `spotify-wrapped-${summary?.year}.png`, {
-          type: 'image/png',
-        });
-
-        if (navigator.share && navigator.canShare?.({ files: [file] })) {
-          await navigator.share({
-            title: `My ${summary?.year} Wrapped`,
-            text: `Check out my music stats for ${summary?.year}!`,
-            files: [file],
-          });
-        } else {
-          // Fallback to download
-          handleDownload();
-        }
-      }, 'image/png');
-    } catch (error) {
-      console.error('Failed to share:', error);
-    }
-  };
 
   if (!stats || !summary) return null;
 
@@ -298,34 +150,6 @@ export function YearInReviewCard() {
                 </p>
               </div>
             )}
-
-            {/* Footer */}
-            <div className="text-center pt-4 border-t border-white/10">
-              <p className="text-sm text-white/40">
-                Generated with Spotify Wrapped Analytics
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Action Buttons */}
-        <div className="p-6 bg-black/60 backdrop-blur-lg border-t border-white/10">
-          <div className="flex gap-3 justify-center flex-wrap">
-            <Button
-              onClick={handleDownload}
-              className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white gap-2"
-            >
-              <Download className="w-4 h-4" />
-              Download
-            </Button>
-            <Button
-              onClick={handleShare}
-              variant="outline"
-              className="border-white/20 text-white hover:bg-white/10 gap-2"
-            >
-              <Share2 className="w-4 h-4" />
-              Share
-            </Button>
           </div>
         </div>
       </CardContent>
