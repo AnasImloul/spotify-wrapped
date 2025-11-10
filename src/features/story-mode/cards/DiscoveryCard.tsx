@@ -38,7 +38,7 @@ export function DiscoveryCard({ uniqueArtists, uniqueTracks }: DiscoveryCardProp
         <div className="space-y-6 sm:space-y-8">
           <div className="text-center">
             <p className="text-pink-200 text-base sm:text-lg md:text-xl mb-2 sm:mb-3 uppercase tracking-wider">Artists Explored</p>
-            <h2 className="text-5xl sm:text-6xl md:text-7xl font-bold bg-gradient-to-r from-pink-300 to-rose-400 bg-clip-text text-transparent">
+            <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold bg-gradient-to-r from-pink-300 to-rose-400 bg-clip-text text-transparent">
               {formatNumber(animatedArtists)}
             </h2>
           </div>
@@ -47,7 +47,7 @@ export function DiscoveryCard({ uniqueArtists, uniqueTracks }: DiscoveryCardProp
 
           <div className="text-center">
             <p className="text-purple-200 text-base sm:text-lg md:text-xl mb-2 sm:mb-3 uppercase tracking-wider">Tracks Discovered</p>
-            <h2 className="text-5xl sm:text-6xl md:text-7xl font-bold bg-gradient-to-r from-purple-300 to-pink-400 bg-clip-text text-transparent">
+            <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold bg-gradient-to-r from-purple-300 to-pink-400 bg-clip-text text-transparent">
               {formatNumber(animatedTracks)}
             </h2>
           </div>

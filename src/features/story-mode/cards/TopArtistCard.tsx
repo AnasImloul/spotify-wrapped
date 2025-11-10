@@ -43,14 +43,14 @@ export function TopArtistCard({ name, minutes, playCount }: TopArtistCardProps) 
         {/* Stats */}
         <div className="flex gap-4 sm:gap-6 md:gap-8 items-center justify-center flex-wrap">
           <div className="text-center">
-            <p className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-green-300 to-green-500 bg-clip-text text-transparent">
+            <p className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-green-300 to-green-500 bg-clip-text text-transparent">
               {formatNumber(animatedMinutes)}
             </p>
             <p className="text-white/60 text-sm sm:text-base md:text-lg uppercase tracking-wider mt-1">Minutes</p>
           </div>
           <div className="w-px h-10 sm:h-12 md:h-14 bg-white/20" />
           <div className="text-center">
-            <p className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-300 to-blue-500 bg-clip-text text-transparent">
+            <p className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-300 to-blue-500 bg-clip-text text-transparent">
               {formatNumber(animatedPlays)}
             </p>
             <p className="text-white/60 text-sm sm:text-base md:text-lg uppercase tracking-wider mt-1">Plays</p>

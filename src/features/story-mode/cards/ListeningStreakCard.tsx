@@ -34,7 +34,7 @@ export function ListeningStreakCard({ streak }: ListeningStreakCardProps) {
 
         {/* Main stat */}
         <div className="space-y-2 sm:space-y-3">
-          <h1 className="text-6xl sm:text-7xl md:text-8xl font-bold bg-gradient-to-r from-orange-300 via-red-400 to-orange-500 bg-clip-text text-transparent">
+          <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold bg-gradient-to-r from-orange-300 via-red-400 to-orange-500 bg-clip-text text-transparent">
             {animatedStreak}
           </h1>
           <p className="text-2xl sm:text-3xl md:text-4xl text-white/80 font-light">consecutive days</p>

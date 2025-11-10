@@ -45,7 +45,7 @@ export function SummaryCard({ totalTracks, uniqueArtists, uniqueTracks, dateRang
                 <Music className="w-4 h-4 sm:w-6 sm:h-6 md:w-7 md:h-7 text-green-400" />
               </div>
             </div>
-            <p className="text-lg sm:text-3xl md:text-4xl font-bold text-white">
+            <p className="text-base sm:text-2xl md:text-3xl font-bold text-white">
               {formatNumber(totalTracks)}
             </p>
             <p className="text-white/60 text-[10px] sm:text-sm md:text-base uppercase tracking-wider leading-tight">Songs</p>
@@ -57,7 +57,7 @@ export function SummaryCard({ totalTracks, uniqueArtists, uniqueTracks, dateRang
                 <TrendingUp className="w-4 h-4 sm:w-6 sm:h-6 md:w-7 md:h-7 text-blue-400" />
               </div>
             </div>
-            <p className="text-lg sm:text-3xl md:text-4xl font-bold text-white">
+            <p className="text-base sm:text-2xl md:text-3xl font-bold text-white">
               {formatNumber(uniqueArtists)}
             </p>
             <p className="text-white/60 text-[10px] sm:text-sm md:text-base uppercase tracking-wider leading-tight">Artists</p>
@@ -69,7 +69,7 @@ export function SummaryCard({ totalTracks, uniqueArtists, uniqueTracks, dateRang
                 <Sparkles className="w-4 h-4 sm:w-6 sm:h-6 md:w-7 md:h-7 text-purple-400" />
               </div>
             </div>
-            <p className="text-lg sm:text-3xl md:text-4xl font-bold text-white">
+            <p className="text-base sm:text-2xl md:text-3xl font-bold text-white">
               {formatNumber(uniqueTracks)}
             </p>
             <p className="text-white/60 text-[10px] sm:text-sm md:text-base uppercase tracking-wider leading-tight">Tracks</p>

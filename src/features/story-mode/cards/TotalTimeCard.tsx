@@ -39,7 +39,7 @@ export function TotalTimeCard({ minutes, funFact }: TotalTimeCardProps) {
 
         {/* Main stat */}
         <div className="space-y-2 sm:space-y-3">
-          <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold bg-gradient-to-r from-blue-300 via-cyan-300 to-blue-400 bg-clip-text text-transparent">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold bg-gradient-to-r from-blue-300 via-cyan-300 to-blue-400 bg-clip-text text-transparent">
             {formatNumber(animatedMinutes)}
           </h1>
           <p className="text-2xl sm:text-3xl md:text-4xl text-white/80 font-light">minutes</p>
@@ -49,12 +49,12 @@ export function TotalTimeCard({ minutes, funFact }: TotalTimeCardProps) {
         <div className="flex gap-3 sm:gap-4 md:gap-6 items-center justify-center flex-wrap text-white/60 text-base sm:text-lg md:text-xl">
           <div className="flex items-center gap-2">
             <span className="text-lg sm:text-xl md:text-2xl">=</span>
-            <span className="text-xl sm:text-2xl md:text-3xl font-semibold text-white">{formatNumber(hours)}</span>
+            <span className="text-lg sm:text-xl md:text-2xl font-semibold text-white">{formatNumber(hours)}</span>
             <span>hours</span>
           </div>
           <div className="flex items-center gap-2">
             <span className="text-lg sm:text-xl md:text-2xl">=</span>
-            <span className="text-xl sm:text-2xl md:text-3xl font-semibold text-white">{days}</span>
+            <span className="text-lg sm:text-xl md:text-2xl font-semibold text-white">{days}</span>
             <span>days</span>
           </div>
         </div>
