@@ -1,24 +1,24 @@
 import { BrowserRouter } from 'react-router-dom';
-import AppRoutes from './routes';
-import { PWAInstallPrompt } from './components/PWAInstallPrompt';
-import { SpotifyDataProvider, DateRangeProvider, FilterProvider, BrandingProvider, ThemeProvider } from './contexts';
+import AppRoutes from './app/router/AppRoutes';
+import { PWAInstallPrompt } from '@/features/onboarding';
+import { SpotifyDataProvider, DateRangeProvider } from '@/shared/contexts';
+import { FilterProvider } from '@/features/analytics/contexts';
+import { BrandingProvider } from '@/features/sharing/contexts';
 
 function App() {
   return (
     <>
       <PWAInstallPrompt />
       <BrowserRouter>
-      <ThemeProvider>
         <DateRangeProvider>
           <FilterProvider>
             <SpotifyDataProvider>
               <BrandingProvider>
-                  <AppRoutes />
+                <AppRoutes />
               </BrandingProvider>
             </SpotifyDataProvider>
           </FilterProvider>
         </DateRangeProvider>
-      </ThemeProvider>
       </BrowserRouter>
     </>
   );

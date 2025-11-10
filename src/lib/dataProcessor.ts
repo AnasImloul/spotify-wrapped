@@ -3,7 +3,7 @@ import {
   ExtendedStreamingHistoryEntry,
   ProcessedStats,
   UploadedFile,
-} from '@/types/spotify';
+} from '@/shared/types';
 import { sortArtists, sortTracks } from './sorting';
 import { detectFileTypeBySchema } from './schemas';
 

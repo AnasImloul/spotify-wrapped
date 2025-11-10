@@ -1,5 +1,5 @@
 import { Navigate, useParams, useNavigate } from 'react-router-dom';
-import { SharedAnalyticsView } from '../components/SharedAnalyticsView';
+import { SharedAnalyticsView } from '@/features/sharing';
 
 export default function SharedViewPage() {
   const { id } = useParams<{ id: string }>();

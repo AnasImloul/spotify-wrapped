@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
-import { StoryMode } from '@/components/StoryMode';
-import { useSpotifyData } from '@/hooks';
+import { StoryMode } from '@/features/story-mode';
+import { useSpotifyData } from '@/shared/hooks';
 
 export default function StoryModePage() {
   const navigate = useNavigate();

@@ -3,7 +3,7 @@
  * Allows users to explore the app without uploading their own data
  */
 
-import { StreamingHistoryEntry } from '@/types/spotify';
+import { StreamingHistoryEntry } from '@/shared/types';
 
 // Diverse artists across multiple genres for realistic sample data
 const sampleArtists = [

@@ -4,9 +4,6 @@
  */
 
 export const FEATURE_FLAGS = {
-  // Theme switcher (dark/light/auto modes)
-  THEME_TOGGLE: false,
-  
   // PWA install prompt
   PWA_INSTALL_PROMPT: true,
   

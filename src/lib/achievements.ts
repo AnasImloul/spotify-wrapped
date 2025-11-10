@@ -1,4 +1,4 @@
-import { ProcessedStats, StreamingHistoryEntry } from '@/types/spotify';
+import { ProcessedStats, StreamingHistoryEntry } from '@/shared/types';
 import { msToMinutes } from './utils';
 
 export interface Achievement {

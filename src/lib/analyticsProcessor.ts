@@ -1,4 +1,4 @@
-import { StreamingHistoryEntry } from '@/types/spotify';
+import { StreamingHistoryEntry } from '@/shared/types';
 
 /**
  * Heatmap data structure: [dayOfWeek][hour] = minutes
