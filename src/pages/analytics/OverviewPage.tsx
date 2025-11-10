@@ -39,7 +39,7 @@ export default function OverviewPage() {
       />
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-12 space-y-12">
+      <main className="flex-grow container mx-auto px-4 py-12 space-y-12">
         {stats && minDate && maxDate && (
           <>
             <div data-tour="date-range">

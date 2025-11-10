@@ -4,7 +4,6 @@ import {
   AnalyticsLayout,
   AnalyticsHeader,
   AnalyticsHero,
-  AnalyticsInstructionsSection,
   AnalyticsFooter
 } from '@/shared/components/layout';
 import {
@@ -68,7 +67,7 @@ export default function UploadPage() {
       />
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-12 space-y-12">
+      <main className="flex-grow container mx-auto px-4 py-12 space-y-12">
         <AnalyticsHero />
         
         <FileUpload />
@@ -87,8 +86,7 @@ export default function UploadPage() {
             </div>
           </div>
         )}
-
-        {!stats && <AnalyticsInstructionsSection />}
+        
       </main>
 
       <AnalyticsFooter />

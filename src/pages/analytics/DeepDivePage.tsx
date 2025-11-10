@@ -34,7 +34,7 @@ export default function DeepDivePage() {
       />
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-12 space-y-12">
+      <main className="flex-grow container mx-auto px-4 py-12 space-y-12">
         {stats && (
           <div className="space-y-12 animate-fade-in">
             <div>
