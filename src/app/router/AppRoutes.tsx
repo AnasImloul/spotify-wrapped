@@ -5,6 +5,7 @@
 
 import { Routes, Route, Navigate } from 'react-router-dom';
 import UploadPage from '@/pages/UploadPage';
+import AnalyticsPageLayout from '@/pages/analytics/AnalyticsPageLayout';
 import OverviewPage from '@/pages/analytics/OverviewPage';
 import InsightsPage from '@/pages/analytics/InsightsPage';
 import DeepDivePage from '@/pages/analytics/DeepDivePage';
@@ -21,11 +22,13 @@ export default function AppRoutes() {
 
       {/* Protected routes - all require data */}
       <Route element={<ProtectedRoute />}>
-        {/* Analytics pages */}
-        <Route path="/analytics/overview" element={<OverviewPage />} />
-        <Route path="/analytics/insights" element={<InsightsPage />} />
-        <Route path="/analytics/deep-dive" element={<DeepDivePage />} />
-        <Route path="/analytics" element={<Navigate to="/analytics/overview" replace />} />
+        {/* Analytics pages - shared layout with nested routes */}
+        <Route path="/analytics" element={<AnalyticsPageLayout />}>
+          <Route index element={<Navigate to="/analytics/overview" replace />} />
+          <Route path="overview" element={<OverviewPage />} />
+          <Route path="insights" element={<InsightsPage />} />
+          <Route path="deep-dive" element={<DeepDivePage />} />
+        </Route>
 
         {/* Story Mode */}
         <Route path="/story" element={<StoryModePage />} />

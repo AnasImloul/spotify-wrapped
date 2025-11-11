@@ -77,22 +77,22 @@ export function MonthPicker({ value, minDate, maxDate, onChange, label }: MonthP
 
   return (
     <div className="flex-1 relative" ref={dropdownRef}>
-      <label className="text-xs text-green-300/80 mb-1.5 block font-medium">{label}</label>
+      <label className="text-xs text-green-300/80 mb-1 lg:mb-1.5 block font-medium">{label}</label>
       <div className="relative overflow-visible">
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="w-full px-4 py-2.5 rounded-xl bg-black/40 backdrop-blur-md border border-green-500/20 text-white focus:outline-none focus:ring-2 focus:ring-green-500/40 focus:border-green-500/40 hover:bg-black/50 hover:border-green-500/30 transition-all duration-200 font-medium text-left flex items-center justify-between gap-2"
+          className="w-full px-3 py-2 lg:px-4 lg:py-2.5 rounded-lg bg-black/40 backdrop-blur-md border border-green-500/20 text-white focus:outline-none focus:ring-2 focus:ring-green-500/40 focus:border-green-500/40 hover:bg-black/50 hover:border-green-500/30 transition-all duration-200 font-medium text-xs lg:text-sm text-left flex items-center justify-between gap-2"
         >
           <span className="whitespace-nowrap overflow-hidden text-ellipsis">{displayValue}</span>
           <ChevronDown
-            className={`w-4 h-4 text-green-400 transition-transform duration-200 flex-shrink-0 ${isOpen ? 'rotate-180' : ''}`}
+            className={`w-3.5 h-3.5 lg:w-4 lg:h-4 text-green-400 transition-transform duration-200 flex-shrink-0 ${isOpen ? 'rotate-180' : ''}`}
           />
         </button>
 
         {isOpen && (
           <div
-            className="absolute z-[9999] mt-2 w-full bg-black/80 border border-green-500/30 rounded-xl shadow-2xl shadow-green-500/10 p-4"
+            className="absolute z-[9999] mt-2 w-full bg-black/80 border border-green-500/30 rounded-lg shadow-2xl shadow-green-500/10 p-4"
             style={{ backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)' }}
           >
             {/* Year selector */}
