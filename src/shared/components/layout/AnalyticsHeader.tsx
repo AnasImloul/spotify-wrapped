@@ -142,7 +142,6 @@ export function AnalyticsHeader({ hasData, onShowStoryMode, renderShareMenu }: A
                 onClick={onShowStoryMode}
                 size="sm"
                 className="bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-white border-0 px-2 sm:px-4 shadow-lg shadow-green-500/20"
-                data-tour="story-mode-button"
               >
                 <Sparkles className="w-4 h-4 sm:mr-2" />
                 <span className="hidden sm:inline">Story</span>

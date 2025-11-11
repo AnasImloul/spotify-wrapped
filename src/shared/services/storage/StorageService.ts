@@ -61,34 +61,6 @@ export class StorageService {
   }
 
   /**
-   * Check if tour was completed
-   */
-  static isTourCompleted(): boolean {
-    return this.getItem(STORAGE_KEYS.tourCompleted) === 'true';
-  }
-
-  /**
-   * Mark tour as completed
-   */
-  static setTourCompleted(): void {
-    this.setItem(STORAGE_KEYS.tourCompleted, 'true');
-  }
-
-  /**
-   * Check if welcome modal was shown
-   */
-  static isWelcomeShown(): boolean {
-    return this.getItem(STORAGE_KEYS.welcomeShown) === 'true';
-  }
-
-  /**
-   * Mark welcome modal as shown
-   */
-  static setWelcomeShown(): void {
-    this.setItem(STORAGE_KEYS.welcomeShown, 'true');
-  }
-
-  /**
    * Get theme preference
    */
   static getTheme(): 'light' | 'dark' | null {

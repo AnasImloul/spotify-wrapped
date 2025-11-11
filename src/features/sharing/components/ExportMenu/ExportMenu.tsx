@@ -54,7 +54,7 @@ export function ExportMenu({ variant = 'default', size = 'default', className }:
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant={variant} size={size} className={className} data-tour="export-button">
+        <Button variant={variant} size={size} className={className}>
           <Download className="w-4 h-4 sm:mr-2" />
           <span className="hidden sm:inline">Export</span>
         </Button>

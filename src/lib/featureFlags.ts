@@ -7,9 +7,6 @@ export const FEATURE_FLAGS = {
   // PWA install prompt
   PWA_INSTALL_PROMPT: true,
   
-  // Onboarding tour
-  ONBOARDING_TOUR: true,
-  
   // Sample data feature
   SAMPLE_DATA: true,
   

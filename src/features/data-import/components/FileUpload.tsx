@@ -125,7 +125,7 @@ export function FileUpload({ onSampleDataLoaded }: FileUploadProps = {}) {
   };
 
   return (
-    <div className="w-full space-y-4" data-tour="file-upload">
+    <div className="w-full space-y-4">
       <Card
         className={cn(
           'border-2 border-dashed transition-all duration-200',

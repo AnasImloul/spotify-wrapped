@@ -30,8 +30,6 @@ export const APP_CONFIG = {
 } as const;
 
 export const STORAGE_KEYS = {
-  tourCompleted: 'tourCompleted',
-  welcomeShown: 'welcomeShown',
   theme: 'theme',
   lastUploadDate: 'lastUploadDate',
 } as const;

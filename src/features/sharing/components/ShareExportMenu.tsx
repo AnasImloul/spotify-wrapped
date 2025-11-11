@@ -128,7 +128,6 @@ export function ShareExportMenu({ variant = 'ghost', size = 'sm', className }: S
           variant={variant} 
           size={size} 
           className={className}
-          data-tour="share-export-menu"
         >
           <Share2 className="w-4 h-4 sm:mr-2" />
           <span className="hidden sm:inline">Share</span>

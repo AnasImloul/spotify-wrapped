@@ -42,7 +42,7 @@ export default function OverviewPage() {
       <main className="flex-grow container mx-auto px-4 py-12 space-y-12">
         {stats && minDate && maxDate && (
           <>
-            <div data-tour="date-range">
+            <div>
               <DateRangeSelector />
             </div>
 
@@ -86,7 +86,7 @@ export default function OverviewPage() {
           <div className="space-y-12 animate-fade-in">
             <div className="h-px bg-gradient-to-r from-transparent via-green-500/50 to-transparent" />
             
-            <div data-tour="stats-overview">
+            <div>
               <h3 className="text-3xl font-bold text-white mb-6 flex items-center gap-3">
                 <BarChart3 className="w-8 h-8 text-green-400" />
                 Your Statistics
@@ -97,7 +97,7 @@ export default function OverviewPage() {
             {(stats.topArtists.length > 0 || stats.topTracks.length > 0) && (
               <>
                 <div className="h-px bg-gradient-to-r from-transparent via-green-500/50 to-transparent" />
-                <div data-tour="top-items">
+                <div>
                   <h3 className="text-3xl font-bold text-white mb-6 flex items-center gap-3">
                     <Trophy className="w-8 h-8 text-green-400" />
                     Hall of Fame

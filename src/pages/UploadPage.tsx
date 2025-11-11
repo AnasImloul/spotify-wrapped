@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import {
   AnalyticsLayout,
   AnalyticsHeader,
@@ -9,56 +9,34 @@ import {
 import {
   FileUpload
 } from '@/features/data-import';
-import { WelcomeModal, OnboardingTour, mainTourSteps } from '@/features/onboarding';
-import { Music2 } from 'lucide-react';
 import { useSpotifyData } from '@/shared/hooks';
-import { StorageService } from '@/shared/services';
 
 export default function UploadPage() {
   const navigate = useNavigate();
   const { stats, isProcessing } = useSpotifyData();
-  const [tourActive, setTourActive] = useState(false);
   const previousProcessingRef = useRef(isProcessing);
+  const hadDataBeforeProcessing = useRef<boolean>(false);
 
-  const handleStartTour = () => {
-    setTourActive(true);
-  };
-
-  const handleCompleteTour = () => {
-    setTourActive(false);
-    StorageService.setTourCompleted();
-  };
-
-  const handleSkipTour = () => {
-    setTourActive(false);
-    StorageService.setTourCompleted();
-  };
-
-  // Redirect to analytics when data has finished processing
+  // Redirect to analytics when data has finished processing (only if uploading from empty state)
   useEffect(() => {
-    // Only redirect if processing just finished (was true, now false) and we have stats
-    if (previousProcessingRef.current && !isProcessing && stats) {
+    // Track if processing just started (false -> true)
+    if (!previousProcessingRef.current && isProcessing) {
+      hadDataBeforeProcessing.current = !!stats;
+    }
+    
+    // Only redirect if:
+    // 1. Processing just finished (was true, now false)
+    // 2. We have stats now
+    // 3. There was no data before this processing started
+    if (previousProcessingRef.current && !isProcessing && stats && !hadDataBeforeProcessing.current) {
       navigate('/analytics/overview');
     }
+    
     previousProcessingRef.current = isProcessing;
   }, [stats, isProcessing, navigate]);
 
   return (
     <AnalyticsLayout>
-      {/* Welcome Modal */}
-      <WelcomeModal
-        onClose={() => {}}
-        onTrySample={() => {}}
-        onStartTour={handleStartTour}
-      />
-
-      {/* Onboarding Tour */}
-      <OnboardingTour
-        steps={mainTourSteps}
-        isActive={tourActive}
-        onComplete={handleCompleteTour}
-        onSkip={handleSkipTour}
-      />
 
       {/* Header */}
       <AnalyticsHeader
@@ -71,22 +49,6 @@ export default function UploadPage() {
         <AnalyticsHero />
         
         <FileUpload />
-
-        {isProcessing && (
-          <div className="glass-card rounded-xl p-8 border border-green-500/30">
-            <div className="flex flex-col items-center justify-center space-y-4">
-              <div className="relative">
-                <div className="w-16 h-16 border-4 border-green-500/30 border-t-green-500 rounded-full animate-spin" />
-                <Music2 className="w-8 h-8 text-green-400 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
-              </div>
-              <div className="text-center space-y-2">
-                <p className="text-lg font-semibold text-white">Processing your music data...</p>
-                <p className="text-sm text-white/60">This may take a moment depending on your listening history</p>
-              </div>
-            </div>
-          </div>
-        )}
-        
       </main>
 
       <AnalyticsFooter />

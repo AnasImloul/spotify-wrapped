@@ -5,7 +5,7 @@
 
 import { AppProviders } from './providers/AppProviders';
 import AppRoutes from './router/AppRoutes';
-import { PWAInstallPrompt } from '@/features/onboarding';
+import { PWAInstallPrompt } from '@/features/onboarding/components/PWAInstallPrompt';
 
 export default function App() {
   return (
