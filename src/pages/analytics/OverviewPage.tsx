@@ -14,36 +14,6 @@ export default function OverviewPage() {
         <QuickStatsCarousel />
       </div>
 
-      <div>
-        <div className="glass-card rounded-xl p-4 border border-white/10">
-          <div className="flex items-center justify-between gap-4">
-            <label className="text-sm font-medium text-white/80">Sort Rankings By:</label>
-            <div className="flex gap-2">
-              <button
-                onClick={() => setSortBy('time')}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                  sortBy === 'time'
-                    ? 'bg-green-500/30 text-green-300 border border-green-500/40'
-                    : 'bg-white/5 text-white/60 border border-white/10 hover:bg-white/10'
-                }`}
-              >
-                Listening Time
-              </button>
-              <button
-                onClick={() => setSortBy('plays')}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                  sortBy === 'plays'
-                    ? 'bg-green-500/30 text-green-300 border border-green-500/40'
-                    : 'bg-white/5 text-white/60 border border-white/10 hover:bg-white/10'
-                }`}
-              >
-                Number of Plays
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <div className="space-y-12 animate-fade-in">
         <div className="h-px bg-gradient-to-r from-transparent via-green-500/50 to-transparent" />
 
@@ -58,11 +28,38 @@ export default function OverviewPage() {
         {(stats.topArtists.length > 0 || stats.topTracks.length > 0) && (
           <>
             <div className="h-px bg-gradient-to-r from-transparent via-green-500/50 to-transparent" />
-            <div>
-              <h3 className="text-3xl font-bold text-white mb-6 flex items-center gap-3">
-                <Trophy className="w-8 h-8 text-green-400" />
-                Hall of Fame
-              </h3>
+            <div className="space-y-4 lg:space-y-6">
+              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 lg:gap-4">
+                <h3 className="text-2xl lg:text-3xl font-bold text-white flex items-center gap-3">
+                  <Trophy className="w-7 h-7 lg:w-8 lg:h-8 text-green-400" />
+                  Hall of Fame
+                </h3>
+                <div className="flex items-center gap-2 lg:gap-3">
+                  <label className="text-xs lg:text-sm font-medium text-white/80">Sort By:</label>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => setSortBy('time')}
+                      className={`px-3 py-1.5 rounded-lg text-xs lg:text-sm font-medium transition-all ${
+                        sortBy === 'time'
+                          ? 'bg-green-500/30 text-green-300 border border-green-500/40'
+                          : 'bg-white/5 text-white/60 border border-white/10 hover:bg-white/10'
+                      }`}
+                    >
+                      Time
+                    </button>
+                    <button
+                      onClick={() => setSortBy('plays')}
+                      className={`px-3 py-1.5 rounded-lg text-xs lg:text-sm font-medium transition-all ${
+                        sortBy === 'plays'
+                          ? 'bg-green-500/30 text-green-300 border border-green-500/40'
+                          : 'bg-white/5 text-white/60 border border-white/10 hover:bg-white/10'
+                      }`}
+                    >
+                      Plays
+                    </button>
+                  </div>
+                </div>
+              </div>
               <TopItems />
             </div>
           </>
