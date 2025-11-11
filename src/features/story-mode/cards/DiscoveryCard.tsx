@@ -16,7 +16,10 @@ export function DiscoveryCard({ uniqueArtists, uniqueTracks }: DiscoveryCardProp
   });
 
   return (
-    <StoryCard gradient="from-pink-900/40 via-rose-800/30 to-purple-700/20" exportId="story-discovery">
+    <StoryCard
+      gradient="from-pink-900/40 via-rose-800/30 to-purple-700/20"
+      exportId="story-discovery"
+    >
       <div className="flex flex-col items-center text-center space-y-4 sm:space-y-6 px-4">
         {/* Icon */}
         <div className="relative">
@@ -37,7 +40,9 @@ export function DiscoveryCard({ uniqueArtists, uniqueTracks }: DiscoveryCardProp
         {/* Stats Grid */}
         <div className="space-y-6 sm:space-y-8">
           <div className="text-center">
-            <p className="text-pink-200 text-base sm:text-lg md:text-xl mb-2 sm:mb-3 uppercase tracking-wider">Artists Explored</p>
+            <p className="text-pink-200 text-base sm:text-lg md:text-xl mb-2 sm:mb-3 uppercase tracking-wider">
+              Artists Explored
+            </p>
             <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold bg-gradient-to-r from-pink-300 to-rose-400 bg-clip-text text-transparent">
               {formatNumber(animatedArtists)}
             </h2>
@@ -46,7 +51,9 @@ export function DiscoveryCard({ uniqueArtists, uniqueTracks }: DiscoveryCardProp
           <div className="w-28 sm:w-32 md:w-36 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent mx-auto" />
 
           <div className="text-center">
-            <p className="text-purple-200 text-base sm:text-lg md:text-xl mb-2 sm:mb-3 uppercase tracking-wider">Tracks Discovered</p>
+            <p className="text-purple-200 text-base sm:text-lg md:text-xl mb-2 sm:mb-3 uppercase tracking-wider">
+              Tracks Discovered
+            </p>
             <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold bg-gradient-to-r from-purple-300 to-pink-400 bg-clip-text text-transparent">
               {formatNumber(animatedTracks)}
             </h2>
@@ -64,4 +71,3 @@ export function DiscoveryCard({ uniqueArtists, uniqueTracks }: DiscoveryCardProp
     </StoryCard>
   );
 }
-

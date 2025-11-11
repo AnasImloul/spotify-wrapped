@@ -17,7 +17,7 @@ export interface CompactShareData {
 /**
  * Encode analytics data to a compact binary URL-safe string
  * Uses MessagePack (binary) + Deflate compression + Base64URL
- * 
+ *
  * Compression comparison:
  * - JSON + Deflate: ~1500-2000 chars
  * - MessagePack + Deflate: ~800-1200 chars (40-50% smaller!)
@@ -40,7 +40,7 @@ export function encodeAnalyticsToUrl(
       Math.round(stats.averageListeningPerDay),
       stats.mostActiveDay,
       stats.mostActiveDayMinutes ? Math.round(stats.mostActiveDayMinutes) : undefined,
-    ].filter(x => x !== undefined) as any,
+    ].filter((x) => x !== undefined) as any,
     a: topArtists.slice(0, 10).map((artist) => [
       artist.name,
       Math.round(artist.totalTime / 60000), // ms to minutes
@@ -52,7 +52,9 @@ export function encodeAnalyticsToUrl(
       Math.round(track.totalMs / 60000), // ms to minutes
       track.playCount,
     ]),
-    dr: dateRange ? [dateRange.startDate.toISOString(), dateRange.endDate.toISOString()] : undefined,
+    dr: dateRange
+      ? [dateRange.startDate.toISOString(), dateRange.endDate.toISOString()]
+      : undefined,
   };
 
   // Encode to MessagePack binary format
@@ -164,7 +166,7 @@ export function getCompactDataFromUrl(encodedId?: string): CompactShareData | nu
   if (encodedId) {
     return decodeAnalyticsFromUrl(encodedId);
   }
-  
+
   // Otherwise, check query params for backward compatibility
   const params = new URLSearchParams(window.location.search);
   const shareParam = params.get('share');
@@ -199,7 +201,9 @@ export function generateSummaryText(compact: CompactShareData): string {
   parts.push('My Spotify Wrapped Analytics!');
 
   if (expanded.stats.totalListeningTime !== undefined) {
-    parts.push(`I listened for ${Math.round(expanded.stats.totalListeningTime)} hours this period.`);
+    parts.push(
+      `I listened for ${Math.round(expanded.stats.totalListeningTime)} hours this period.`
+    );
   }
 
   if (expanded.topArtists.length > 0) {
@@ -219,4 +223,3 @@ export function generateSummaryText(compact: CompactShareData): string {
 
   return parts.join(' ');
 }
-

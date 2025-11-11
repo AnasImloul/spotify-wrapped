@@ -14,7 +14,7 @@ export async function elementToCanvas(
 ): Promise<HTMLCanvasElement> {
   // Clone the element to avoid capturing unwanted parts
   const clone = element.cloneNode(true) as HTMLElement;
-  
+
   // Create a temporary container
   const container = document.createElement('div');
   container.style.position = 'fixed';
@@ -25,19 +25,19 @@ export async function elementToCanvas(
   container.style.overflow = 'hidden';
   container.style.zIndex = '-9999';
   container.style.pointerEvents = 'none';
-  
+
   // Apply the same computed styles to the clone
   const computedStyle = window.getComputedStyle(element);
   clone.style.width = `${element.offsetWidth}px`;
   clone.style.height = `${element.offsetHeight}px`;
   clone.style.margin = '0';
   clone.style.padding = computedStyle.padding;
-  
+
   container.appendChild(clone);
   document.body.appendChild(container);
-  
+
   try {
-    const canvas = await html2canvas(clone, {
+    return await html2canvas(clone, {
       scale: options?.scale || 2,
       backgroundColor: options?.backgroundColor || '#000000',
       width: options?.width || element.offsetWidth,
@@ -48,8 +48,6 @@ export async function elementToCanvas(
       foreignObjectRendering: true,
       imageTimeout: 0,
     });
-    
-    return canvas;
   } finally {
     // Clean up
     document.body.removeChild(container);
@@ -109,11 +107,9 @@ export async function exportElementAsImage(
   const format = options?.format || 'png';
   const mimeType = format === 'jpeg' ? 'image/jpeg' : 'image/png';
   const blob = await canvasToBlob(canvas, mimeType, options?.quality || 0.95);
-  
-  const fullFilename = filename.endsWith(`.${format}`) 
-    ? filename 
-    : `${filename}.${format}`;
-  
+
+  const fullFilename = filename.endsWith(`.${format}`) ? filename : `${filename}.${format}`;
+
   downloadBlob(blob, fullFilename);
 }
 
@@ -133,4 +129,3 @@ export async function elementToDataURL(
   const mimeType = format === 'jpeg' ? 'image/jpeg' : 'image/png';
   return canvas.toDataURL(mimeType, options?.quality || 0.95);
 }
-

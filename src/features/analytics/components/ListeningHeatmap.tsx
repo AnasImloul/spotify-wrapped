@@ -1,5 +1,11 @@
 import { useMemo, useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/shared/components/ui/card';
 import { Button } from '@/shared/components/ui/button';
 import { useSpotifyData, useDateRange } from '@/shared/hooks';
 import { generateHeatmap } from '@/shared/services';
@@ -12,9 +18,19 @@ const HOURS = Array.from({ length: 24 }, (_, i) => i);
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 // Tooltip component that renders via portal
-function Tooltip({ children, visible, x, y }: { children: React.ReactNode; visible: boolean; x: number; y: number }) {
+function Tooltip({
+  children,
+  visible,
+  x,
+  y,
+}: {
+  children: React.ReactNode;
+  visible: boolean;
+  x: number;
+  y: number;
+}) {
   if (!visible) return null;
-  
+
   return createPortal(
     <div
       className="fixed px-2 py-1 bg-black/90 text-white text-xs rounded whitespace-nowrap z-[9999] pointer-events-none"
@@ -40,7 +56,12 @@ export function ListeningHeatmap({ timeUnit = 'hours' }: ListeningHeatmapProps) 
   const { startDate, endDate } = useDateRange();
   const [viewMode, setViewMode] = useState<'detailed' | 'calendar'>('detailed');
   const [selectedYear, setSelectedYear] = useState<number | null>(null);
-  const [tooltip, setTooltip] = useState<{ visible: boolean; x: number; y: number; content: React.ReactNode }>({
+  const [tooltip, setTooltip] = useState<{
+    visible: boolean;
+    x: number;
+    y: number;
+    content: React.ReactNode;
+  }>({
     visible: false,
     x: 0,
     y: 0,
@@ -64,10 +85,10 @@ export function ListeningHeatmap({ timeUnit = 'hours' }: ListeningHeatmapProps) 
   // First, filter streaming history by global date range
   const dateFilteredHistory = useMemo(() => {
     if (!streamingHistory || streamingHistory.length === 0) return [];
-    
+
     const start = new Date(startDate);
     const end = new Date(endDate);
-    
+
     return streamingHistory.filter((entry) => {
       const date = new Date(entry.endTime);
       return date >= start && date <= end;
@@ -77,13 +98,13 @@ export function ListeningHeatmap({ timeUnit = 'hours' }: ListeningHeatmapProps) 
   // Get available years from date-filtered streaming history
   const availableYears = useMemo(() => {
     if (dateFilteredHistory.length === 0) return [];
-    
+
     const years = new Set<number>();
     dateFilteredHistory.forEach((entry) => {
       const year = new Date(entry.endTime).getFullYear();
       years.add(year);
     });
-    
+
     return Array.from(years).sort((a, b) => b - a); // Descending order
   }, [dateFilteredHistory]);
 
@@ -97,7 +118,7 @@ export function ListeningHeatmap({ timeUnit = 'hours' }: ListeningHeatmapProps) 
   // Filter streaming history by selected year
   const filteredHistory = useMemo(() => {
     if (!streamingHistory || selectedYear === null) return streamingHistory;
-    
+
     return streamingHistory.filter((entry) => {
       const year = new Date(entry.endTime).getFullYear();
       return year === selectedYear;
@@ -115,7 +136,7 @@ export function ListeningHeatmap({ timeUnit = 'hours' }: ListeningHeatmapProps) 
 
     // Create a map of date -> minutes
     const dailyMinutes = new Map<string, number>();
-    
+
     filteredHistory.forEach((entry) => {
       const date = new Date(entry.endTime);
       const dateKey = date.toISOString().split('T')[0]; // YYYY-MM-DD
@@ -126,19 +147,19 @@ export function ListeningHeatmap({ timeUnit = 'hours' }: ListeningHeatmapProps) 
     // Find the date range for the selected year
     const start = new Date(selectedYear, 0, 1); // January 1st
     const end = new Date(selectedYear, 11, 31); // December 31st
-    
+
     // Find which day of week the start date is (0 = Sunday)
     const startDayOfWeek = start.getDay();
-    
+
     // Calculate weeks needed
     const days: Array<{ date: Date; dateKey: string; minutes: number }> = [];
     const current = new Date(start);
-    
+
     // Add padding days for the first week (if start day is not Sunday)
     for (let i = 0; i < startDayOfWeek; i++) {
       days.push({ date: new Date(0), dateKey: '', minutes: 0 });
     }
-    
+
     // Add all days in range
     while (current <= end) {
       const dateKey = current.toISOString().split('T')[0];
@@ -149,16 +170,16 @@ export function ListeningHeatmap({ timeUnit = 'hours' }: ListeningHeatmapProps) 
       });
       current.setDate(current.getDate() + 1);
     }
-    
+
     // Calculate max value for color scaling
     const maxValue = Math.max(...Array.from(dailyMinutes.values()), 1);
-    
+
     // Group into weeks
-    const weeks: typeof days[] = [];
+    const weeks: (typeof days)[] = [];
     for (let i = 0; i < days.length; i += 7) {
       weeks.push(days.slice(i, i + 7));
     }
-    
+
     return { weeks, maxValue };
   }, [filteredHistory, selectedYear]);
 
@@ -179,7 +200,8 @@ export function ListeningHeatmap({ timeUnit = 'hours' }: ListeningHeatmapProps) 
     }
   };
 
-  const canGoPrevious = selectedYear !== null && availableYears.indexOf(selectedYear) < availableYears.length - 1;
+  const canGoPrevious =
+    selectedYear !== null && availableYears.indexOf(selectedYear) < availableYears.length - 1;
   const canGoNext = selectedYear !== null && availableYears.indexOf(selectedYear) > 0;
 
   if (!heatmapData) {
@@ -189,9 +211,9 @@ export function ListeningHeatmap({ timeUnit = 'hours' }: ListeningHeatmapProps) 
   // Get color intensity based on value for both views
   const getColor = (value: number, maxVal: number): string => {
     if (value === 0) return 'bg-gray-800/30';
-    
+
     const intensity = value / maxVal;
-    
+
     if (intensity < 0.2) return 'bg-green-500/20';
     if (intensity < 0.4) return 'bg-green-500/40';
     if (intensity < 0.6) return 'bg-green-500/60';
@@ -200,14 +222,13 @@ export function ListeningHeatmap({ timeUnit = 'hours' }: ListeningHeatmapProps) 
   };
 
   // Format date for display
-  const formatDate = (date: Date): string => {
-    return date.toLocaleDateString('en-US', { 
-      weekday: 'short', 
-      year: 'numeric', 
-      month: 'short', 
-      day: 'numeric' 
+  const formatDate = (date: Date): string =>
+    date.toLocaleDateString('en-US', {
+      weekday: 'short',
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
     });
-  };
 
   return (
     <Card className="bg-black/40 border-white/10">
@@ -278,10 +299,7 @@ export function ListeningHeatmap({ timeUnit = 'hours' }: ListeningHeatmapProps) 
                 <div className="flex mb-2 gap-1">
                   <div className="w-8 flex-shrink-0"></div>
                   {HOURS.map((hour) => (
-                    <div
-                      key={hour}
-                      className="w-4 text-center text-[9px] text-white/60"
-                    >
+                    <div key={hour} className="w-4 text-center text-[9px] text-white/60">
                       {hour % 3 === 0 ? (hour === 0 ? '0' : hour) : ''}
                     </div>
                   ))}
@@ -306,15 +324,19 @@ export function ListeningHeatmap({ timeUnit = 'hours' }: ListeningHeatmapProps) 
                             key={hour}
                             className={`w-4 h-4 rounded-sm ${getColor(value, heatmapData.maxValue)} 
                               transition-all hover:scale-150 hover:z-50 hover:ring-1 hover:ring-white/50 cursor-pointer`}
-                            onMouseEnter={(e) => handleMouseEnter(e, (
-                              <>
-                                {day} {hour}:00
-                                <br />
-                                Total: {formatMinutes(value, timeUnit)}
-                                <br />
-                                Avg: {formatMinutes(average, timeUnit)} ({count} {count === 1 ? 'day' : 'days'})
-                              </>
-                            ))}
+                            onMouseEnter={(e) =>
+                              handleMouseEnter(
+                                e,
+                                <>
+                                  {day} {hour}:00
+                                  <br />
+                                  Total: {formatMinutes(value, timeUnit)}
+                                  <br />
+                                  Avg: {formatMinutes(average, timeUnit)} ({count}{' '}
+                                  {count === 1 ? 'day' : 'days'})
+                                </>
+                              )
+                            }
                             onMouseLeave={handleMouseLeave}
                           />
                         );
@@ -330,9 +352,7 @@ export function ListeningHeatmap({ timeUnit = 'hours' }: ListeningHeatmapProps) 
               <div className="flex flex-col w-full pt-8 pb-2 overflow-x-auto">
                 {/* Year label */}
                 <div className="flex gap-1 mb-2 justify-center">
-                  <div className="text-sm text-white/80 font-semibold">
-                    {selectedYear}
-                  </div>
+                  <div className="text-sm text-white/80 font-semibold">{selectedYear}</div>
                 </div>
 
                 {/* Center wrapper */}
@@ -359,7 +379,7 @@ export function ListeningHeatmap({ timeUnit = 'hours' }: ListeningHeatmapProps) 
                             // Check if this is the first day of a month
                             const isFirstOfMonth = day.date.getDate() === 1;
                             const monthLabel = isFirstOfMonth ? MONTHS[day.date.getMonth()] : null;
-                            
+
                             return (
                               <div key={`${weekIndex}-${dayIndex}`} className="relative">
                                 {/* Month label above first day of month */}
@@ -370,15 +390,23 @@ export function ListeningHeatmap({ timeUnit = 'hours' }: ListeningHeatmapProps) 
                                 )}
                                 <div
                                   className={`w-3 h-3 rounded-sm ${
-                                    day.dateKey ? getColor(day.minutes, calendarData.maxValue) : 'bg-transparent'
+                                    day.dateKey
+                                      ? getColor(day.minutes, calendarData.maxValue)
+                                      : 'bg-transparent'
                                   } ${day.dateKey ? 'transition-all hover:scale-150 hover:z-50 hover:ring-1 hover:ring-white/50 cursor-pointer' : ''}`}
-                                  onMouseEnter={day.dateKey ? (e) => handleMouseEnter(e, (
-                                    <>
-                                      {formatDate(day.date)}
-                                      <br />
-                                      {formatMinutes(day.minutes, timeUnit)}
-                                    </>
-                                  )) : undefined}
+                                  onMouseEnter={
+                                    day.dateKey
+                                      ? (e) =>
+                                          handleMouseEnter(
+                                            e,
+                                            <>
+                                              {formatDate(day.date)}
+                                              <br />
+                                              {formatMinutes(day.minutes, timeUnit)}
+                                            </>
+                                          )
+                                      : undefined
+                                  }
                                   onMouseLeave={day.dateKey ? handleMouseLeave : undefined}
                                 />
                               </div>
@@ -408,7 +436,7 @@ export function ListeningHeatmap({ timeUnit = 'hours' }: ListeningHeatmapProps) 
           </div>
         </div>
       </CardContent>
-      
+
       {/* Global tooltip rendered via portal */}
       <Tooltip visible={tooltip.visible} x={tooltip.x} y={tooltip.y}>
         {tooltip.content}
@@ -416,4 +444,3 @@ export function ListeningHeatmap({ timeUnit = 'hours' }: ListeningHeatmapProps) 
     </Card>
   );
 }
-

@@ -32,10 +32,7 @@ const COLORS = [
   '#FF8C00', // Dark Orange
 ];
 
-export function TrackComparison({
-  onClose,
-  initialTracks = [],
-}: TrackComparisonProps) {
+export function TrackComparison({ onClose, initialTracks = [] }: TrackComparisonProps) {
   const { streamingHistory } = useSpotifyData();
   const { startDate, endDate } = useDateRange();
   const sortedTracks = useSortedTracks();
@@ -49,7 +46,10 @@ export function TrackComparison({
   // Close autocomplete when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (searchContainerRef.current && !searchContainerRef.current.contains(event.target as Node)) {
+      if (
+        searchContainerRef.current &&
+        !searchContainerRef.current.contains(event.target as Node)
+      ) {
         setShowAutocomplete(false);
       }
     };
@@ -76,7 +76,7 @@ export function TrackComparison({
   const filteredTracks = useMemo(() => {
     // Filter out already selected tracks
     const unselectedTracks = sortedTracks.filter(
-      track => !selectedTracks.some(t => t.name === track.name && t.artist === track.artist)
+      (track) => !selectedTracks.some((t) => t.name === track.name && t.artist === track.artist)
     );
 
     // If no search term, return already-sorted list (respects global sortBy setting)
@@ -87,8 +87,10 @@ export function TrackComparison({
     // Use fuzzy search
     const results = trackFuse.search(searchTerm);
     return results
-      .map(result => result.item)
-      .filter(track => !selectedTracks.some(t => t.name === track.name && t.artist === track.artist))
+      .map((result) => result.item)
+      .filter(
+        (track) => !selectedTracks.some((t) => t.name === track.name && t.artist === track.artist)
+      )
       .slice(0, 20);
   }, [sortedTracks, selectedTracks, searchTerm, trackFuse]);
 
@@ -99,19 +101,19 @@ export function TrackComparison({
     const trackData = new Map<string, Map<string, number>>();
 
     // Initialize data structures for each track
-    selectedTracks.forEach(track => {
+    selectedTracks.forEach((track) => {
       const trackKey = `${track.name}|||${track.artist}`;
       trackData.set(trackKey, new Map());
     });
 
     // Process streaming history
-    streamingHistory.forEach(entry => {
+    streamingHistory.forEach((entry) => {
       const trackKey = `${entry.trackName}|||${entry.artistName}`;
       if (!trackData.has(trackKey)) return;
 
       const entryDate = new Date(entry.endTime);
       const monthKey = `${entryDate.getFullYear()}-${String(entryDate.getMonth() + 1).padStart(2, '0')}`;
-      
+
       // Date range filter
       if (startDate && monthKey < startDate) return;
       if (endDate && monthKey > endDate) return;
@@ -120,21 +122,21 @@ export function TrackComparison({
 
       const trackMap = trackData.get(trackKey)!;
       const currentMinutes = trackMap.get(monthKey) || 0;
-      trackMap.set(monthKey, currentMinutes + (entry.msPlayed / 1000 / 60));
+      trackMap.set(monthKey, currentMinutes + entry.msPlayed / 1000 / 60);
     });
 
     // Convert to array format for Recharts
     const sortedMonths = Array.from(monthsSet).sort();
-    
-    return sortedMonths.map(month => {
+
+    return sortedMonths.map((month) => {
       const dataPoint: any = {
-        month: new Date(month + '-01').toLocaleDateString('en-US', { 
-          month: 'short', 
-          year: 'numeric' 
+        month: new Date(`${month}-01`).toLocaleDateString('en-US', {
+          month: 'short',
+          year: 'numeric',
         }),
       };
 
-      selectedTracks.forEach(track => {
+      selectedTracks.forEach((track) => {
         const trackKey = `${track.name}|||${track.artist}`;
         const displayName = `${track.name} - ${track.artist}`;
         const minutes = trackData.get(trackKey)?.get(month) || 0;
@@ -154,7 +156,9 @@ export function TrackComparison({
   };
 
   const removeTrack = (track: { name: string; artist: string }) => {
-    setSelectedTracks(selectedTracks.filter(t => !(t.name === track.name && t.artist === track.artist)));
+    setSelectedTracks(
+      selectedTracks.filter((t) => !(t.name === track.name && t.artist === track.artist))
+    );
   };
 
   return (
@@ -180,12 +184,14 @@ export function TrackComparison({
             </button>
           </div>
         </CardHeader>
-        
+
         <CardContent className="p-6 flex-1 overflow-y-auto custom-scrollbar">
           <div className="space-y-4">
             {/* Track Selection */}
             <div>
-              <h3 className="text-white font-semibold mb-3">Selected Tracks ({selectedTracks.length}/8)</h3>
+              <h3 className="text-white font-semibold mb-3">
+                Selected Tracks ({selectedTracks.length}/8)
+              </h3>
               <div className="flex flex-wrap gap-2 mb-4">
                 {selectedTracks.map((track, index) => (
                   <div
@@ -193,7 +199,7 @@ export function TrackComparison({
                     className="flex items-center gap-2 bg-white/5 border rounded-lg px-3 py-2 hover:border-blue-500/30 transition-colors"
                     style={{ borderColor: `${COLORS[index]}40` }}
                   >
-                    <div 
+                    <div
                       className="w-3 h-3 rounded-full"
                       style={{ backgroundColor: COLORS[index] }}
                     />
@@ -227,7 +233,7 @@ export function TrackComparison({
                   {showAutocomplete && (searchTerm || filteredTracks.length > 0) && (
                     <div className="bg-black/80 backdrop-blur-sm border border-white/10 rounded-lg max-h-60 overflow-y-auto custom-scrollbar">
                       {filteredTracks.length > 0 ? (
-                        filteredTracks.map(track => (
+                        filteredTracks.map((track) => (
                           <button
                             key={`${track.name}-${track.artist}`}
                             onClick={() => addTrack({ name: track.name, artist: track.artist })}
@@ -239,7 +245,9 @@ export function TrackComparison({
                               </span>
                               <div className="flex flex-col flex-1 min-w-0">
                                 <span className="truncate">{track.name}</span>
-                                <span className="text-xs text-white/50 truncate">{track.artist}</span>
+                                <span className="text-xs text-white/50 truncate">
+                                  {track.artist}
+                                </span>
                               </div>
                             </div>
                             <div className="text-xs text-white/40 ml-2 flex-shrink-0">
@@ -277,12 +285,12 @@ export function TrackComparison({
                       <YAxis
                         stroke="rgba(255,255,255,0.5)"
                         style={{ fontSize: '11px' }}
-                        label={{ 
-                          value: 'Minutes', 
-                          angle: -90, 
-                          position: 'insideLeft', 
+                        label={{
+                          value: 'Minutes',
+                          angle: -90,
+                          position: 'insideLeft',
                           fill: 'rgba(255,255,255,0.7)',
-                          style: { fontSize: '11px' }
+                          style: { fontSize: '11px' },
                         }}
                       />
                       <Tooltip
@@ -291,11 +299,11 @@ export function TrackComparison({
                           border: '1px solid rgba(59, 130, 246, 0.3)',
                           borderRadius: '8px',
                           color: 'white',
-                          fontSize: '12px'
+                          fontSize: '12px',
                         }}
                         formatter={(value: number, name: string) => [`${value} min`, name]}
                       />
-                      <Legend 
+                      <Legend
                         wrapperStyle={{ fontSize: '12px', paddingTop: '10px' }}
                         iconType="line"
                       />
@@ -319,10 +327,9 @@ export function TrackComparison({
               </div>
             ) : (
               <div className="text-center py-12 text-white/60 bg-white/5 rounded-lg border border-white/10">
-                {selectedTracks.length === 0 
+                {selectedTracks.length === 0
                   ? 'Add tracks to start comparing their listening patterns'
-                  : 'No listening data available for the selected date range'
-                }
+                  : 'No listening data available for the selected date range'}
               </div>
             )}
 
@@ -333,7 +340,10 @@ export function TrackComparison({
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                   {selectedTracks.map((track, index) => {
                     const displayName = `${track.name} - ${track.artist}`;
-                    const totalMinutes = chartData.reduce((sum, month) => sum + (month[displayName] || 0), 0);
+                    const totalMinutes = chartData.reduce(
+                      (sum, month) => sum + (month[displayName] || 0),
+                      0
+                    );
                     return (
                       <div
                         key={displayName}
@@ -341,7 +351,7 @@ export function TrackComparison({
                         style={{ borderColor: `${COLORS[index]}40` }}
                       >
                         <div className="flex items-center gap-2 mb-1">
-                          <div 
+                          <div
                             className="w-2 h-2 rounded-full"
                             style={{ backgroundColor: COLORS[index] }}
                           />
@@ -350,7 +360,9 @@ export function TrackComparison({
                             <p className="text-[10px] text-white/50 truncate">{track.artist}</p>
                           </div>
                         </div>
-                        <p className="text-lg font-bold text-white">{totalMinutes.toLocaleString()} min</p>
+                        <p className="text-lg font-bold text-white">
+                          {totalMinutes.toLocaleString()} min
+                        </p>
                       </div>
                     );
                   })}
@@ -363,4 +375,3 @@ export function TrackComparison({
     </div>
   );
 }
-

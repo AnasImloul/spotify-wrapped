@@ -21,8 +21,18 @@ export function MonthPicker({ value, minDate, maxDate, onChange, label }: MonthP
   const maxMonth = parseInt(maxDate.split('-')[1]);
 
   const months = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
   ];
 
   useEffect(() => {
@@ -75,11 +85,13 @@ export function MonthPicker({ value, minDate, maxDate, onChange, label }: MonthP
           className="w-full px-4 py-2.5 rounded-xl bg-black/40 backdrop-blur-md border border-green-500/20 text-white focus:outline-none focus:ring-2 focus:ring-green-500/40 focus:border-green-500/40 hover:bg-black/50 hover:border-green-500/30 transition-all duration-200 font-medium text-left flex items-center justify-between"
         >
           <span>{displayValue}</span>
-          <ChevronDown className={`w-4 h-4 text-green-400 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+          <ChevronDown
+            className={`w-4 h-4 text-green-400 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+          />
         </button>
 
         {isOpen && (
-          <div 
+          <div
             className="absolute z-[9999] mt-2 w-full bg-black/80 border border-green-500/30 rounded-xl shadow-2xl shadow-green-500/10 p-4"
             style={{ backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)' }}
           >
@@ -108,7 +120,8 @@ export function MonthPicker({ value, minDate, maxDate, onChange, label }: MonthP
             <div className="grid grid-cols-3 gap-2">
               {months.map((month, index) => {
                 const monthNum = index + 1;
-                const isSelected = monthNum === selectedMonth && selectedYear === parseInt(value.split('-')[0]);
+                const isSelected =
+                  monthNum === selectedMonth && selectedYear === parseInt(value.split('-')[0]);
                 const isDisabled = isMonthDisabled(monthNum);
 
                 return (
@@ -119,9 +132,10 @@ export function MonthPicker({ value, minDate, maxDate, onChange, label }: MonthP
                     disabled={isDisabled}
                     className={`
                       px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200
-                      ${isSelected 
-                        ? 'bg-green-500/30 text-green-300 border border-green-500/50' 
-                        : 'text-white/70 hover:bg-green-500/10 hover:text-green-300 border border-transparent'
+                      ${
+                        isSelected
+                          ? 'bg-green-500/30 text-green-300 border border-green-500/50'
+                          : 'text-white/70 hover:bg-green-500/10 hover:text-green-300 border border-transparent'
                       }
                       ${isDisabled ? 'opacity-30 cursor-not-allowed hover:bg-transparent hover:text-white/70' : ''}
                     `}
@@ -137,4 +151,3 @@ export function MonthPicker({ value, minDate, maxDate, onChange, label }: MonthP
     </div>
   );
 }
-

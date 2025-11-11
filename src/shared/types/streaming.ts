@@ -43,5 +43,3 @@ export interface UploadedFile {
   type: 'streaming' | 'extended';
   data: any;
 }
-
-

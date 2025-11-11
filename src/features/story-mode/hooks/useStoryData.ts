@@ -7,25 +7,25 @@ export interface StoryInsights {
   // Top items
   topArtist: { name: string; minutes: number; playCount: number } | null;
   topTrack: { name: string; artist: string; minutes: number; playCount: number } | null;
-  
+
   // Totals
   totalMinutes: number;
   totalTracks: number;
   uniqueArtists: number;
   uniqueTracks: number;
-  
+
   // Discovery
   artistsDiscovered: number;
   tracksDiscovered: number;
-  
+
   // Patterns
   listeningStreak: number;
   timeOfDay: 'morning' | 'afternoon' | 'evening' | 'night';
   peakListeningHour: number;
-  
+
   // Comparisons
   funFact: string;
-  
+
   // Date range
   startDate: string;
   endDate: string;
@@ -190,4 +190,3 @@ function generateFunFact(minutes: number): string {
     return `Every minute counts!`;
   }
 }
-

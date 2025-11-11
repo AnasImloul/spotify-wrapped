@@ -27,7 +27,7 @@ export function formatMinutes(minutes: number, unit: TimeUnit = 'minutes'): stri
     }
     return `${mins}m`;
   }
-  
+
   // Default: minutes
   return `${formatNumber(Math.round(minutes))} min`;
 }
@@ -61,5 +61,3 @@ export function msToMinutes(ms: number): number {
 export function formatNumber(num: number): string {
   return new Intl.NumberFormat('en-US').format(num);
 }
-
-

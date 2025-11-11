@@ -99,23 +99,27 @@ export function PersonalRecords() {
                 <div className="absolute top-8 right-8 opacity-0 group-hover:opacity-100 transition-all duration-500 delay-100">
                   <div className={cn('w-1.5 h-1.5 rounded-full animate-ping', colors.particle)} />
                 </div>
-                
+
                 {/* Content */}
                 <div className="relative z-10">
                   {/* Icon with animated background */}
                   <div className="flex items-center justify-between mb-4">
-                    <div className={cn(
-                      'relative w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-300 group-hover:scale-105',
-                      colors.icon
-                    )}>
+                    <div
+                      className={cn(
+                        'relative w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-300 group-hover:scale-105',
+                        colors.icon
+                      )}
+                    >
                       <IconComponent className={cn('w-6 h-6', colors.iconText)} />
                     </div>
-                    
+
                     {/* Achievement badge */}
-                    <div className={cn(
-                      'px-2.5 py-1 rounded-full border border-white/20 backdrop-blur-sm transition-all duration-300',
-                      colors.accent
-                    )}>
+                    <div
+                      className={cn(
+                        'px-2.5 py-1 rounded-full border border-white/20 backdrop-blur-sm transition-all duration-300',
+                        colors.accent
+                      )}
+                    >
                       <Trophy className="w-3 h-3 text-white/70 group-hover:text-white transition-colors" />
                     </div>
                   </div>
@@ -142,10 +146,12 @@ export function PersonalRecords() {
                   </div>
 
                   {/* Bottom accent line */}
-                  <div className={cn(
-                    'absolute -bottom-1 left-0 right-0 h-1 opacity-50 group-hover:opacity-100 transition-opacity',
-                    colors.accent
-                  )} />
+                  <div
+                    className={cn(
+                      'absolute -bottom-1 left-0 right-0 h-1 opacity-50 group-hover:opacity-100 transition-opacity',
+                      colors.accent
+                    )}
+                  />
                 </div>
               </div>
             );
@@ -155,4 +161,3 @@ export function PersonalRecords() {
     </Card>
   );
 }
-

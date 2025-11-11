@@ -47,12 +47,12 @@ export function useInstallPrompt() {
 
     installPrompt.prompt();
     const { outcome } = await installPrompt.userChoice;
-    
+
     if (outcome === 'accepted') {
       setInstallPrompt(null);
       return true;
     }
-    
+
     return false;
   };
 
@@ -62,5 +62,3 @@ export function useInstallPrompt() {
     promptInstall,
   };
 }
-
-

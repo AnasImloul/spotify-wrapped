@@ -20,7 +20,7 @@ export function DataLoadingProgress({
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setDots(prev => (prev.length >= 3 ? '' : prev + '.'));
+      setDots((prev) => (prev.length >= 3 ? '' : `${prev}.`));
     }, 500);
 
     return () => clearInterval(interval);
@@ -48,7 +48,9 @@ export function DataLoadingProgress({
         <div className="space-y-4">
           {/* Header */}
           <div className="flex items-center gap-3">
-            <div className={`w-12 h-12 rounded-full bg-gradient-to-br ${stageColors[stage]} flex items-center justify-center shadow-lg animate-pulse-soft`}>
+            <div
+              className={`w-12 h-12 rounded-full bg-gradient-to-br ${stageColors[stage]} flex items-center justify-center shadow-lg animate-pulse-soft`}
+            >
               {stage === 'complete' ? (
                 <FileJson className="w-6 h-6 text-white" />
               ) : (
@@ -57,7 +59,8 @@ export function DataLoadingProgress({
             </div>
             <div className="flex-1 min-w-0">
               <h3 className="text-lg font-bold text-white truncate">
-                {stageLabels[stage]}{dots}
+                {stageLabels[stage]}
+                {dots}
               </h3>
               <p className="text-sm text-white/60 truncate">{fileName}</p>
             </div>
@@ -91,8 +94,8 @@ export function DataLoadingProgress({
                     stage === s
                       ? `border-white bg-gradient-to-br ${stageColors[s]} text-white`
                       : index < ['reading', 'parsing', 'processing', 'complete'].indexOf(stage)
-                      ? 'border-green-500/50 bg-green-500/20 text-green-400'
-                      : 'border-white/20 bg-white/5 text-white/40'
+                        ? 'border-green-500/50 bg-green-500/20 text-green-400'
+                        : 'border-white/20 bg-white/5 text-white/40'
                   }`}
                 >
                   {s === 'reading' && <Upload className="w-4 h-4" />}
@@ -113,4 +116,3 @@ export function DataLoadingProgress({
 }
 
 // Add shimmer animation to index.css
-

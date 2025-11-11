@@ -40,7 +40,7 @@ const timeOfDayConfig = {
 export function TimeOfDayCard({ timeOfDay, peakHour }: TimeOfDayCardProps) {
   const config = timeOfDayConfig[timeOfDay];
   const Icon = config.icon;
-  
+
   const formatHour = (hour: number) => {
     const period = hour >= 12 ? 'PM' : 'AM';
     const displayHour = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
@@ -52,25 +52,31 @@ export function TimeOfDayCard({ timeOfDay, peakHour }: TimeOfDayCardProps) {
       <div className="flex flex-col items-center text-center space-y-4 sm:space-y-6 px-4">
         {/* Icon */}
         <div className="relative">
-          <div className={`absolute inset-0 bg-${timeOfDay === 'night' ? 'indigo' : 'orange'}-500/30 blur-3xl rounded-full`} />
-          <div className={`relative bg-gradient-to-br from-${timeOfDay === 'night' ? 'indigo' : 'yellow'}-400 to-${timeOfDay === 'night' ? 'purple' : 'orange'}-600 p-5 sm:p-6 md:p-7 rounded-full`}>
+          <div
+            className={`absolute inset-0 bg-${timeOfDay === 'night' ? 'indigo' : 'orange'}-500/30 blur-3xl rounded-full`}
+          />
+          <div
+            className={`relative bg-gradient-to-br from-${timeOfDay === 'night' ? 'indigo' : 'yellow'}-400 to-${timeOfDay === 'night' ? 'purple' : 'orange'}-600 p-5 sm:p-6 md:p-7 rounded-full`}
+          >
             <Icon className="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 text-white" />
           </div>
         </div>
 
         {/* Label */}
         <div className="space-y-1 sm:space-y-2">
-          <p className={`${config.color} text-lg sm:text-xl md:text-2xl font-medium tracking-wide uppercase`}>
+          <p
+            className={`${config.color} text-lg sm:text-xl md:text-2xl font-medium tracking-wide uppercase`}
+          >
             Your Listening Time
           </p>
-          <div className={`w-20 sm:w-24 md:w-28 h-0.5 sm:h-1 bg-gradient-to-r from-transparent via-${timeOfDay === 'night' ? 'indigo' : 'orange'}-400 to-transparent mx-auto`} />
+          <div
+            className={`w-20 sm:w-24 md:w-28 h-0.5 sm:h-1 bg-gradient-to-r from-transparent via-${timeOfDay === 'night' ? 'indigo' : 'orange'}-400 to-transparent mx-auto`}
+          />
         </div>
 
         {/* Time of day */}
         <div className="space-y-2 sm:space-y-3">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white">
-            {config.label}
-          </h1>
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white">{config.label}</h1>
         </div>
 
         {/* Peak hour */}
@@ -91,4 +97,3 @@ export function TimeOfDayCard({ timeOfDay, peakHour }: TimeOfDayCardProps) {
     </StoryCard>
   );
 }
-

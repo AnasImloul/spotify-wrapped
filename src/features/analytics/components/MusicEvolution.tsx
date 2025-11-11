@@ -31,7 +31,7 @@ export function MusicEvolution({ stats }: MusicEvolutionProps) {
               <div className="absolute -left-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-white text-xs font-bold shadow-lg">
                 {index + 1}
               </div>
-              
+
               <div className="ml-4">
                 <div className="flex items-start justify-between mb-3">
                   <div>
@@ -39,10 +39,16 @@ export function MusicEvolution({ stats }: MusicEvolutionProps) {
                       {getMonthName(era.peakMonth - 1)} Era
                     </h4>
                     <div className="flex gap-2 flex-wrap">
-                      <Badge variant="secondary" className="capitalize bg-green-500/20 text-green-300 border-green-500/30">
+                      <Badge
+                        variant="secondary"
+                        className="capitalize bg-green-500/20 text-green-300 border-green-500/30"
+                      >
                         {era.genre}
                       </Badge>
-                      <Badge variant="outline" className="capitalize border-green-500/20 text-green-300">
+                      <Badge
+                        variant="outline"
+                        className="capitalize border-green-500/20 text-green-300"
+                      >
                         {era.mood}
                       </Badge>
                       <Badge variant="outline" className="capitalize border-white/20 text-white/80">
@@ -54,9 +60,7 @@ export function MusicEvolution({ stats }: MusicEvolutionProps) {
 
                 {era.tracks && era.tracks.length > 0 && (
                   <div className="mt-4 space-y-2">
-                    <p className="text-sm font-semibold text-white/60">
-                      Defining Tracks:
-                    </p>
+                    <p className="text-sm font-semibold text-white/60">Defining Tracks:</p>
                     <div className="space-y-2">
                       {era.tracks.map((track, trackIndex) => (
                         <div
@@ -78,4 +82,3 @@ export function MusicEvolution({ stats }: MusicEvolutionProps) {
     </Card>
   );
 }
-

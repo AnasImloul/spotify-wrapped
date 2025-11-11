@@ -40,7 +40,11 @@ export interface ShareableData {
 /**
  * Compress and encode data to base64 URL-safe string
  */
-export function encodeDataToUrl(stats: ProcessedStats, topArtists: any[], topTracks: any[]): string {
+export function encodeDataToUrl(
+  stats: ProcessedStats,
+  topArtists: any[],
+  topTracks: any[]
+): string {
   const shareableData: ShareableData = {
     v: 1,
     s: {
@@ -51,9 +55,7 @@ export function encodeDataToUrl(stats: ProcessedStats, topArtists: any[], topTra
       ua: stats.totalArtists,
       ad: Math.round(stats.averageListeningPerDay),
       mpd: stats.mostActiveDay,
-      mpa: stats.mostActiveDayMinutes
-        ? Math.round(stats.mostActiveDayMinutes)
-        : undefined,
+      mpa: stats.mostActiveDayMinutes ? Math.round(stats.mostActiveDayMinutes) : undefined,
     },
     a: topArtists.slice(0, 10).map((artist) => ({
       n: artist.name,
@@ -208,4 +210,3 @@ export function generateUrlShareText(data: ShareableData): string {
 
   return lines.join('\n');
 }
-

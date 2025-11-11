@@ -9,11 +9,7 @@ interface SwipeNavigationOptions {
 /**
  * Hook to handle swipe gestures and arrow key navigation
  */
-export function useSwipeNavigation({
-  onNext,
-  onPrev,
-  threshold = 50,
-}: SwipeNavigationOptions) {
+export function useSwipeNavigation({ onNext, onPrev, threshold = 50 }: SwipeNavigationOptions) {
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
   const elementRef = useRef<HTMLDivElement>(null);
@@ -79,4 +75,3 @@ export function useSwipeNavigation({
 
   return elementRef;
 }
-

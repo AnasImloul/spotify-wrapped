@@ -1,14 +1,10 @@
 import { useNavigate } from 'react-router-dom';
-import {
-  AnalyticsLayout,
-  AnalyticsHeader,
-  AnalyticsFooter
-} from '@/shared/components/layout';
+import { AnalyticsLayout, AnalyticsHeader, AnalyticsFooter } from '@/shared/components/layout';
 import {
   PersonalRecords,
   ListeningStreak,
   MoodEnergyAnalysis,
-  YearOverYearComparison
+  YearOverYearComparison,
 } from '@/features/analytics';
 import { ShareExportMenu } from '@/features/sharing';
 import { Trophy, Flame, Sparkles, BarChart3 } from 'lucide-react';
@@ -24,13 +20,15 @@ export default function DeepDivePage() {
       <AnalyticsHeader
         hasData={!!stats}
         onShowStoryMode={() => navigate('/story')}
-        renderShareMenu={() => stats ? (
-          <ShareExportMenu
-            variant="ghost"
-            size="sm"
-            className="text-white/80 hover:text-white hover:bg-white/10"
-          />
-        ) : null}
+        renderShareMenu={() =>
+          stats ? (
+            <ShareExportMenu
+              variant="ghost"
+              size="sm"
+              className="text-white/80 hover:text-white hover:bg-white/10"
+            />
+          ) : null
+        }
       />
 
       {/* Main Content */}
@@ -82,4 +80,3 @@ export default function DeepDivePage() {
     </AnalyticsLayout>
   );
 }
-

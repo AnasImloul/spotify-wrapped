@@ -1,5 +1,11 @@
 import { useMemo, useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/shared/components/ui/card';
 import { Badge } from '@/shared/components/ui/badge';
 import { Button } from '@/shared/components/ui/button';
 import { Trophy, Award, Star, Sparkles, Lock } from 'lucide-react';
@@ -21,7 +27,7 @@ export function Achievements() {
 
   const filteredAchievements = useMemo(() => {
     if (selectedCategory === 'all') return achievements;
-    return achievements.filter(a => a.category === selectedCategory);
+    return achievements.filter((a) => a.category === selectedCategory);
   }, [achievements, selectedCategory]);
 
   const categories: { id: FilterCategory; label: string; icon: React.ReactNode }[] = [
@@ -51,7 +57,7 @@ export function Achievements() {
 
   if (!stats) return null;
 
-  const unlockedCount = achievements.filter(a => a.unlocked).length;
+  const unlockedCount = achievements.filter((a) => a.unlocked).length;
   const totalCount = achievements.length;
 
   return (
@@ -67,16 +73,19 @@ export function Achievements() {
               Milestones you've reached throughout your listening history
             </CardDescription>
             <div className="mt-3">
-              <Badge variant="secondary" className="bg-gradient-to-r from-green-500/20 to-blue-500/20 text-white border-green-500/30">
+              <Badge
+                variant="secondary"
+                className="bg-gradient-to-r from-green-500/20 to-blue-500/20 text-white border-green-500/30"
+              >
                 <Trophy className="w-3 h-3 mr-1" />
                 {unlockedCount} / {totalCount} Unlocked
               </Badge>
             </div>
           </div>
-          
+
           {/* Category Filter */}
           <div className="flex flex-wrap gap-2">
-            {categories.map(category => (
+            {categories.map((category) => (
               <Button
                 key={category.id}
                 variant={selectedCategory === category.id ? 'default' : 'outline'}
@@ -84,8 +93,8 @@ export function Achievements() {
                 onClick={() => setSelectedCategory(category.id)}
                 className={cn(
                   'gap-2 transition-all',
-                  selectedCategory === category.id 
-                    ? 'bg-green-500 hover:bg-green-600 text-white' 
+                  selectedCategory === category.id
+                    ? 'bg-green-500 hover:bg-green-600 text-white'
                     : 'text-white/70 hover:text-white border-white/20 hover:bg-white/10'
                 )}
               >
@@ -140,16 +149,20 @@ export function Achievements() {
                 </div>
 
                 {/* Content */}
-                <h3 className={cn(
-                  'font-bold text-lg mb-1',
-                  achievement.unlocked ? 'text-white' : 'text-white/40'
-                )}>
+                <h3
+                  className={cn(
+                    'font-bold text-lg mb-1',
+                    achievement.unlocked ? 'text-white' : 'text-white/40'
+                  )}
+                >
                   {achievement.title}
                 </h3>
-                <p className={cn(
-                  'text-sm',
-                  achievement.unlocked ? 'text-white/70' : 'text-white/30'
-                )}>
+                <p
+                  className={cn(
+                    'text-sm',
+                    achievement.unlocked ? 'text-white/70' : 'text-white/30'
+                  )}
+                >
                   {achievement.description}
                 </p>
 
@@ -159,7 +172,9 @@ export function Achievements() {
                     <div className="w-full bg-white/10 rounded-full h-2 overflow-hidden">
                       <div
                         className="bg-gradient-to-r from-green-500 to-blue-500 h-full transition-all duration-500"
-                        style={{ width: `${(achievement.progress / achievement.maxProgress) * 100}%` }}
+                        style={{
+                          width: `${(achievement.progress / achievement.maxProgress) * 100}%`,
+                        }}
                       />
                     </div>
                     <p className="text-xs text-white/50 mt-1">
@@ -182,8 +197,8 @@ export function Achievements() {
         {/* Achievement Stats */}
         {filteredAchievements.length > 0 && (
           <div className="mt-8 grid grid-cols-2 sm:grid-cols-5 gap-3">
-            {(['bronze', 'silver', 'gold', 'platinum', 'diamond'] as const).map(tier => {
-              const count = achievements.filter(a => a.tier === tier && a.unlocked).length;
+            {(['bronze', 'silver', 'gold', 'platinum', 'diamond'] as const).map((tier) => {
+              const count = achievements.filter((a) => a.tier === tier && a.unlocked).length;
               return (
                 <div
                   key={tier}
@@ -203,4 +218,3 @@ export function Achievements() {
     </Card>
   );
 }
-

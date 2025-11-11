@@ -17,7 +17,10 @@ export function TopArtistCard({ name, minutes, playCount }: TopArtistCardProps) 
   });
 
   return (
-    <StoryCard gradient="from-green-900/40 via-green-800/30 to-green-700/20" exportId="story-top-artist">
+    <StoryCard
+      gradient="from-green-900/40 via-green-800/30 to-green-700/20"
+      exportId="story-top-artist"
+    >
       <div className="flex flex-col items-center text-center space-y-4 sm:space-y-6 px-4">
         {/* Icon */}
         <div className="relative">
@@ -46,14 +49,18 @@ export function TopArtistCard({ name, minutes, playCount }: TopArtistCardProps) 
             <p className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-green-300 to-green-500 bg-clip-text text-transparent">
               {formatNumber(animatedMinutes)}
             </p>
-            <p className="text-white/60 text-sm sm:text-base md:text-lg uppercase tracking-wider mt-1">Minutes</p>
+            <p className="text-white/60 text-sm sm:text-base md:text-lg uppercase tracking-wider mt-1">
+              Minutes
+            </p>
           </div>
           <div className="w-px h-10 sm:h-12 md:h-14 bg-white/20" />
           <div className="text-center">
             <p className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-300 to-blue-500 bg-clip-text text-transparent">
               {formatNumber(animatedPlays)}
             </p>
-            <p className="text-white/60 text-sm sm:text-base md:text-lg uppercase tracking-wider mt-1">Plays</p>
+            <p className="text-white/60 text-sm sm:text-base md:text-lg uppercase tracking-wider mt-1">
+              Plays
+            </p>
           </div>
         </div>
 
@@ -68,4 +75,3 @@ export function TopArtistCard({ name, minutes, playCount }: TopArtistCardProps) 
     </StoryCard>
   );
 }
-

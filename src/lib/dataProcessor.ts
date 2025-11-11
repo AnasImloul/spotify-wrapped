@@ -37,28 +37,27 @@ export function convertExtendedToStandard(
  * Detect file type using Zod schema validation with filename fallback
  * @returns Object with type, validation status, and optional error message
  */
-export function detectFileType(
-  fileName: string,
-  data: any
-): 'streaming' | 'extended' {
+export function detectFileType(fileName: string, data: any): 'streaming' | 'extended' {
   // First, try schema-based detection (most reliable)
   const schemaResult = detectFileTypeBySchema(data);
-  
+
   if (schemaResult.isValid && schemaResult.type !== 'unknown') {
     console.log(`✓ Detected ${schemaResult.type} format via schema validation for ${fileName}`);
     return schemaResult.type;
   }
 
   // Fallback to filename pattern matching (for edge cases)
-  console.warn(`⚠ Schema validation failed for ${fileName}, falling back to filename pattern matching`);
+  console.warn(
+    `⚠ Schema validation failed for ${fileName}, falling back to filename pattern matching`
+  );
   console.warn(`Schema error: ${schemaResult.error}`);
-  
+
   // Check for extended streaming history by filename pattern
   if (fileName.match(/Streaming_History_Audio_.*\.json/i)) {
     console.log(`Detected extended format via filename for ${fileName}`);
     return 'extended';
   }
-  
+
   // Check for standard streaming history
   if (fileName.match(/StreamingHistory_music_\d+\.json/i)) {
     console.log(`Detected streaming format via filename for ${fileName}`);
@@ -80,7 +79,9 @@ export function detectFileType(
   }
 
   // Default to streaming if can't determine
-  console.warn(`⚠ Could not definitively detect format for ${fileName}, defaulting to 'streaming'`);
+  console.warn(
+    `⚠ Could not definitively detect format for ${fileName}, defaulting to 'streaming'`
+  );
   return 'streaming';
 }
 
@@ -95,10 +96,10 @@ export function processStreamingHistory(
     filteredHistories = histories.filter((entry) => {
       const entryDate = new Date(entry.endTime);
       const entryYearMonth = `${entryDate.getFullYear()}-${String(entryDate.getMonth() + 1).padStart(2, '0')}`;
-      
+
       if (startDate && entryYearMonth < startDate) return false;
       if (endDate && entryYearMonth > endDate) return false;
-      
+
       return true;
     });
   }
@@ -272,7 +273,7 @@ export function getDateRangeFromFiles(files: UploadedFile[]): { min: string; max
       file.data.forEach((entry: StreamingHistoryEntry) => {
         const date = new Date(entry.endTime);
         const yearMonth = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
-        
+
         if (!minDate || yearMonth < minDate) {
           minDate = yearMonth;
         }
@@ -286,7 +287,7 @@ export function getDateRangeFromFiles(files: UploadedFile[]): { min: string; max
         if (converted) {
           const date = new Date(converted.endTime);
           const yearMonth = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
-          
+
           if (!minDate || yearMonth < minDate) {
             minDate = yearMonth;
           }
@@ -317,4 +318,3 @@ export function getStreamingHistoryFromFiles(files: UploadedFile[]): StreamingHi
 
   return streamingHistories;
 }
-

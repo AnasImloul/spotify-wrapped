@@ -30,7 +30,7 @@ export function ConfirmModal({
   title,
   description,
   confirmText = 'Confirm',
-  cancelText = 'Cancel'
+  cancelText = 'Cancel',
 }: ConfirmModalProps) {
   const handleConfirm = () => {
     onConfirm();
@@ -45,13 +45,9 @@ export function ConfirmModal({
             <div className="w-10 h-10 rounded-full flex items-center justify-center bg-green-500/20 border border-green-500/30">
               <AlertTriangle className="w-5 h-5 text-green-400" />
             </div>
-            <DialogTitle className="text-xl font-bold text-white">
-              {title}
-            </DialogTitle>
+            <DialogTitle className="text-xl font-bold text-white">{title}</DialogTitle>
           </div>
-          <DialogDescription className="text-white/70">
-            {description}
-          </DialogDescription>
+          <DialogDescription className="text-white/70">{description}</DialogDescription>
         </DialogHeader>
 
         <div className="flex gap-3 mt-6">
@@ -73,4 +69,3 @@ export function ConfirmModal({
     </Dialog>
   );
 }
-

@@ -1,7 +1,21 @@
 import { useMemo, useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/shared/components/ui/card';
 import { Button } from '@/shared/components/ui/button';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from 'recharts';
 import { useSpotifyData, useDateRange } from '@/shared/hooks';
 import { generateMonthlyTrends } from '@/shared/services';
 import { formatNumber, formatMinutes, type TimeUnit } from '@/shared/utils';
@@ -15,10 +29,10 @@ export function MonthlyTrends() {
   // Filter streaming history by global date range
   const filteredHistory = useMemo(() => {
     if (!streamingHistory || streamingHistory.length === 0) return [];
-    
+
     const start = new Date(startDate);
     const end = new Date(endDate);
-    
+
     return streamingHistory.filter((entry) => {
       const date = new Date(entry.endTime);
       return date >= start && date <= end;
@@ -43,15 +57,13 @@ export function MonthlyTrends() {
 
   // Custom tooltip
   const CustomTooltip = ({ active, payload }: any) => {
-    if (active && payload && payload.length) {
+    if (active && payload?.length) {
       const data = payload[0].payload;
       return (
         <div className="bg-black/90 backdrop-blur-sm border border-white/20 rounded-lg p-3 shadow-xl">
           <p className="text-white font-semibold mb-2">{formatMonthLabel(data.month)}</p>
           <div className="space-y-1 text-sm">
-            <p className="text-green-400">
-              {formatMinutes(data.minutes, timeUnit)}
-            </p>
+            <p className="text-green-400">{formatMinutes(data.minutes, timeUnit)}</p>
             <p className="text-white/60">{formatNumber(data.trackCount)} tracks played</p>
           </div>
         </div>
@@ -70,7 +82,7 @@ export function MonthlyTrends() {
               Your listening activity over time
             </CardDescription>
           </div>
-          
+
           {/* Time Unit Toggle */}
           <div className="flex gap-2 flex-shrink-0">
             <Button
@@ -154,26 +166,29 @@ export function MonthlyTrends() {
         {/* Summary stats */}
         <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-4">
           <div className="text-center">
-            <p className="text-2xl font-bold text-green-400">
-              {trendsData.length}
-            </p>
+            <p className="text-2xl font-bold text-green-400">{trendsData.length}</p>
             <p className="text-sm text-white/60">Months</p>
           </div>
           <div className="text-center">
             <p className="text-2xl font-bold text-green-400">
-              {formatMinutes(Math.round(trendsData.reduce((sum, m) => sum + m.minutes, 0) / trendsData.length), timeUnit)}
+              {formatMinutes(
+                Math.round(trendsData.reduce((sum, m) => sum + m.minutes, 0) / trendsData.length),
+                timeUnit
+              )}
             </p>
             <p className="text-sm text-white/60">Avg/Month</p>
           </div>
           <div className="text-center">
             <p className="text-2xl font-bold text-green-400">
-              {formatMinutes(Math.max(...trendsData.map(m => m.minutes)), timeUnit)}
+              {formatMinutes(Math.max(...trendsData.map((m) => m.minutes)), timeUnit)}
             </p>
             <p className="text-sm text-white/60">Peak</p>
           </div>
           <div className="text-center">
             <p className="text-2xl font-bold text-green-400">
-              {formatMonthLabel(trendsData.reduce((max, m) => m.minutes > max.minutes ? m : max).month)}
+              {formatMonthLabel(
+                trendsData.reduce((max, m) => (m.minutes > max.minutes ? m : max)).month
+              )}
             </p>
             <p className="text-sm text-white/60">Peak Month</p>
           </div>
@@ -182,4 +197,3 @@ export function MonthlyTrends() {
     </Card>
   );
 }
-

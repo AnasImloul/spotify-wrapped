@@ -45,5 +45,3 @@ export interface MonthlyData {
   month: string;
   minutes: number;
 }
-
-

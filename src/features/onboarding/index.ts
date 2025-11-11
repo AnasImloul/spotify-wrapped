@@ -4,4 +4,3 @@
  */
 
 export { PWAInstallPrompt } from './components/PWAInstallPrompt';
-

@@ -197,7 +197,7 @@ export function calculateAchievements(
   const topArtist = stats.topArtists[0];
   if (topArtist) {
     const topArtistHours = msToMinutes(topArtist.totalMs) / 60;
-    
+
     if (topArtistHours >= 10) {
       achievements.push({
         id: 'super-fan-10',
@@ -261,7 +261,8 @@ export function calculateAchievements(
   }
 
   // Special Achievements
-  if (stats.averageListeningPerDay >= 180) { // 3 hours per day
+  if (stats.averageListeningPerDay >= 180) {
+    // 3 hours per day
     achievements.push({
       id: 'daily-listener',
       title: 'Daily Ritual',
@@ -313,8 +314,12 @@ export function calculateAchievements(
 
   // Early Bird / Night Owl
   const hourDistribution = calculateHourDistribution(streamingHistory);
-  const morningListening = hourDistribution.filter(h => h.hour >= 5 && h.hour < 9).reduce((sum, h) => sum + h.minutes, 0);
-  const nightListening = hourDistribution.filter(h => h.hour >= 22 || h.hour < 2).reduce((sum, h) => sum + h.minutes, 0);
+  const morningListening = hourDistribution
+    .filter((h) => h.hour >= 5 && h.hour < 9)
+    .reduce((sum, h) => sum + h.minutes, 0);
+  const nightListening = hourDistribution
+    .filter((h) => h.hour >= 22 || h.hour < 2)
+    .reduce((sum, h) => sum + h.minutes, 0);
   const totalListeningMinutes = hourDistribution.reduce((sum, h) => sum + h.minutes, 0);
 
   if (morningListening / totalListeningMinutes > 0.3) {
@@ -374,7 +379,7 @@ export function calculatePersonalRecords(
   const totalMinutes = msToMinutes(stats.totalListeningTime * 60 * 60 * 1000);
   const totalHours = Math.floor(totalMinutes / 60);
   const totalDays = Math.floor(totalHours / 24);
-  
+
   if (totalDays > 0) {
     records.push({
       id: 'total-time',
@@ -415,7 +420,11 @@ export function calculatePersonalRecords(
       id: 'most-active-day',
       title: 'Most Active Day',
       value: `${stats.mostActiveDayMinutes} min`,
-      description: date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
+      description: date.toLocaleDateString('en-US', {
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric',
+      }),
       icon: 'time',
       category: 'time',
     });
@@ -449,7 +458,7 @@ export function calculatePersonalRecords(
     id: 'track-variety',
     title: 'Songs Discovered',
     value: stats.totalTracks.toLocaleString(),
-    description: 'Different tracks you\'ve enjoyed',
+    description: "Different tracks you've enjoyed",
     icon: 'variety',
     category: 'variety',
   });
@@ -486,7 +495,7 @@ export function calculatePersonalRecords(
     const avgHours = Math.floor(stats.averageListeningPerDay / 60);
     const avgMinutes = Math.floor(stats.averageListeningPerDay % 60);
     const timeStr = avgHours > 0 ? `${avgHours}h ${avgMinutes}m` : `${avgMinutes} min`;
-    
+
     records.push({
       id: 'daily-average',
       title: 'Daily Average',
@@ -517,12 +526,12 @@ export function calculatePersonalRecords(
 function calculateListeningStreak(history: StreamingHistoryEntry[]): number {
   if (history.length === 0) return 0;
 
-  const sortedHistory = [...history].sort((a, b) => 
-    new Date(b.endTime).getTime() - new Date(a.endTime).getTime()
+  const sortedHistory = [...history].sort(
+    (a, b) => new Date(b.endTime).getTime() - new Date(a.endTime).getTime()
   );
 
   const uniqueDays = new Set<string>();
-  sortedHistory.forEach(entry => {
+  sortedHistory.forEach((entry) => {
     const date = new Date(entry.endTime);
     const dayKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
     uniqueDays.add(dayKey);
@@ -535,12 +544,14 @@ function calculateListeningStreak(history: StreamingHistoryEntry[]): number {
   for (const dayKey of sortedDays) {
     const dayDate = new Date(dayKey);
     const expectedDayKey = `${expectedDate.getFullYear()}-${String(expectedDate.getMonth() + 1).padStart(2, '0')}-${String(expectedDate.getDate()).padStart(2, '0')}`;
-    
+
     if (dayKey === expectedDayKey) {
       streak++;
       expectedDate.setDate(expectedDate.getDate() - 1);
     } else if (dayKey < expectedDayKey) {
-      const dayDiff = Math.floor((new Date(expectedDayKey).getTime() - dayDate.getTime()) / (1000 * 60 * 60 * 24));
+      const dayDiff = Math.floor(
+        (new Date(expectedDayKey).getTime() - dayDate.getTime()) / (1000 * 60 * 60 * 24)
+      );
       if (dayDiff === 1) {
         streak++;
         expectedDate = new Date(dayDate);
@@ -554,10 +565,12 @@ function calculateListeningStreak(history: StreamingHistoryEntry[]): number {
   return streak;
 }
 
-function calculateHourDistribution(history: StreamingHistoryEntry[]): { hour: number; minutes: number }[] {
+function calculateHourDistribution(
+  history: StreamingHistoryEntry[]
+): { hour: number; minutes: number }[] {
   const hourMap = new Map<number, number>();
-  
-  history.forEach(entry => {
+
+  history.forEach((entry) => {
     const date = new Date(entry.endTime);
     const hour = date.getHours();
     const minutes = entry.msPlayed / 1000 / 60;
@@ -570,15 +583,17 @@ function calculateHourDistribution(history: StreamingHistoryEntry[]): { hour: nu
   }));
 }
 
-function calculateWeekendListening(history: StreamingHistoryEntry[]): { weekendPercentage: number } {
+function calculateWeekendListening(history: StreamingHistoryEntry[]): {
+  weekendPercentage: number;
+} {
   let weekendMinutes = 0;
   let totalMinutes = 0;
 
-  history.forEach(entry => {
+  history.forEach((entry) => {
     const date = new Date(entry.endTime);
     const day = date.getDay();
     const minutes = entry.msPlayed / 1000 / 60;
-    
+
     totalMinutes += minutes;
     if (day === 0 || day === 6) {
       weekendMinutes += minutes;
@@ -590,11 +605,14 @@ function calculateWeekendListening(history: StreamingHistoryEntry[]): { weekendP
   };
 }
 
-function calculateLongestSession(history: StreamingHistoryEntry[]): { minutes: number; date: string } {
+function calculateLongestSession(history: StreamingHistoryEntry[]): {
+  minutes: number;
+  date: string;
+} {
   if (history.length === 0) return { minutes: 0, date: '' };
 
-  const sortedHistory = [...history].sort((a, b) => 
-    new Date(a.endTime).getTime() - new Date(b.endTime).getTime()
+  const sortedHistory = [...history].sort(
+    (a, b) => new Date(a.endTime).getTime() - new Date(b.endTime).getTime()
   );
 
   let maxSession = 0;
@@ -603,9 +621,9 @@ function calculateLongestSession(history: StreamingHistoryEntry[]): { minutes: n
   let currentSessionDate = '';
   let lastEndTime: Date | null = null;
 
-  sortedHistory.forEach(entry => {
+  sortedHistory.forEach((entry) => {
     const endTime = new Date(entry.endTime);
-    
+
     if (lastEndTime && (endTime.getTime() - lastEndTime.getTime()) / 1000 / 60 > 30) {
       // Gap of more than 30 minutes - new session
       if (currentSession > maxSession) {
@@ -613,14 +631,22 @@ function calculateLongestSession(history: StreamingHistoryEntry[]): { minutes: n
         maxSessionDate = currentSessionDate;
       }
       currentSession = entry.msPlayed / 1000 / 60;
-      currentSessionDate = endTime.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+      currentSessionDate = endTime.toLocaleDateString('en-US', {
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric',
+      });
     } else {
       if (!lastEndTime) {
-        currentSessionDate = endTime.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+        currentSessionDate = endTime.toLocaleDateString('en-US', {
+          month: 'long',
+          day: 'numeric',
+          year: 'numeric',
+        });
       }
       currentSession += entry.msPlayed / 1000 / 60;
     }
-    
+
     lastEndTime = endTime;
   });
 
@@ -632,15 +658,18 @@ function calculateLongestSession(history: StreamingHistoryEntry[]): { minutes: n
   return { minutes: Math.floor(maxSession), date: maxSessionDate };
 }
 
-function calculateBusiestWeek(history: StreamingHistoryEntry[]): { minutes: number; weekStart: string } {
+function calculateBusiestWeek(history: StreamingHistoryEntry[]): {
+  minutes: number;
+  weekStart: string;
+} {
   const weekMap = new Map<string, number>();
 
-  history.forEach(entry => {
+  history.forEach((entry) => {
     const date = new Date(entry.endTime);
     const weekStart = getWeekStart(date);
     const weekKey = weekStart.toISOString().split('T')[0];
     const minutes = entry.msPlayed / 1000 / 60;
-    
+
     weekMap.set(weekKey, (weekMap.get(weekKey) || 0) + minutes);
   });
 
@@ -670,4 +699,3 @@ function getWeekStart(date: Date): Date {
   const diff = d.getDate() - day;
   return new Date(d.setDate(diff));
 }
-

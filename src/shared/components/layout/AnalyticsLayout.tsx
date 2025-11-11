@@ -16,5 +16,3 @@ export function AnalyticsLayout({ children }: AnalyticsLayoutProps) {
     </div>
   );
 }
-
-

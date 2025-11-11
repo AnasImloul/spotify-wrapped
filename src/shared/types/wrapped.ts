@@ -61,5 +61,3 @@ export interface WrappedData {
   yearlyMetrics: YearlyMetrics;
   musicEvolution: MusicEvolution;
 }
-
-

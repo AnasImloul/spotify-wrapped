@@ -67,8 +67,12 @@ export function ShareableLink({
       stats.mostActiveDay,
       stats.mostActiveDayMinutes,
     ],
-    a: sortedArtists.slice(0, 10).map((a) => [a.name, Math.round(a.totalTime / 60000), a.playCount]),
-    t: sortedTracks.slice(0, 10).map((t) => [t.name, t.artist, Math.round(t.totalMs / 60000), t.playCount]),
+    a: sortedArtists
+      .slice(0, 10)
+      .map((a) => [a.name, Math.round(a.totalTime / 60000), a.playCount]),
+    t: sortedTracks
+      .slice(0, 10)
+      .map((t) => [t.name, t.artist, Math.round(t.totalMs / 60000), t.playCount]),
     dr: [startDate, endDate],
   };
   const shareText = generateSummaryText(compactData as any);
@@ -112,7 +116,8 @@ export function ShareableLink({
             Shareable Analytics Link
           </DialogTitle>
           <DialogDescription>
-            Share your Spotify analytics with a single link. No data upload required - everything is encoded in the URL!
+            Share your Spotify analytics with a single link. No data upload required - everything is
+            encoded in the URL!
           </DialogDescription>
         </DialogHeader>
 
@@ -122,7 +127,8 @@ export function ShareableLink({
             <Alert variant="destructive">
               <AlertCircle className="h-4 w-4" />
               <AlertDescription>
-                Warning: This URL is {url.length} characters long and may not work in all browsers. Consider sharing fewer items or using the image/PDF export instead.
+                Warning: This URL is {url.length} characters long and may not work in all browsers.
+                Consider sharing fewer items or using the image/PDF export instead.
               </AlertDescription>
             </Alert>
           )}
@@ -163,9 +169,7 @@ export function ShareableLink({
           {/* Preview Text */}
           <div className="space-y-2">
             <label className="text-sm font-medium">Preview Text</label>
-            <div className="p-3 bg-muted rounded-lg text-sm whitespace-pre-wrap">
-              {shareText}
-            </div>
+            <div className="p-3 bg-muted rounded-lg text-sm whitespace-pre-wrap">{shareText}</div>
           </div>
 
           {/* Action Buttons */}
@@ -187,7 +191,8 @@ export function ShareableLink({
           {/* Info */}
           <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-3">
             <p className="text-xs text-blue-200">
-              <strong>How it works:</strong> Your analytics are compressed and encoded directly into the URL. No server upload needed - completely private!
+              <strong>How it works:</strong> Your analytics are compressed and encoded directly into
+              the URL. No server upload needed - completely private!
             </p>
           </div>
 
@@ -206,4 +211,3 @@ export function ShareableLink({
     </Dialog>
   );
 }
-

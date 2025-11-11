@@ -21,7 +21,7 @@ export function formatMinutes(minutes: number, unit: TimeUnit = 'minutes'): stri
     }
     return `${mins}m`;
   }
-  
+
   // Default: minutes
   return `${formatNumber(Math.round(minutes))} min`;
 }
@@ -73,4 +73,3 @@ export function getMonthName(monthIndex: number): string {
   ];
   return months[monthIndex] || '';
 }
-

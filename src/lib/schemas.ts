@@ -54,9 +54,11 @@ export type ExtendedStreamingHistory = z.infer<typeof ExtendedStreamingHistorySc
  * Validates ALL entries in the array for complete type safety
  * Returns the detected type and whether validation was successful
  */
-export function detectFileTypeBySchema(
-  data: unknown
-): { type: 'streaming' | 'extended' | 'unknown'; isValid: boolean; error?: string } {
+export function detectFileTypeBySchema(data: unknown): {
+  type: 'streaming' | 'extended' | 'unknown';
+  isValid: boolean;
+  error?: string;
+} {
   if (!Array.isArray(data) || data.length === 0) {
     return { type: 'unknown', isValid: false, error: 'Data is not a non-empty array' };
   }
@@ -79,10 +81,10 @@ export function detectFileTypeBySchema(
     extendedResult.success ? null : extendedResult.error.issues[0]?.message,
   ].filter(Boolean);
 
-  return { 
-    type: 'unknown', 
-    isValid: false, 
-    error: `File format not recognized. Expected standard or extended streaming history. Errors: ${errors.join(', ')}` 
+  return {
+    type: 'unknown',
+    isValid: false,
+    error: `File format not recognized. Expected standard or extended streaming history. Errors: ${errors.join(', ')}`,
   };
 }
 
@@ -99,25 +101,24 @@ export function validateStreamingHistoryArray(
       if (result.success) {
         return { isValid: true, validEntries: result.data.length };
       }
-      return { 
-        isValid: false, 
-        error: `Invalid standard streaming history: ${result.error.issues[0]?.message}` 
+      return {
+        isValid: false,
+        error: `Invalid standard streaming history: ${result.error.issues[0]?.message}`,
       };
     } else {
       const result = ExtendedStreamingHistoryArraySchema.safeParse(data);
       if (result.success) {
         return { isValid: true, validEntries: result.data.length };
       }
-      return { 
-        isValid: false, 
-        error: `Invalid extended streaming history: ${result.error.issues[0]?.message}` 
+      return {
+        isValid: false,
+        error: `Invalid extended streaming history: ${result.error.issues[0]?.message}`,
       };
     }
   } catch (error) {
-    return { 
-      isValid: false, 
-      error: error instanceof Error ? error.message : 'Unknown validation error' 
+    return {
+      isValid: false,
+      error: error instanceof Error ? error.message : 'Unknown validation error',
     };
   }
 }
-

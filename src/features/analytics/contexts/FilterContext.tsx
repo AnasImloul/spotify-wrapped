@@ -35,4 +35,3 @@ export function useFilterContext() {
   }
   return context;
 }
-

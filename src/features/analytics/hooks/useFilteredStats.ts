@@ -9,4 +9,3 @@ export function useFilteredStats(): ProcessedStats | null {
   const { stats } = useSpotifyDataContext();
   return stats;
 }
-

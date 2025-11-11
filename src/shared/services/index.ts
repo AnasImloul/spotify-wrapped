@@ -14,4 +14,3 @@ export { generateHeatmap, analyzeListeningPatterns } from '@/lib/analyticsProces
 export { generateMonthlyTrends } from '@/lib/analyticsProcessor';
 export { detectFileType } from '@/lib/dataProcessor';
 export type { UploadedFile } from '@/lib/dataProcessor';
-

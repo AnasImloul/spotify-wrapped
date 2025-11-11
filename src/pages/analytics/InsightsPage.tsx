@@ -1,15 +1,11 @@
 import { useNavigate } from 'react-router-dom';
-import {
-  AnalyticsLayout,
-  AnalyticsHeader,
-  AnalyticsFooter
-} from '@/shared/components/layout';
+import { AnalyticsLayout, AnalyticsHeader, AnalyticsFooter } from '@/shared/components/layout';
 import {
   ListeningHeatmap,
   MonthlyTrends,
   ListeningPatterns,
   DiscoveryTimeline,
-  YearInReviewCard
+  YearInReviewCard,
 } from '@/features/analytics';
 import { ShareExportMenu } from '@/features/sharing';
 import { Activity, Sparkles, Trophy } from 'lucide-react';
@@ -25,13 +21,15 @@ export default function InsightsPage() {
       <AnalyticsHeader
         hasData={!!stats}
         onShowStoryMode={() => navigate('/story')}
-        renderShareMenu={() => stats ? (
-          <ShareExportMenu
-            variant="ghost"
-            size="sm"
-            className="text-white/80 hover:text-white hover:bg-white/10"
-          />
-        ) : null}
+        renderShareMenu={() =>
+          stats ? (
+            <ShareExportMenu
+              variant="ghost"
+              size="sm"
+              className="text-white/80 hover:text-white hover:bg-white/10"
+            />
+          ) : null
+        }
       />
 
       {/* Main Content */}
@@ -77,4 +75,3 @@ export default function InsightsPage() {
     </AnalyticsLayout>
   );
 }
-

@@ -29,7 +29,7 @@ export function MoodEnergyAnalysis() {
 
     const hourlyActivity = new Array(24).fill(0);
 
-    streamingHistory.forEach(entry => {
+    streamingHistory.forEach((entry) => {
       const date = new Date(entry.endTime);
       const hour = date.getHours();
       const minutes = entry.msPlayed / 1000 / 60;
@@ -51,7 +51,7 @@ export function MoodEnergyAnalysis() {
     };
 
     // Determine dominant listening pattern
-    const maxPeriod = Object.entries(percentages).reduce((a, b) => 
+    const maxPeriod = Object.entries(percentages).reduce((a, b) =>
       b[1] > a[1] ? b : a
     )[0] as keyof typeof percentages;
 
@@ -94,11 +94,18 @@ export function MoodEnergyAnalysis() {
 
     // Peak listening hour
     const peakHour = hourlyActivity.indexOf(Math.max(...hourlyActivity));
-    const peakTime = peakHour === 0 ? '12 AM' : peakHour < 12 ? `${peakHour} AM` : peakHour === 12 ? '12 PM' : `${peakHour - 12} PM`;
+    const peakTime =
+      peakHour === 0
+        ? '12 AM'
+        : peakHour < 12
+          ? `${peakHour} AM`
+          : peakHour === 12
+            ? '12 PM'
+            : `${peakHour - 12} PM`;
     insights.push(`Your peak listening hour was ${peakTime}`);
 
     // Consistency analysis
-    const nonZeroHours = hourlyActivity.filter(h => h > 0).length;
+    const nonZeroHours = hourlyActivity.filter((h) => h > 0).length;
     if (nonZeroHours > 18) {
       insights.push('You listened to music throughout the day - it was part of your rhythm!');
     } else if (nonZeroHours < 8) {
@@ -214,16 +221,20 @@ export function MoodEnergyAnalysis() {
     <Card className="bg-black/40 border-white/10">
       <CardContent className="pt-6 space-y-6">
         {/* Dominant Profile */}
-        <div className={cn(
-          'bg-gradient-to-br rounded-xl p-6 border-2 hover:scale-[1.01] transition-all duration-300',
-          profile.bgGradient,
-          profile.borderColor
-        )}>
+        <div
+          className={cn(
+            'bg-gradient-to-br rounded-xl p-6 border-2 hover:scale-[1.01] transition-all duration-300',
+            profile.bgGradient,
+            profile.borderColor
+          )}
+        >
           <div className="flex items-center gap-4 mb-3">
-            <div className={cn(
-              'w-12 h-12 flex-shrink-0 rounded-full bg-gradient-to-br flex items-center justify-center shadow-lg',
-              profile.iconGradient
-            )}>
+            <div
+              className={cn(
+                'w-12 h-12 flex-shrink-0 rounded-full bg-gradient-to-br flex items-center justify-center shadow-lg',
+                profile.iconGradient
+              )}
+            >
               <ProfileIcon className="w-6 h-6 text-white" />
             </div>
             <div>
@@ -277,5 +288,3 @@ export function MoodEnergyAnalysis() {
     </Card>
   );
 }
-
-

@@ -19,7 +19,7 @@ export function InstructionsModal({ open, onOpenChange }: InstructionsModalProps
             How to Get Your Spotify Data
           </DialogTitle>
         </DialogHeader>
-        
+
         <div className="space-y-6">
           <ol className="space-y-4 text-white/80">
             <li className="flex gap-3">
@@ -59,7 +59,15 @@ export function InstructionsModal({ open, onOpenChange }: InstructionsModalProps
                 4
               </span>
               <span className="pt-0.5">
-                Download and extract the files: <code className="font-mono text-xs bg-white/10 px-1.5 py-0.5 rounded">StreamingHistory_music_*.json</code> (standard) or <code className="font-mono text-xs bg-white/10 px-1.5 py-0.5 rounded">Streaming_History_Audio_*.json</code> (extended)
+                Download and extract the files:{' '}
+                <code className="font-mono text-xs bg-white/10 px-1.5 py-0.5 rounded">
+                  StreamingHistory_music_*.json
+                </code>{' '}
+                (standard) or{' '}
+                <code className="font-mono text-xs bg-white/10 px-1.5 py-0.5 rounded">
+                  Streaming_History_Audio_*.json
+                </code>{' '}
+                (extended)
               </span>
             </li>
             <li className="flex gap-3">
@@ -74,8 +82,9 @@ export function InstructionsModal({ open, onOpenChange }: InstructionsModalProps
 
           <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4">
             <p className="text-sm text-blue-200">
-              <strong className="font-semibold">100% Private:</strong> All data processing happens in your browser. 
-              Nothing is uploaded to any server. Your listening history stays completely private.
+              <strong className="font-semibold">100% Private:</strong> All data processing happens
+              in your browser. Nothing is uploaded to any server. Your listening history stays
+              completely private.
             </p>
           </div>
         </div>
@@ -83,4 +92,3 @@ export function InstructionsModal({ open, onOpenChange }: InstructionsModalProps
     </Dialog>
   );
 }
-

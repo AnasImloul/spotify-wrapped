@@ -14,12 +14,15 @@ export function TotalTimeCard({ minutes, funFact }: TotalTimeCardProps) {
     duration: 2000,
     easing: 'easeOutCubic',
   });
-  
+
   const hours = Math.round(minutes / 60);
   const days = Math.round(hours / 24);
 
   return (
-    <StoryCard gradient="from-blue-900/40 via-cyan-800/30 to-blue-700/20" exportId="story-total-time">
+    <StoryCard
+      gradient="from-blue-900/40 via-cyan-800/30 to-blue-700/20"
+      exportId="story-total-time"
+    >
       <div className="flex flex-col items-center text-center space-y-4 sm:space-y-6 px-4">
         {/* Icon */}
         <div className="relative">
@@ -49,7 +52,9 @@ export function TotalTimeCard({ minutes, funFact }: TotalTimeCardProps) {
         <div className="flex gap-3 sm:gap-4 md:gap-6 items-center justify-center flex-wrap text-white/60 text-base sm:text-lg md:text-xl">
           <div className="flex items-center gap-2">
             <span className="text-lg sm:text-xl md:text-2xl">=</span>
-            <span className="text-lg sm:text-xl md:text-2xl font-semibold text-white">{formatNumber(hours)}</span>
+            <span className="text-lg sm:text-xl md:text-2xl font-semibold text-white">
+              {formatNumber(hours)}
+            </span>
             <span>hours</span>
           </div>
           <div className="flex items-center gap-2">
@@ -70,4 +75,3 @@ export function TotalTimeCard({ minutes, funFact }: TotalTimeCardProps) {
     </StoryCard>
   );
 }
-

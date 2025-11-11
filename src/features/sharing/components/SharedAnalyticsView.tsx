@@ -2,7 +2,13 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { X, Download, Mic2, Headphones } from 'lucide-react';
 import { Button } from '@/shared/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/shared/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from '@/shared/components/ui/card';
 import { Badge } from '@/shared/components/ui/badge';
 import { getCompactDataFromUrl, expandCompactData } from '@/shared/services/sharing';
 import { formatNumber } from '@/shared/utils';
@@ -134,9 +140,7 @@ export function SharedAnalyticsView({ onClose, shareId }: SharedAnalyticsViewPro
                 <Mic2 className="w-6 h-6 text-green-400" />
                 Top Artists
               </CardTitle>
-              <CardDescription className="text-white/60">
-                Most listened artists
-              </CardDescription>
+              <CardDescription className="text-white/60">Most listened artists</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
@@ -174,9 +178,7 @@ export function SharedAnalyticsView({ onClose, shareId }: SharedAnalyticsViewPro
                 <Headphones className="w-6 h-6 text-blue-400" />
                 Top Tracks
               </CardTitle>
-              <CardDescription className="text-white/60">
-                Most played songs
-              </CardDescription>
+              <CardDescription className="text-white/60">Most played songs</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
@@ -198,9 +200,7 @@ export function SharedAnalyticsView({ onClose, shareId }: SharedAnalyticsViewPro
                       <span className="text-sm text-white/40 hidden sm:inline">
                         {formatNumber(track.playCount)} plays
                       </span>
-                      <Badge variant="secondary">
-                        {formatNumber(track.minutes)} min
-                      </Badge>
+                      <Badge variant="secondary">{formatNumber(track.minutes)} min</Badge>
                     </div>
                   </div>
                 ))}
@@ -217,7 +217,8 @@ export function SharedAnalyticsView({ onClose, shareId }: SharedAnalyticsViewPro
                 Want to see your own Spotify analytics?
               </h3>
               <p className="text-white/80">
-                Upload your Spotify data and discover your unique listening patterns, top artists, and more!
+                Upload your Spotify data and discover your unique listening patterns, top artists,
+                and more!
               </p>
               <Button
                 onClick={handleGetOwn}
@@ -234,10 +235,11 @@ export function SharedAnalyticsView({ onClose, shareId }: SharedAnalyticsViewPro
         {/* Footer Note */}
         <div className="text-center text-white/40 text-sm">
           <p>This analytics data was shared via URL encoding.</p>
-          <p>No data was uploaded to any server - everything is processed locally in your browser.</p>
+          <p>
+            No data was uploaded to any server - everything is processed locally in your browser.
+          </p>
         </div>
       </main>
     </div>
   );
 }
-

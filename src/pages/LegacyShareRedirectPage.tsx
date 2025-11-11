@@ -14,4 +14,3 @@ export default function LegacyShareRedirectPage() {
 
   return <Navigate to="/" replace />;
 }
-

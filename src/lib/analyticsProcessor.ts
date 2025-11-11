@@ -47,15 +47,11 @@ export interface ListeningPatterns {
  */
 export function generateHeatmap(history: StreamingHistoryEntry[]): HeatmapData {
   // Initialize 7x24 matrix (days × hours)
-  const heatmap: number[][] = Array.from({ length: 7 }, () => 
-    Array.from({ length: 24 }, () => 0)
-  );
-  const counts: number[][] = Array.from({ length: 7 }, () => 
-    Array.from({ length: 24 }, () => 0)
-  );
+  const heatmap: number[][] = Array.from({ length: 7 }, () => Array.from({ length: 24 }, () => 0));
+  const counts: number[][] = Array.from({ length: 7 }, () => Array.from({ length: 24 }, () => 0));
 
   // Track unique dates for each day/hour combination
-  const uniqueDates = Array.from({ length: 7 }, () => 
+  const uniqueDates = Array.from({ length: 7 }, () =>
     Array.from({ length: 24 }, () => new Set<string>())
   );
 
@@ -192,4 +188,3 @@ export function analyzeListeningPatterns(history: StreamingHistoryEntry[]): List
     lateNightMinutes: Math.round(lateNightMinutes),
   };
 }
-

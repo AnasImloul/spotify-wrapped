@@ -29,12 +29,12 @@ export function FileUpload({ onSampleDataLoaded }: FileUploadProps = {}) {
 
   const processFiles = async (files: FileList) => {
     setError(null);
-    
+
     const newFiles: UploadedFile[] = [];
 
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
-      
+
       if (!file.name.endsWith('.json')) {
         setError('Please upload only JSON files');
         continue;
@@ -44,20 +44,24 @@ export function FileUpload({ onSampleDataLoaded }: FileUploadProps = {}) {
         const text = await file.text();
         const data = JSON.parse(text);
         const type = detectFileType(file.name, data);
-        
+
         // Only accept streaming history files (both standard and extended)
         if (type !== 'streaming' && type !== 'extended') {
-          setError(`${file.name} is not a streaming history file. Please upload only StreamingHistory_music_*.json or Streaming_History_Audio_*.json files.`);
+          setError(
+            `${file.name} is not a streaming history file. Please upload only StreamingHistory_music_*.json or Streaming_History_Audio_*.json files.`
+          );
           continue;
         }
-        
+
         newFiles.push({
           name: file.name,
           type,
           data,
         });
       } catch (err) {
-        setError(`Error parsing ${file.name}: ${err instanceof Error ? err.message : 'Unknown error'}`);
+        setError(
+          `Error parsing ${file.name}: ${err instanceof Error ? err.message : 'Unknown error'}`
+        );
       }
     }
 
@@ -67,10 +71,12 @@ export function FileUpload({ onSampleDataLoaded }: FileUploadProps = {}) {
 
     // Check for mixed types (standard + extended)
     const allFiles = [...uploadedFiles, ...newFiles];
-    const types = new Set(allFiles.map(f => f.type));
-    
+    const types = new Set(allFiles.map((f) => f.type));
+
     if (types.has('streaming') && types.has('extended')) {
-      setError('Cannot mix standard and extended streaming history files. Please upload only one type to avoid duplicate data. Remove all files and start over with a single format.');
+      setError(
+        'Cannot mix standard and extended streaming history files. Please upload only one type to avoid duplicate data. Remove all files and start over with a single format.'
+      );
       return;
     }
 
@@ -106,7 +112,7 @@ export function FileUpload({ onSampleDataLoaded }: FileUploadProps = {}) {
   const handleLoadSampleData = () => {
     setError(null);
     setLoadingSample(true);
-    
+
     // Simulate loading delay for better UX
     setTimeout(() => {
       try {
@@ -145,11 +151,14 @@ export function FileUpload({ onSampleDataLoaded }: FileUploadProps = {}) {
               isDragging ? 'text-primary' : 'text-muted-foreground'
             )}
           />
-          <h3 className="text-2xl font-semibold mb-2">
-            Drop your streaming history files here
-          </h3>
+          <h3 className="text-2xl font-semibold mb-2">Drop your streaming history files here</h3>
           <p className="text-muted-foreground text-center mb-6 max-w-md">
-            Upload <span className="font-mono">StreamingHistory_music_*.json</span> (standard) <strong>OR</strong> <span className="font-mono">Streaming_History_Audio_*.json</span> (extended) files from your Spotify data export. <span className="text-yellow-400 text-xs block mt-2">Warning: Do not mix both types to avoid duplicate data</span>
+            Upload <span className="font-mono">StreamingHistory_music_*.json</span> (standard){' '}
+            <strong>OR</strong> <span className="font-mono">Streaming_History_Audio_*.json</span>{' '}
+            (extended) files from your Spotify data export.{' '}
+            <span className="text-yellow-400 text-xs block mt-2">
+              Warning: Do not mix both types to avoid duplicate data
+            </span>
           </p>
           <div className="flex flex-row gap-3 justify-center items-center">
             <label className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-11 px-6 cursor-pointer">
@@ -231,4 +240,3 @@ export function FileUpload({ onSampleDataLoaded }: FileUploadProps = {}) {
     </div>
   );
 }
-

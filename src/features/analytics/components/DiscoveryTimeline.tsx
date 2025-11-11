@@ -2,16 +2,24 @@ import { useMemo, useState, useEffect } from 'react';
 import { Card, CardContent } from '@/shared/components/ui/card';
 import { Button } from '@/shared/components/ui/button';
 import { Badge } from '@/shared/components/ui/badge';
-import { Sparkles, Calendar, Music, Headphones, TrendingUp, ChevronDown, ChevronUp } from 'lucide-react';
+import {
+  Sparkles,
+  Calendar,
+  Music,
+  Headphones,
+  TrendingUp,
+  ChevronDown,
+  ChevronUp,
+} from 'lucide-react';
 import { useSpotifyData } from '@/shared/hooks';
 import { formatNumber } from '@/shared/utils';
 import { cn } from '@/shared/utils';
 
 // CONFIGURABLE THRESHOLDS - Easy to adjust
 const DISCOVERY_CONFIG = {
-  MIN_WEEKS_DURATION: 4,        // Minimum weeks to track (4 weeks = 1 month)
-  MIN_PLAYS_PER_WEEK: 3,        // Minimum plays per week
-  MIN_TOTAL_PLAYS: 5,           // Minimum total plays in the period
+  MIN_WEEKS_DURATION: 4, // Minimum weeks to track (4 weeks = 1 month)
+  MIN_PLAYS_PER_WEEK: 3, // Minimum plays per week
+  MIN_TOTAL_PLAYS: 5, // Minimum total plays in the period
   MIN_STREAM_DURATION_MS: 60000, // Minimum stream duration (60000ms = 1 minute)
 };
 
@@ -35,20 +43,23 @@ export function DiscoveryTimeline() {
     if (!streamingHistory || streamingHistory.length === 0) return [];
 
     // Track first occurrence and weekly plays for each artist/track
-    const itemTracking = new Map<string, {
-      name: string;
-      type: 'artist' | 'track';
-      artist?: string;
-      firstPlayed: Date;
-      weeklyPlays: Map<string, number>;
-    }>();
+    const itemTracking = new Map<
+      string,
+      {
+        name: string;
+        type: 'artist' | 'track';
+        artist?: string;
+        firstPlayed: Date;
+        weeklyPlays: Map<string, number>;
+      }
+    >();
 
     // Sort by oldest first
     const sortedHistory = [...streamingHistory].sort(
       (a, b) => new Date(a.endTime).getTime() - new Date(b.endTime).getTime()
     );
 
-    sortedHistory.forEach(entry => {
+    sortedHistory.forEach((entry) => {
       // Only consider streams that meet minimum duration
       if (entry.msPlayed < DISCOVERY_CONFIG.MIN_STREAM_DURATION_MS) {
         return; // Skip this entry
@@ -57,7 +68,7 @@ export function DiscoveryTimeline() {
       const artistKey = `artist:${entry.artistName}`;
       const trackKey = `track:${entry.trackName}|||${entry.artistName}`;
       const date = new Date(entry.endTime);
-      
+
       // Get week key (year + week number)
       const weekKey = getWeekKey(date);
 
@@ -93,16 +104,19 @@ export function DiscoveryTimeline() {
     const qualifiedItems: DiscoveryItem[] = [];
 
     itemTracking.forEach((item) => {
-      const totalPlays = Array.from(item.weeklyPlays.values()).reduce((sum, plays) => sum + plays, 0);
+      const totalPlays = Array.from(item.weeklyPlays.values()).reduce(
+        (sum, plays) => sum + plays,
+        0
+      );
       const weeksActive = item.weeklyPlays.size;
-      
+
       // Check if item meets consistency criteria
       const meetsMinimumWeeks = weeksActive >= DISCOVERY_CONFIG.MIN_WEEKS_DURATION;
       const meetsMinimumPlays = totalPlays >= DISCOVERY_CONFIG.MIN_TOTAL_PLAYS;
-      
+
       // Check if item was played consistently (at least MIN_PLAYS_PER_WEEK in most weeks)
       let qualifiedWeeks = 0;
-      item.weeklyPlays.forEach(plays => {
+      item.weeklyPlays.forEach((plays) => {
         if (plays >= DISCOVERY_CONFIG.MIN_PLAYS_PER_WEEK) {
           qualifiedWeeks++;
         }
@@ -110,8 +124,11 @@ export function DiscoveryTimeline() {
       const consistentEnough = qualifiedWeeks >= DISCOVERY_CONFIG.MIN_WEEKS_DURATION;
 
       if (meetsMinimumWeeks && meetsMinimumPlays && consistentEnough) {
-        const monthYear = item.firstPlayed.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
-        
+        const monthYear = item.firstPlayed.toLocaleDateString('en-US', {
+          month: 'long',
+          year: 'numeric',
+        });
+
         qualifiedItems.push({
           name: item.name,
           type: item.type,
@@ -130,7 +147,7 @@ export function DiscoveryTimeline() {
   // Get available years from discovery data
   const availableYears = useMemo(() => {
     const years = new Set<string>();
-    discoveryData.forEach(item => {
+    discoveryData.forEach((item) => {
       years.add(item.firstPlayed.getFullYear().toString());
     });
     return Array.from(years).sort((a, b) => parseInt(b) - parseInt(a));
@@ -150,14 +167,15 @@ export function DiscoveryTimeline() {
     const grouped = new Map<string, DiscoveryItem[]>();
 
     discoveryData
-      .filter(item => {
+      .filter((item) => {
         // Filter by type
         const typeMatch = showType === 'artists' ? item.type === 'artist' : item.type === 'track';
         // Filter by year
-        const yearMatch = selectedYear === 'all' || item.firstPlayed.getFullYear().toString() === selectedYear;
+        const yearMatch =
+          selectedYear === 'all' || item.firstPlayed.getFullYear().toString() === selectedYear;
         return typeMatch && yearMatch;
       })
-      .forEach(item => {
+      .forEach((item) => {
         if (!grouped.has(item.monthYear)) {
           grouped.set(item.monthYear, []);
         }
@@ -169,30 +187,35 @@ export function DiscoveryTimeline() {
       items.sort((a, b) => b.totalPlays - a.totalPlays);
     });
 
-    return Array.from(grouped.entries())
-      .sort((a, b) => {
-        const dateA = new Date(a[0]);
-        const dateB = new Date(b[0]);
-        return dateB.getTime() - dateA.getTime();
-      });
+    return Array.from(grouped.entries()).sort((a, b) => {
+      const dateA = new Date(a[0]);
+      const dateB = new Date(b[0]);
+      return dateB.getTime() - dateA.getTime();
+    });
   }, [discoveryData, showType, selectedYear]);
 
   // Calculate totals based on current filters
-  const totalArtists = useMemo(() => {
-    return discoveryData.filter(d => {
-      const typeMatch = d.type === 'artist';
-      const yearMatch = selectedYear === 'all' || d.firstPlayed.getFullYear().toString() === selectedYear;
-      return typeMatch && yearMatch;
-    }).length;
-  }, [discoveryData, selectedYear]);
+  const totalArtists = useMemo(
+    () =>
+      discoveryData.filter((d) => {
+        const typeMatch = d.type === 'artist';
+        const yearMatch =
+          selectedYear === 'all' || d.firstPlayed.getFullYear().toString() === selectedYear;
+        return typeMatch && yearMatch;
+      }).length,
+    [discoveryData, selectedYear]
+  );
 
-  const totalTracks = useMemo(() => {
-    return discoveryData.filter(d => {
-      const typeMatch = d.type === 'track';
-      const yearMatch = selectedYear === 'all' || d.firstPlayed.getFullYear().toString() === selectedYear;
-      return typeMatch && yearMatch;
-    }).length;
-  }, [discoveryData, selectedYear]);
+  const totalTracks = useMemo(
+    () =>
+      discoveryData.filter((d) => {
+        const typeMatch = d.type === 'track';
+        const yearMatch =
+          selectedYear === 'all' || d.firstPlayed.getFullYear().toString() === selectedYear;
+        return typeMatch && yearMatch;
+      }).length,
+    [discoveryData, selectedYear]
+  );
 
   const toggleMonth = (monthYear: string) => {
     const newExpanded = new Set(expandedMonths);
@@ -211,7 +234,9 @@ export function DiscoveryTimeline() {
           <div className="text-center py-12 text-white/40">
             <Sparkles className="w-12 h-12 mx-auto mb-3 opacity-50" />
             <p>No consistently listened music found in your history</p>
-            <p className="text-sm mt-2">This shows artists and tracks you listened to regularly, not one-time plays</p>
+            <p className="text-sm mt-2">
+              This shows artists and tracks you listened to regularly, not one-time plays
+            </p>
           </div>
         </CardContent>
       </Card>
@@ -224,11 +249,17 @@ export function DiscoveryTimeline() {
         <div className="flex items-start justify-between gap-4 flex-wrap mb-6">
           <div>
             <div className="flex gap-2">
-              <Badge variant="secondary" className="bg-gradient-to-r from-green-500/20 to-emerald-500/20 text-white border-green-500/30">
+              <Badge
+                variant="secondary"
+                className="bg-gradient-to-r from-green-500/20 to-emerald-500/20 text-white border-green-500/30"
+              >
                 <Headphones className="w-3 h-3 mr-1" />
                 {formatNumber(totalArtists)} Artists
               </Badge>
-              <Badge variant="secondary" className="bg-gradient-to-r from-blue-500/20 to-cyan-500/20 text-white border-blue-500/30">
+              <Badge
+                variant="secondary"
+                className="bg-gradient-to-r from-blue-500/20 to-cyan-500/20 text-white border-blue-500/30"
+              >
                 <Music className="w-3 h-3 mr-1" />
                 {formatNumber(totalTracks)} Tracks
               </Badge>
@@ -286,7 +317,7 @@ export function DiscoveryTimeline() {
                   <Calendar className="h-4 w-4" />
                   All Years
                 </Button>
-                {availableYears.map(year => (
+                {availableYears.map((year) => (
                   <Button
                     key={year}
                     variant={selectedYear === year ? 'default' : 'outline'}
@@ -311,17 +342,17 @@ export function DiscoveryTimeline() {
             <p>No discoveries found in selected category</p>
           </div>
         ) : (
-          <div className="space-y-4 max-h-[600px] overflow-y-auto custom-scrollbar pr-2" style={{ paddingLeft: '5px' }}>
+          <div
+            className="space-y-4 max-h-[600px] overflow-y-auto custom-scrollbar pr-2"
+            style={{ paddingLeft: '5px' }}
+          >
             {groupedByMonth.map(([monthYear, items]) => {
               const isExpanded = expandedMonths.has(monthYear);
               const displayItems = isExpanded ? items : items.slice(0, 5);
               const hasMore = items.length > 5;
 
               return (
-                <div
-                  key={monthYear}
-                  className="border-l-2 border-purple-500/30 pl-3 relative"
-                >
+                <div key={monthYear} className="border-l-2 border-purple-500/30 pl-3 relative">
                   {/* Timeline dot */}
                   <div className="absolute left-0 top-1.5 w-3 h-3 bg-purple-500 rounded-full -translate-x-[7px] ring-4 ring-black/40" />
 
@@ -330,7 +361,10 @@ export function DiscoveryTimeline() {
                     <div className="flex items-center gap-2">
                       <Calendar className="w-4 h-4 text-purple-400" />
                       <h3 className="font-bold text-white">{monthYear}</h3>
-                      <Badge variant="secondary" className="bg-purple-500/20 text-purple-300 border-purple-500/30">
+                      <Badge
+                        variant="secondary"
+                        className="bg-purple-500/20 text-purple-300 border-purple-500/30"
+                      >
                         {items.length} consistent
                       </Badge>
                     </div>
@@ -356,13 +390,9 @@ export function DiscoveryTimeline() {
                               <Music className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" />
                             )}
                             <div className="min-w-0 flex-1">
-                              <p className="font-semibold text-white truncate">
-                                {item.name}
-                              </p>
+                              <p className="font-semibold text-white truncate">{item.name}</p>
                               {item.artist && (
-                                <p className="text-xs text-white/60 truncate">
-                                  {item.artist}
-                                </p>
+                                <p className="text-xs text-white/60 truncate">{item.artist}</p>
                               )}
                               <div className="flex items-center gap-2 mt-1 flex-wrap">
                                 <p className="text-xs text-white/40">
@@ -424,7 +454,9 @@ export function DiscoveryTimeline() {
 function getWeekKey(date: Date): string {
   const year = date.getFullYear();
   const startOfYear = new Date(year, 0, 1);
-  const daysSinceStart = Math.floor((date.getTime() - startOfYear.getTime()) / (1000 * 60 * 60 * 24));
+  const daysSinceStart = Math.floor(
+    (date.getTime() - startOfYear.getTime()) / (1000 * 60 * 60 * 24)
+  );
   const weekNumber = Math.ceil((daysSinceStart + startOfYear.getDay() + 1) / 7);
   return `${year}-W${weekNumber}`;
 }

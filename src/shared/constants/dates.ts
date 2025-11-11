@@ -60,5 +60,3 @@ export const MONTH_ABBR = [
   'Nov',
   'Dec',
 ] as const;
-
-

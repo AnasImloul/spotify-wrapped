@@ -9,10 +9,15 @@ interface SummaryCardProps {
   dateRange: { start: string; end: string };
 }
 
-export function SummaryCard({ totalTracks, uniqueArtists, uniqueTracks, dateRange }: SummaryCardProps) {
+export function SummaryCard({
+  totalTracks,
+  uniqueArtists,
+  uniqueTracks,
+  dateRange,
+}: SummaryCardProps) {
   return (
-    <StoryCard 
-      gradient="from-slate-900/40 via-green-900/30 to-blue-900/20" 
+    <StoryCard
+      gradient="from-slate-900/40 via-green-900/30 to-blue-900/20"
       exportId="story-summary"
     >
       <div className="flex flex-col items-center text-center space-y-3 sm:space-y-5 max-w-2xl px-3 sm:px-4">
@@ -48,7 +53,9 @@ export function SummaryCard({ totalTracks, uniqueArtists, uniqueTracks, dateRang
             <p className="text-base sm:text-2xl md:text-3xl font-bold text-white">
               {formatNumber(totalTracks)}
             </p>
-            <p className="text-white/60 text-[10px] sm:text-sm md:text-base uppercase tracking-wider leading-tight">Songs</p>
+            <p className="text-white/60 text-[10px] sm:text-sm md:text-base uppercase tracking-wider leading-tight">
+              Songs
+            </p>
           </div>
 
           <div className="space-y-1.5 sm:space-y-2 md:space-y-2.5 p-3 sm:p-5 md:p-6 bg-white/5 backdrop-blur-md rounded-xl border border-white/10">
@@ -60,7 +67,9 @@ export function SummaryCard({ totalTracks, uniqueArtists, uniqueTracks, dateRang
             <p className="text-base sm:text-2xl md:text-3xl font-bold text-white">
               {formatNumber(uniqueArtists)}
             </p>
-            <p className="text-white/60 text-[10px] sm:text-sm md:text-base uppercase tracking-wider leading-tight">Artists</p>
+            <p className="text-white/60 text-[10px] sm:text-sm md:text-base uppercase tracking-wider leading-tight">
+              Artists
+            </p>
           </div>
 
           <div className="space-y-1.5 sm:space-y-2 md:space-y-2.5 p-3 sm:p-5 md:p-6 bg-white/5 backdrop-blur-md rounded-xl border border-white/10">
@@ -72,7 +81,9 @@ export function SummaryCard({ totalTracks, uniqueArtists, uniqueTracks, dateRang
             <p className="text-base sm:text-2xl md:text-3xl font-bold text-white">
               {formatNumber(uniqueTracks)}
             </p>
-            <p className="text-white/60 text-[10px] sm:text-sm md:text-base uppercase tracking-wider leading-tight">Tracks</p>
+            <p className="text-white/60 text-[10px] sm:text-sm md:text-base uppercase tracking-wider leading-tight">
+              Tracks
+            </p>
           </div>
         </div>
 
@@ -89,4 +100,3 @@ export function SummaryCard({ totalTracks, uniqueArtists, uniqueTracks, dateRang
     </StoryCard>
   );
 }
-

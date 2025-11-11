@@ -11,11 +11,11 @@ import {
 import { useState } from 'react';
 import { useFilteredStats, useDateRange } from '@/shared/hooks';
 import { generatePDFReport, exportStatsAsText, copyToClipboard } from '@/shared/services/export';
-import { 
-  encodeAnalyticsToUrl, 
-  generateCompactShareUrl, 
+import {
+  encodeAnalyticsToUrl,
+  generateCompactShareUrl,
   generateSummaryText,
-  getCompactDataFromUrl 
+  getCompactDataFromUrl,
 } from '@/shared/services/sharing';
 import { useSortedArtists, useSortedTracks } from '@/shared/hooks';
 import { copyTextToClipboard } from '@/lib/social';
@@ -26,19 +26,23 @@ interface ShareExportMenuProps {
   className?: string;
 }
 
-export function ShareExportMenu({ variant = 'ghost', size = 'sm', className }: ShareExportMenuProps) {
+export function ShareExportMenu({
+  variant = 'ghost',
+  size = 'sm',
+  className,
+}: ShareExportMenuProps) {
   const stats = useFilteredStats();
   const { startDate, endDate } = useDateRange();
   const sortedArtists = useSortedArtists();
   const sortedTracks = useSortedTracks();
-  
+
   const [copied, setCopied] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
 
   const handleExportPDF = async () => {
     if (!stats || isExporting) return;
-    
+
     setIsExporting(true);
     try {
       await generatePDFReport(stats, { start: startDate, end: endDate });
@@ -51,10 +55,10 @@ export function ShareExportMenu({ variant = 'ghost', size = 'sm', className }: S
 
   const handleCopyAsText = async () => {
     if (!stats) return;
-    
+
     const text = exportStatsAsText(stats, { start: startDate, end: endDate });
     const success = await copyToClipboard(text);
-    
+
     if (success) {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
@@ -71,7 +75,7 @@ export function ShareExportMenu({ variant = 'ghost', size = 'sm', className }: S
       { startDate: new Date(startDate), endDate: new Date(endDate) }
     );
     const url = generateCompactShareUrl(encoded);
-    
+
     try {
       await copyTextToClipboard(url);
       setCopiedLink(true);
@@ -91,7 +95,7 @@ export function ShareExportMenu({ variant = 'ghost', size = 'sm', className }: S
       { startDate: new Date(startDate), endDate: new Date(endDate) }
     );
     const url = generateCompactShareUrl(encoded);
-    
+
     const compactData = getCompactDataFromUrl() || {
       v: 2,
       s: [
@@ -104,12 +108,16 @@ export function ShareExportMenu({ variant = 'ghost', size = 'sm', className }: S
         stats.mostActiveDay,
         stats.mostActiveDayMinutes,
       ],
-      a: sortedArtists.slice(0, 10).map((a) => [a.name, Math.round(a.totalTime / 60000), a.playCount]),
-      t: sortedTracks.slice(0, 10).map((t) => [t.name, t.artist, Math.round(t.totalMs / 60000), t.playCount]),
+      a: sortedArtists
+        .slice(0, 10)
+        .map((a) => [a.name, Math.round(a.totalTime / 60000), a.playCount]),
+      t: sortedTracks
+        .slice(0, 10)
+        .map((t) => [t.name, t.artist, Math.round(t.totalMs / 60000), t.playCount]),
       dr: [startDate, endDate],
     };
     const shareText = generateSummaryText(compactData as any);
-    
+
     try {
       await copyTextToClipboard(`${shareText}\n\n${url}`);
       setCopied(true);
@@ -124,11 +132,7 @@ export function ShareExportMenu({ variant = 'ghost', size = 'sm', className }: S
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button 
-          variant={variant} 
-          size={size} 
-          className={className}
-        >
+        <Button variant={variant} size={size} className={className}>
           <Share2 className="w-4 h-4 sm:mr-2" />
           <span className="hidden sm:inline">Share</span>
         </Button>
@@ -136,7 +140,7 @@ export function ShareExportMenu({ variant = 'ghost', size = 'sm', className }: S
       <DropdownMenuContent align="end" className="w-56">
         <DropdownMenuLabel>Share Options</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        
+
         <DropdownMenuItem onClick={handleCopyShareLink}>
           {copiedLink ? (
             <>
@@ -150,7 +154,7 @@ export function ShareExportMenu({ variant = 'ghost', size = 'sm', className }: S
             </>
           )}
         </DropdownMenuItem>
-        
+
         <DropdownMenuItem onClick={handleCopyShareText}>
           <Copy className="w-4 h-4 mr-2" />
           Copy Text + Link
@@ -159,12 +163,12 @@ export function ShareExportMenu({ variant = 'ghost', size = 'sm', className }: S
         <DropdownMenuSeparator />
         <DropdownMenuLabel>Export Options</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        
+
         <DropdownMenuItem onClick={handleExportPDF} disabled={isExporting}>
           <FileText className="w-4 h-4 mr-2" />
           {isExporting ? 'Exporting...' : 'Export as PDF'}
         </DropdownMenuItem>
-        
+
         <DropdownMenuItem onClick={handleCopyAsText}>
           {copied ? (
             <>
@@ -178,9 +182,9 @@ export function ShareExportMenu({ variant = 'ghost', size = 'sm', className }: S
             </>
           )}
         </DropdownMenuItem>
-        
+
         <DropdownMenuSeparator />
-        
+
         <div className="px-2 py-1.5 text-xs text-muted-foreground">
           Tip: Use Story Mode for shareable images
         </div>
@@ -188,4 +192,3 @@ export function ShareExportMenu({ variant = 'ghost', size = 'sm', className }: S
     </DropdownMenu>
   );
 }
-

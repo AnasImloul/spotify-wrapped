@@ -39,13 +39,13 @@ export function DateRangeProvider({ children }: DateRangeProviderProps) {
     const currentYear = now.getFullYear();
     const currentYearStart = `${currentYear}-01`;
     const currentYearEnd = `${currentYear}-12`;
-    
+
     // If current year is within the data range, use it (with clamping)
     // Otherwise, reset to the full data range
     if (minDate && maxDate) {
       const minYear = parseInt(minDate.split('-')[0]);
       const maxYear = parseInt(maxDate.split('-')[0]);
-      
+
       if (currentYear >= minYear && currentYear <= maxYear) {
         // Current year is within data range, but clamp to actual data boundaries
         const clampedStart = currentYearStart < minDate ? minDate : currentYearStart;
@@ -92,7 +92,7 @@ export function DateRangeProvider({ children }: DateRangeProviderProps) {
         }
         return currentStart;
       });
-      
+
       setEndDate((currentEnd) => {
         if (currentEnd > max || currentEnd < min) {
           return max;
@@ -129,4 +129,3 @@ export function useDateRangeContext() {
   }
   return context;
 }
-

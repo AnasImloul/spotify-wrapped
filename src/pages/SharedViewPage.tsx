@@ -11,4 +11,3 @@ export default function SharedViewPage() {
 
   return <SharedAnalyticsView onClose={() => navigate('/')} shareId={id} />;
 }
-

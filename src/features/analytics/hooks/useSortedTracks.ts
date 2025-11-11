@@ -11,12 +11,12 @@ export function useSortedTracks() {
   const { sortBy } = useFilterContext();
 
   return useMemo(() => {
-    if (!stats || !stats.topTracks) {
+    if (!stats?.topTracks) {
       return [];
     }
 
     let sorted = [...stats.topTracks];
-    
+
     if (sortBy === 'plays') {
       sorted = sorted.sort((a, b) => b.playCount - a.playCount);
     } else {
@@ -31,4 +31,3 @@ export function useSortedTracks() {
     }));
   }, [stats, sortBy]);
 }
-

@@ -8,7 +8,7 @@ export function StatsOverview() {
 
   if (!stats) {
     return null;
-}
+  }
   const totalMinutes = msToMinutes(stats.totalListeningTime * 60 * 60 * 1000);
   const totalHours = Math.round(totalMinutes / 60);
   const totalDays = Math.round(totalHours / 24);
@@ -21,9 +21,7 @@ export function StatsOverview() {
           <Clock className="h-4 w-4 text-green-400" />
         </CardHeader>
         <CardContent>
-          <div className="text-3xl font-bold text-green-400">
-            {formatNumber(totalMinutes)} min
-          </div>
+          <div className="text-3xl font-bold text-green-400">{formatNumber(totalMinutes)} min</div>
           <p className="text-xs text-white/60 mt-2">
             That's {formatNumber(totalHours)} hours or {totalDays} days of pure music!
           </p>
@@ -36,12 +34,8 @@ export function StatsOverview() {
           <Music className="h-4 w-4 text-green-400" />
         </CardHeader>
         <CardContent>
-          <div className="text-3xl font-bold text-green-300">
-            {formatNumber(stats.totalTracks)}
-          </div>
-          <p className="text-xs text-white/60 mt-2">
-            Different songs in your library
-          </p>
+          <div className="text-3xl font-bold text-green-300">{formatNumber(stats.totalTracks)}</div>
+          <p className="text-xs text-white/60 mt-2">Different songs in your library</p>
         </CardContent>
       </Card>
 
@@ -54,9 +48,7 @@ export function StatsOverview() {
           <div className="text-3xl font-bold text-green-300">
             {formatNumber(stats.totalArtists)}
           </div>
-          <p className="text-xs text-white/60 mt-2">
-            Unique artists you've enjoyed
-          </p>
+          <p className="text-xs text-white/60 mt-2">Unique artists you've enjoyed</p>
         </CardContent>
       </Card>
 
@@ -70,9 +62,7 @@ export function StatsOverview() {
             <div className="text-3xl font-bold text-green-300">
               {Math.round(stats.averageListeningPerDay)} min
             </div>
-            <p className="text-xs text-white/60 mt-2">
-              Average listening time per day
-            </p>
+            <p className="text-xs text-white/60 mt-2">Average listening time per day</p>
           </CardContent>
         </Card>
       )}
@@ -88,7 +78,8 @@ export function StatsOverview() {
               Top {Math.round(100 - stats.yearlyMetrics.percentGreaterThanWorldwideUsers)}%
             </div>
             <p className="text-xs text-white/60 mt-2">
-              You listened more than {stats.yearlyMetrics.percentGreaterThanWorldwideUsers.toFixed(1)}% of Spotify users
+              You listened more than{' '}
+              {stats.yearlyMetrics.percentGreaterThanWorldwideUsers.toFixed(1)}% of Spotify users
             </p>
           </CardContent>
         </Card>
@@ -109,7 +100,9 @@ export function StatsOverview() {
               })}
             </div>
             <p className="text-xs text-white/60 mt-2">
-              {stats.mostActiveDayMinutes ? `${formatNumber(stats.mostActiveDayMinutes)} minutes played` : 'Your most music-filled day'}
+              {stats.mostActiveDayMinutes
+                ? `${formatNumber(stats.mostActiveDayMinutes)} minutes played`
+                : 'Your most music-filled day'}
             </p>
           </CardContent>
         </Card>
@@ -117,4 +110,3 @@ export function StatsOverview() {
     </div>
   );
 }
-

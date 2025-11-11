@@ -14,4 +14,3 @@ export default function StoryModePage() {
 
   return <StoryMode onClose={() => navigate('/')} />;
 }
-

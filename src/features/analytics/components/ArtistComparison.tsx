@@ -32,16 +32,11 @@ const COLORS = [
   '#FF8C00', // Dark Orange
 ];
 
-export function ArtistComparison({
-  onClose,
-  initialArtists = [],
-}: ArtistComparisonProps) {
+export function ArtistComparison({ onClose, initialArtists = [] }: ArtistComparisonProps) {
   const { streamingHistory } = useSpotifyData();
   const { startDate, endDate } = useDateRange();
   const sortedArtists = useSortedArtists();
-  const [selectedArtists, setSelectedArtists] = useState<string[]>(
-    initialArtists.slice(0, 5)
-  );
+  const [selectedArtists, setSelectedArtists] = useState<string[]>(initialArtists.slice(0, 5));
   const [searchTerm, setSearchTerm] = useState('');
   const [showAutocomplete, setShowAutocomplete] = useState(false);
   const searchContainerRef = useRef<HTMLDivElement>(null);
@@ -49,7 +44,10 @@ export function ArtistComparison({
   // Close autocomplete when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (searchContainerRef.current && !searchContainerRef.current.contains(event.target as Node)) {
+      if (
+        searchContainerRef.current &&
+        !searchContainerRef.current.contains(event.target as Node)
+      ) {
         setShowAutocomplete(false);
       }
     };
@@ -76,7 +74,7 @@ export function ArtistComparison({
   const filteredArtists = useMemo(() => {
     // Filter out already selected artists
     const unselectedArtists = sortedArtists.filter(
-      artist => !selectedArtists.includes(artist.name)
+      (artist) => !selectedArtists.includes(artist.name)
     );
 
     // If no search term, return already-sorted list (respects global sortBy setting)
@@ -87,8 +85,8 @@ export function ArtistComparison({
     // Use fuzzy search
     const results = artistFuse.search(searchTerm);
     return results
-      .map(result => result.item)
-      .filter(artist => !selectedArtists.includes(artist.name))
+      .map((result) => result.item)
+      .filter((artist) => !selectedArtists.includes(artist.name))
       .slice(0, 20);
   }, [sortedArtists, selectedArtists, searchTerm, artistFuse]);
 
@@ -99,17 +97,17 @@ export function ArtistComparison({
     const artistData = new Map<string, Map<string, number>>();
 
     // Initialize data structures for each artist
-    selectedArtists.forEach(artist => {
+    selectedArtists.forEach((artist) => {
       artistData.set(artist, new Map());
     });
 
     // Process streaming history
-    streamingHistory.forEach(entry => {
+    streamingHistory.forEach((entry) => {
       if (!selectedArtists.includes(entry.artistName)) return;
 
       const entryDate = new Date(entry.endTime);
       const monthKey = `${entryDate.getFullYear()}-${String(entryDate.getMonth() + 1).padStart(2, '0')}`;
-      
+
       // Date range filter
       if (startDate && monthKey < startDate) return;
       if (endDate && monthKey > endDate) return;
@@ -118,21 +116,21 @@ export function ArtistComparison({
 
       const artistMap = artistData.get(entry.artistName)!;
       const currentMinutes = artistMap.get(monthKey) || 0;
-      artistMap.set(monthKey, currentMinutes + (entry.msPlayed / 1000 / 60));
+      artistMap.set(monthKey, currentMinutes + entry.msPlayed / 1000 / 60);
     });
 
     // Convert to array format for Recharts
     const sortedMonths = Array.from(monthsSet).sort();
-    
-    return sortedMonths.map(month => {
+
+    return sortedMonths.map((month) => {
       const dataPoint: any = {
-        month: new Date(month + '-01').toLocaleDateString('en-US', { 
-          month: 'short', 
-          year: 'numeric' 
+        month: new Date(`${month}-01`).toLocaleDateString('en-US', {
+          month: 'short',
+          year: 'numeric',
         }),
       };
 
-      selectedArtists.forEach(artist => {
+      selectedArtists.forEach((artist) => {
         const minutes = artistData.get(artist)?.get(month) || 0;
         dataPoint[artist] = Math.round(minutes);
       });
@@ -150,7 +148,7 @@ export function ArtistComparison({
   };
 
   const removeArtist = (artist: string) => {
-    setSelectedArtists(selectedArtists.filter(a => a !== artist));
+    setSelectedArtists(selectedArtists.filter((a) => a !== artist));
   };
 
   return (
@@ -176,12 +174,14 @@ export function ArtistComparison({
             </button>
           </div>
         </CardHeader>
-        
+
         <CardContent className="p-6 flex-1 overflow-y-auto custom-scrollbar">
           <div className="space-y-4">
             {/* Artist Selection */}
             <div>
-              <h3 className="text-white font-semibold mb-3">Selected Artists ({selectedArtists.length}/8)</h3>
+              <h3 className="text-white font-semibold mb-3">
+                Selected Artists ({selectedArtists.length}/8)
+              </h3>
               <div className="flex flex-wrap gap-2 mb-4">
                 {selectedArtists.map((artist, index) => (
                   <div
@@ -189,7 +189,7 @@ export function ArtistComparison({
                     className="flex items-center gap-2 bg-white/5 border rounded-lg px-3 py-2 hover:border-green-500/30 transition-colors"
                     style={{ borderColor: `${COLORS[index]}40` }}
                   >
-                    <div 
+                    <div
                       className="w-3 h-3 rounded-full"
                       style={{ backgroundColor: COLORS[index] }}
                     />
@@ -220,7 +220,7 @@ export function ArtistComparison({
                   {showAutocomplete && (searchTerm || filteredArtists.length > 0) && (
                     <div className="bg-black/80 backdrop-blur-sm border border-white/10 rounded-lg max-h-60 overflow-y-auto custom-scrollbar">
                       {filteredArtists.length > 0 ? (
-                        filteredArtists.map(artist => (
+                        filteredArtists.map((artist) => (
                           <button
                             key={artist.name}
                             onClick={() => addArtist(artist.name)}
@@ -267,12 +267,12 @@ export function ArtistComparison({
                       <YAxis
                         stroke="rgba(255,255,255,0.5)"
                         style={{ fontSize: '11px' }}
-                        label={{ 
-                          value: 'Minutes', 
-                          angle: -90, 
-                          position: 'insideLeft', 
+                        label={{
+                          value: 'Minutes',
+                          angle: -90,
+                          position: 'insideLeft',
                           fill: 'rgba(255,255,255,0.7)',
-                          style: { fontSize: '11px' }
+                          style: { fontSize: '11px' },
                         }}
                       />
                       <Tooltip
@@ -281,11 +281,11 @@ export function ArtistComparison({
                           border: '1px solid rgba(29, 185, 84, 0.3)',
                           borderRadius: '8px',
                           color: 'white',
-                          fontSize: '12px'
+                          fontSize: '12px',
                         }}
                         formatter={(value: number, name: string) => [`${value} min`, name]}
                       />
-                      <Legend 
+                      <Legend
                         wrapperStyle={{ fontSize: '12px', paddingTop: '10px' }}
                         iconType="line"
                       />
@@ -306,10 +306,9 @@ export function ArtistComparison({
               </div>
             ) : (
               <div className="text-center py-12 text-white/60 bg-white/5 rounded-lg border border-white/10">
-                {selectedArtists.length === 0 
+                {selectedArtists.length === 0
                   ? 'Add artists to start comparing their listening patterns'
-                  : 'No listening data available for the selected date range'
-                }
+                  : 'No listening data available for the selected date range'}
               </div>
             )}
 
@@ -319,7 +318,10 @@ export function ArtistComparison({
                 <h3 className="text-white font-semibold mb-3">Total Listening Time</h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                   {selectedArtists.map((artist, index) => {
-                    const totalMinutes = chartData.reduce((sum, month) => sum + (month[artist] || 0), 0);
+                    const totalMinutes = chartData.reduce(
+                      (sum, month) => sum + (month[artist] || 0),
+                      0
+                    );
                     return (
                       <div
                         key={artist}
@@ -327,13 +329,15 @@ export function ArtistComparison({
                         style={{ borderColor: `${COLORS[index]}40` }}
                       >
                         <div className="flex items-center gap-2 mb-1">
-                          <div 
+                          <div
                             className="w-2 h-2 rounded-full"
                             style={{ backgroundColor: COLORS[index] }}
                           />
                           <p className="text-xs text-white/60 truncate">{artist}</p>
                         </div>
-                        <p className="text-lg font-bold text-white">{totalMinutes.toLocaleString()} min</p>
+                        <p className="text-lg font-bold text-white">
+                          {totalMinutes.toLocaleString()} min
+                        </p>
                       </div>
                     );
                   })}
@@ -346,4 +350,3 @@ export function ArtistComparison({
     </div>
   );
 }
-

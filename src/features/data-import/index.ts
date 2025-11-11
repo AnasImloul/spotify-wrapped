@@ -8,4 +8,3 @@ export { DataLoadingProgress } from './components/DataLoadingProgress';
 export { DateRangeSelector } from './components/DateRangeSelector';
 export { MonthPicker } from './components/MonthPicker';
 export * from './services';
-

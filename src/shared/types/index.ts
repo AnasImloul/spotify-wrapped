@@ -10,8 +10,16 @@ export * from './streaming';
 export * from './analytics';
 
 // Spotify Wrapped data types (excluding TopArtist which conflicts with analytics)
-export type { TopArtistsData, TopPodcastsData, TopTracksData, YearlyMetrics, EraTrack, MusicEra, MusicEvolution, WrappedData } from './wrapped';
+export type {
+  TopArtistsData,
+  TopPodcastsData,
+  TopTracksData,
+  YearlyMetrics,
+  EraTrack,
+  MusicEra,
+  MusicEvolution,
+  WrappedData,
+} from './wrapped';
 
 // User data types
 export * from './user';
-

@@ -1,5 +1,11 @@
 import { useMemo, useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/shared/components/ui/card';
 import { Button } from '@/shared/components/ui/button';
 import { useSpotifyData, useDateRange } from '@/shared/hooks';
 import { analyzeListeningPatterns } from '@/shared/services';
@@ -14,10 +20,10 @@ export function ListeningPatterns() {
   // Filter streaming history by global date range
   const filteredHistory = useMemo(() => {
     if (!streamingHistory || streamingHistory.length === 0) return [];
-    
+
     const start = new Date(startDate);
     const end = new Date(endDate);
-    
+
     return streamingHistory.filter((entry) => {
       const date = new Date(entry.endTime);
       return date >= start && date <= end;
@@ -34,18 +40,22 @@ export function ListeningPatterns() {
   }
 
   // Calculate averages per day using actual day counts
-  const avgWeekdayMinutes = patterns.weekdayCount > 0 ? patterns.weekdayMinutes / patterns.weekdayCount : 0;
-  const avgWeekendMinutes = patterns.weekendCount > 0 ? patterns.weekendMinutes / patterns.weekendCount : 0;
-  
+  const avgWeekdayMinutes =
+    patterns.weekdayCount > 0 ? patterns.weekdayMinutes / patterns.weekdayCount : 0;
+  const avgWeekendMinutes =
+    patterns.weekendCount > 0 ? patterns.weekendMinutes / patterns.weekendCount : 0;
+
   // Calculate averages for day/night
   const avgDayMinutes = patterns.dayCount > 0 ? patterns.dayMinutes / patterns.dayCount : 0;
   const avgNightMinutes = patterns.dayCount > 0 ? patterns.nightMinutes / patterns.dayCount : 0;
-  
+
   // Calculate averages for time of day breakdown
   const avgMorningMinutes = patterns.dayCount > 0 ? patterns.morningMinutes / patterns.dayCount : 0;
-  const avgAfternoonMinutes = patterns.dayCount > 0 ? patterns.afternoonMinutes / patterns.dayCount : 0;
+  const avgAfternoonMinutes =
+    patterns.dayCount > 0 ? patterns.afternoonMinutes / patterns.dayCount : 0;
   const avgEveningMinutes = patterns.dayCount > 0 ? patterns.eveningMinutes / patterns.dayCount : 0;
-  const avgLateNightMinutes = patterns.dayCount > 0 ? patterns.lateNightMinutes / patterns.dayCount : 0;
+  const avgLateNightMinutes =
+    patterns.dayCount > 0 ? patterns.lateNightMinutes / patterns.dayCount : 0;
 
   return (
     <Card className="bg-black/40 border-white/10">
@@ -57,7 +67,7 @@ export function ListeningPatterns() {
               When you listen to music most
             </CardDescription>
           </div>
-          
+
           {/* Time Unit Toggle */}
           <div className="flex gap-2 flex-shrink-0">
             <Button
@@ -91,7 +101,7 @@ export function ListeningPatterns() {
             <h3 className="text-lg font-semibold text-white">Weekday vs Weekend</h3>
             <span className="text-xs text-white/50">(Average per Day)</span>
           </div>
-          
+
           {/* Average per day comparison */}
           <div className="grid grid-cols-2 gap-4">
             <div className="bg-white/5 rounded-lg p-4 border border-white/10">
@@ -99,18 +109,14 @@ export function ListeningPatterns() {
               <p className="text-2xl font-bold text-green-400">
                 {formatMinutes(avgWeekdayMinutes, timeUnit)}
               </p>
-              <p className="text-white/40 text-[10px] mt-1">
-                ({patterns.weekdayCount} days)
-              </p>
+              <p className="text-white/40 text-[10px] mt-1">({patterns.weekdayCount} days)</p>
             </div>
             <div className="bg-white/5 rounded-lg p-4 border border-white/10">
               <p className="text-white/60 text-sm mb-1">Avg Weekend Day</p>
               <p className="text-2xl font-bold text-blue-400">
                 {formatMinutes(avgWeekendMinutes, timeUnit)}
               </p>
-              <p className="text-white/40 text-[10px] mt-1">
-                ({patterns.weekendCount} days)
-              </p>
+              <p className="text-white/40 text-[10px] mt-1">({patterns.weekendCount} days)</p>
             </div>
           </div>
         </div>
@@ -125,31 +131,23 @@ export function ListeningPatterns() {
             <h3 className="text-lg font-semibold text-white">Day vs Night</h3>
             <span className="text-xs text-white/50">(Average per Day)</span>
           </div>
-          
+
           <div className="grid grid-cols-2 gap-4">
             <div className="bg-white/5 rounded-lg p-4 border border-white/10">
               <p className="text-white/60 text-sm mb-1">Avg Day (6AM-6PM)</p>
               <p className="text-2xl font-bold text-green-400">
                 {formatMinutes(avgDayMinutes, timeUnit)}
               </p>
-              <p className="text-white/60 text-xs mt-1">
-                {patterns.dayPercentage}% of total
-              </p>
-              <p className="text-white/40 text-[10px] mt-1">
-                ({patterns.dayCount} days)
-              </p>
+              <p className="text-white/60 text-xs mt-1">{patterns.dayPercentage}% of total</p>
+              <p className="text-white/40 text-[10px] mt-1">({patterns.dayCount} days)</p>
             </div>
             <div className="bg-white/5 rounded-lg p-4 border border-white/10">
               <p className="text-white/60 text-sm mb-1">Avg Night (6PM-6AM)</p>
               <p className="text-2xl font-bold text-blue-400">
                 {formatMinutes(avgNightMinutes, timeUnit)}
               </p>
-              <p className="text-white/60 text-xs mt-1">
-                {patterns.nightPercentage}% of total
-              </p>
-              <p className="text-white/40 text-[10px] mt-1">
-                ({patterns.dayCount} days)
-              </p>
+              <p className="text-white/60 text-xs mt-1">{patterns.nightPercentage}% of total</p>
+              <p className="text-white/40 text-[10px] mt-1">({patterns.dayCount} days)</p>
             </div>
           </div>
         </div>
@@ -161,7 +159,7 @@ export function ListeningPatterns() {
             <h3 className="text-lg font-semibold text-white">Time of Day Breakdown</h3>
             <span className="text-xs text-white/50">(Average per Day)</span>
           </div>
-          
+
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             <div className="bg-white/5 rounded-lg p-4 border border-white/10">
               <p className="text-white/60 text-sm mb-1">Morning</p>
@@ -197,4 +195,3 @@ export function ListeningPatterns() {
     </Card>
   );
 }
-

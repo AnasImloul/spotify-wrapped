@@ -10,14 +10,10 @@ export function AnalyticsFooter() {
         <div className="text-center text-white/60 text-sm">
           <p>
             Built for music enthusiasts |{' '}
-            <span className="text-white/40">
-              Independent project not affiliated with Spotify
-            </span>
+            <span className="text-white/40">Independent project not affiliated with Spotify</span>
           </p>
         </div>
       </div>
     </footer>
   );
 }
-
-

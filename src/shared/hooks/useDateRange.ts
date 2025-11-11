@@ -5,7 +5,7 @@ import { useDateRangeContext } from '@/shared/contexts/DateRangeContext';
  */
 export function useDateRange() {
   const context = useDateRangeContext();
-  
+
   return {
     startDate: context.startDate,
     endDate: context.endDate,
@@ -19,4 +19,3 @@ export function useDateRange() {
     updateDateRangeFromFiles: context.updateDateRangeFromFiles,
   };
 }
-

@@ -13,7 +13,7 @@ export class StorageService {
     try {
       const item = localStorage.getItem(key);
       if (item === null) return null;
-      
+
       // Try to parse as JSON, fallback to string
       try {
         return JSON.parse(item) as T;
@@ -74,5 +74,3 @@ export class StorageService {
     this.setItem(STORAGE_KEYS.theme, theme);
   }
 }
-
-

@@ -14,12 +14,12 @@ import { useFilteredStats } from '@/shared/hooks';
 export function ListeningTrends() {
   const stats = useFilteredStats();
 
-  if (!stats || !stats.listeningByMonth || stats.listeningByMonth.length === 0) {
+  if (!stats?.listeningByMonth || stats.listeningByMonth.length === 0) {
     return null;
   }
 
   const monthlyData = stats.listeningByMonth.map((item) => ({
-    month: new Date(item.month + '-01').toLocaleDateString('en-US', {
+    month: new Date(`${item.month}-01`).toLocaleDateString('en-US', {
       month: 'short',
       year: '2-digit',
     }),
@@ -87,4 +87,3 @@ export function ListeningTrends() {
     </Card>
   );
 }
-

@@ -55,5 +55,3 @@ export const TOP_ITEMS_LIMITS = {
   extended: 50,
   maximum: 100,
 } as const;
-
-

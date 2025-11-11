@@ -17,8 +17,8 @@ export function YearInReviewCard() {
     const topTrack = stats.topTracks[0];
 
     // Get year from date range
-    const startYear = new Date(startDate + '-01').getFullYear();
-    const endYear = new Date(endDate + '-01').getFullYear();
+    const startYear = new Date(`${startDate}-01`).getFullYear();
+    const endYear = new Date(`${endDate}-01`).getFullYear();
     const year = startYear === endYear ? startYear.toString() : `${startYear}-${endYear}`;
 
     return {
@@ -27,16 +27,20 @@ export function YearInReviewCard() {
       totalMinutes,
       totalTracks: stats.totalTracks,
       totalArtists: stats.totalArtists,
-      topArtist: topArtist ? {
-        name: topArtist.name,
-        plays: topArtist.playCount,
-        minutes: Math.round(msToMinutes(topArtist.totalMs)),
-      } : null,
-      topTrack: topTrack ? {
-        name: topTrack.name,
-        artist: topTrack.artist,
-        plays: topTrack.playCount,
-      } : null,
+      topArtist: topArtist
+        ? {
+            name: topArtist.name,
+            plays: topArtist.playCount,
+            minutes: Math.round(msToMinutes(topArtist.totalMs)),
+          }
+        : null,
+      topTrack: topTrack
+        ? {
+            name: topTrack.name,
+            artist: topTrack.artist,
+            plays: topTrack.playCount,
+          }
+        : null,
       avgDaily: Math.round(stats.averageListeningPerDay || 0),
     };
   }, [stats, startDate, endDate]);
@@ -66,9 +70,7 @@ export function YearInReviewCard() {
                   <Music className="w-7 h-7 text-white" />
                 </div>
               </div>
-              <h2 className="text-5xl sm:text-6xl font-bold text-white">
-                {summary.year}
-              </h2>
+              <h2 className="text-5xl sm:text-6xl font-bold text-white">{summary.year}</h2>
               <p className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent">
                 Wrapped
               </p>
@@ -156,4 +158,3 @@ export function YearInReviewCard() {
     </Card>
   );
 }
-

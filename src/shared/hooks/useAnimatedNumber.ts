@@ -3,29 +3,27 @@ import { useState, useEffect } from 'react';
 // Easing functions
 export const EasingFunctions = {
   linear: (t: number): number => t,
-  
+
   easeInQuad: (t: number): number => t * t,
   easeOutQuad: (t: number): number => t * (2 - t),
   easeInOutQuad: (t: number): number => (t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t),
-  
+
   easeInCubic: (t: number): number => t * t * t,
   easeOutCubic: (t: number): number => 1 - Math.pow(1 - t, 3),
-  easeInOutCubic: (t: number): number => 
+  easeInOutCubic: (t: number): number =>
     t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2,
-  
+
   easeInQuart: (t: number): number => t * t * t * t,
   easeOutQuart: (t: number): number => 1 - Math.pow(1 - t, 4),
   easeInOutQuart: (t: number): number =>
     t < 0.5 ? 8 * t * t * t * t : 1 - Math.pow(-2 * t + 2, 4) / 2,
-  
+
   easeInExpo: (t: number): number => (t === 0 ? 0 : Math.pow(2, 10 * t - 10)),
   easeOutExpo: (t: number): number => (t === 1 ? 1 : 1 - Math.pow(2, -10 * t)),
   easeInOutExpo: (t: number): number => {
     if (t === 0) return 0;
     if (t === 1) return 1;
-    return t < 0.5
-      ? Math.pow(2, 20 * t - 10) / 2
-      : (2 - Math.pow(2, -20 * t + 10)) / 2;
+    return t < 0.5 ? Math.pow(2, 20 * t - 10) / 2 : (2 - Math.pow(2, -20 * t + 10)) / 2;
   },
 } as const;
 
@@ -40,13 +38,13 @@ interface UseAnimatedNumberOptions {
 
 /**
  * Custom hook for animating numbers with various easing functions
- * 
+ *
  * @param target - The target number to animate to
  * @param duration - Animation duration in milliseconds (default: 1500)
  * @param easing - Easing function to use (default: 'easeOutCubic')
  * @param fps - Frames per second (default: 60)
  * @returns The current animated value
- * 
+ *
  * @example
  * const animatedCount = useAnimatedNumber({ target: 1000, duration: 2000, easing: 'easeOutCubic' });
  */
@@ -85,7 +83,7 @@ export function useAnimatedNumber({
 
 /**
  * Hook for animating multiple numbers simultaneously with the same settings
- * 
+ *
  * @example
  * const [count1, count2, count3] = useAnimatedNumbers({
  *   targets: [100, 200, 300],
@@ -130,4 +128,3 @@ export function useAnimatedNumbers({
 
   return values;
 }
-

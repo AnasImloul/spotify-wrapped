@@ -1,11 +1,28 @@
 import { useMemo, useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/shared/components/ui/card';
 import { Button } from '@/shared/components/ui/button';
 import { TrendingUp, TrendingDown, Minus, ArrowRight, Calendar } from 'lucide-react';
 import { useSpotifyData } from '@/shared/hooks';
 import { formatNumber, msToMinutes } from '@/shared/utils';
 import { cn } from '@/shared/utils';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, LineChart, Line } from 'recharts';
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  Legend,
+  LineChart,
+  Line,
+} from 'recharts';
 
 interface YearlyStats {
   year: string;
@@ -27,8 +44,8 @@ export function YearOverYearComparison() {
 
     // Group data by year
     const yearMap = new Map<string, any[]>();
-    
-    streamingHistory.forEach(entry => {
+
+    streamingHistory.forEach((entry) => {
       const year = new Date(entry.endTime).getFullYear().toString();
       if (!yearMap.has(year)) {
         yearMap.set(year, []);
@@ -44,36 +61,34 @@ export function YearOverYearComparison() {
       const totalHours = Math.round(msToMinutes(totalMs) / 60);
 
       // Count unique tracks
-      const tracks = new Set(entries.map(e => `${e.trackName}|||${e.artistName}`));
+      const tracks = new Set(entries.map((e) => `${e.trackName}|||${e.artistName}`));
       const totalTracks = tracks.size;
 
       // Count unique artists
-      const artists = new Set(entries.map(e => e.artistName));
+      const artists = new Set(entries.map((e) => e.artistName));
       const totalArtists = artists.size;
 
       // Get top artist
       const artistCounts = new Map<string, number>();
-      entries.forEach(e => {
+      entries.forEach((e) => {
         artistCounts.set(e.artistName, (artistCounts.get(e.artistName) || 0) + e.msPlayed);
       });
-      const topArtist = Array.from(artistCounts.entries())
-        .sort((a, b) => b[1] - a[1])[0]?.[0] || 'N/A';
+      const topArtist =
+        Array.from(artistCounts.entries()).sort((a, b) => b[1] - a[1])[0]?.[0] || 'N/A';
 
       // Get top track
       const trackCounts = new Map<string, number>();
-      entries.forEach(e => {
+      entries.forEach((e) => {
         const key = `${e.trackName}|||${e.artistName}`;
         trackCounts.set(key, (trackCounts.get(key) || 0) + e.msPlayed);
       });
-      const topTrackKey = Array.from(trackCounts.entries())
-        .sort((a, b) => b[1] - a[1])[0]?.[0] || 'N/A|||N/A';
+      const topTrackKey =
+        Array.from(trackCounts.entries()).sort((a, b) => b[1] - a[1])[0]?.[0] || 'N/A|||N/A';
       const [topTrack, topTrackArtist] = topTrackKey.split('|||');
 
       // Calculate average daily
-      const uniqueDays = new Set(
-        entries.map(e => new Date(e.endTime).toDateString())
-      ).size;
-      const avgDaily = Math.round((msToMinutes(totalMs) / uniqueDays) || 0);
+      const uniqueDays = new Set(entries.map((e) => new Date(e.endTime).toDateString())).size;
+      const avgDaily = Math.round(msToMinutes(totalMs) / uniqueDays || 0);
 
       yearlyStats.push({
         year,
@@ -106,7 +121,9 @@ export function YearOverYearComparison() {
           <div className="text-center py-12 text-white/40">
             <Calendar className="w-12 h-12 mx-auto mb-3 opacity-50" />
             <p>You need data from at least 2 different years for comparison</p>
-            <p className="text-sm mt-2">Upload more streaming history files to see year-over-year trends</p>
+            <p className="text-sm mt-2">
+              Upload more streaming history files to see year-over-year trends
+            </p>
           </div>
         </CardContent>
       </Card>
@@ -138,14 +155,14 @@ export function YearOverYearComparison() {
   });
 
   // Chart data
-  const chartData = yearlyData.map(y => ({
+  const chartData = yearlyData.map((y) => ({
     year: y.year,
     'Total Hours': y.totalHours,
     'Unique Tracks': y.totalTracks,
     'Unique Artists': y.totalArtists,
   }));
 
-  const trendData = yearlyData.map(y => ({
+  const trendData = yearlyData.map((y) => ({
     year: y.year,
     'Daily Average (min)': y.avgDaily,
   }));
@@ -224,11 +241,16 @@ export function YearOverYearComparison() {
                         {formatNumber(data.totalHours)}
                       </p>
                       {data.changes && (
-                        <div className={cn(
-                          'flex items-center gap-1 text-xs mt-1',
-                          data.changes.hours.percentage > 0 ? 'text-green-400' : 
-                          data.changes.hours.percentage < 0 ? 'text-red-400' : 'text-white/40'
-                        )}>
+                        <div
+                          className={cn(
+                            'flex items-center gap-1 text-xs mt-1',
+                            data.changes.hours.percentage > 0
+                              ? 'text-green-400'
+                              : data.changes.hours.percentage < 0
+                                ? 'text-red-400'
+                                : 'text-white/40'
+                          )}
+                        >
                           {data.changes.hours.percentage > 0 ? (
                             <TrendingUp className="w-3 h-3" />
                           ) : data.changes.hours.percentage < 0 ? (
@@ -251,11 +273,16 @@ export function YearOverYearComparison() {
                         {formatNumber(data.totalTracks)}
                       </p>
                       {data.changes && (
-                        <div className={cn(
-                          'flex items-center gap-1 text-xs mt-1',
-                          data.changes.tracks.percentage > 0 ? 'text-green-400' : 
-                          data.changes.tracks.percentage < 0 ? 'text-red-400' : 'text-white/40'
-                        )}>
+                        <div
+                          className={cn(
+                            'flex items-center gap-1 text-xs mt-1',
+                            data.changes.tracks.percentage > 0
+                              ? 'text-green-400'
+                              : data.changes.tracks.percentage < 0
+                                ? 'text-red-400'
+                                : 'text-white/40'
+                          )}
+                        >
                           {data.changes.tracks.percentage > 0 ? (
                             <TrendingUp className="w-3 h-3" />
                           ) : data.changes.tracks.percentage < 0 ? (
@@ -278,11 +305,16 @@ export function YearOverYearComparison() {
                         {formatNumber(data.totalArtists)}
                       </p>
                       {data.changes && (
-                        <div className={cn(
-                          'flex items-center gap-1 text-xs mt-1',
-                          data.changes.artists.percentage > 0 ? 'text-green-400' : 
-                          data.changes.artists.percentage < 0 ? 'text-red-400' : 'text-white/40'
-                        )}>
+                        <div
+                          className={cn(
+                            'flex items-center gap-1 text-xs mt-1',
+                            data.changes.artists.percentage > 0
+                              ? 'text-green-400'
+                              : data.changes.artists.percentage < 0
+                                ? 'text-red-400'
+                                : 'text-white/40'
+                          )}
+                        >
                           {data.changes.artists.percentage > 0 ? (
                             <TrendingUp className="w-3 h-3" />
                           ) : data.changes.artists.percentage < 0 ? (
@@ -301,15 +333,18 @@ export function YearOverYearComparison() {
                     {/* Daily Average */}
                     <div>
                       <p className="text-white/60 text-sm mb-1">Daily Avg</p>
-                      <p className="text-2xl font-bold text-white">
-                        {data.avgDaily} min
-                      </p>
+                      <p className="text-2xl font-bold text-white">{data.avgDaily} min</p>
                       {data.changes && (
-                        <div className={cn(
-                          'flex items-center gap-1 text-xs mt-1',
-                          data.changes.avgDaily.percentage > 0 ? 'text-green-400' : 
-                          data.changes.avgDaily.percentage < 0 ? 'text-red-400' : 'text-white/40'
-                        )}>
+                        <div
+                          className={cn(
+                            'flex items-center gap-1 text-xs mt-1',
+                            data.changes.avgDaily.percentage > 0
+                              ? 'text-green-400'
+                              : data.changes.avgDaily.percentage < 0
+                                ? 'text-red-400'
+                                : 'text-white/40'
+                          )}
+                        >
                           {data.changes.avgDaily.percentage > 0 ? (
                             <TrendingUp className="w-3 h-3" />
                           ) : data.changes.avgDaily.percentage < 0 ? (
@@ -354,7 +389,10 @@ export function YearOverYearComparison() {
                 <h3 className="text-lg font-semibold text-white mb-4">Overall Growth</h3>
                 <div className="h-[300px]">
                   <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={chartData} margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
+                    <BarChart
+                      data={chartData}
+                      margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
+                    >
                       <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
                       <XAxis
                         dataKey="year"
@@ -387,7 +425,10 @@ export function YearOverYearComparison() {
                 <h3 className="text-lg font-semibold text-white mb-4">Daily Average Trend</h3>
                 <div className="h-[250px]">
                   <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={trendData} margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
+                    <LineChart
+                      data={trendData}
+                      margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
+                    >
                       <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
                       <XAxis
                         dataKey="year"
@@ -423,4 +464,3 @@ export function YearOverYearComparison() {
     </Card>
   );
 }
-

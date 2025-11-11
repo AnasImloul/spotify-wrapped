@@ -3,11 +3,7 @@
  * Handles file parsing, validation, and transformation of Spotify data
  */
 
-import {
-  StreamingHistoryEntry,
-  ExtendedStreamingHistoryEntry,
-  UploadedFile,
-} from '@/shared/types';
+import { StreamingHistoryEntry, ExtendedStreamingHistoryEntry, UploadedFile } from '@/shared/types';
 import { detectFileTypeBySchema } from '@/lib/schemas';
 
 export class DataProcessingService {
@@ -48,7 +44,9 @@ export class DataProcessingService {
     }
 
     // Fallback to filename pattern matching (for edge cases)
-    console.warn(`⚠ Schema validation failed for ${fileName}, falling back to filename pattern matching`);
+    console.warn(
+      `⚠ Schema validation failed for ${fileName}, falling back to filename pattern matching`
+    );
     console.warn(`Schema error: ${schemaResult.error}`);
 
     // Check for extended streaming history by filename pattern
@@ -78,7 +76,9 @@ export class DataProcessingService {
     }
 
     // Default to streaming if can't determine
-    console.warn(`⚠ Could not definitively detect format for ${fileName}, defaulting to 'streaming'`);
+    console.warn(
+      `⚠ Could not definitively detect format for ${fileName}, defaulting to 'streaming'`
+    );
     return 'streaming';
   }
 
@@ -143,5 +143,3 @@ export class DataProcessingService {
     return { min: minDate, max: maxDate };
   }
 }
-
-

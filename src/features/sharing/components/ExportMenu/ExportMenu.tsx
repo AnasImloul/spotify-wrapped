@@ -26,7 +26,7 @@ export function ExportMenu({ variant = 'default', size = 'default', className }:
 
   const handleExportPDF = async () => {
     if (!stats || isExporting) return;
-    
+
     setIsExporting(true);
     try {
       await generatePDFReport(stats, { start: startDate, end: endDate });
@@ -39,10 +39,10 @@ export function ExportMenu({ variant = 'default', size = 'default', className }:
 
   const handleCopyAsText = async () => {
     if (!stats) return;
-    
+
     const text = exportStatsAsText(stats, { start: startDate, end: endDate });
     const success = await copyToClipboard(text);
-    
+
     if (success) {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
@@ -62,12 +62,12 @@ export function ExportMenu({ variant = 'default', size = 'default', className }:
       <DropdownMenuContent align="end" className="w-56">
         <DropdownMenuLabel>Export Options</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        
+
         <DropdownMenuItem onClick={handleExportPDF} disabled={isExporting}>
           <FileText className="w-4 h-4 mr-2" />
           Export as PDF
         </DropdownMenuItem>
-        
+
         <DropdownMenuItem onClick={handleCopyAsText}>
           {copied ? (
             <>
@@ -81,9 +81,9 @@ export function ExportMenu({ variant = 'default', size = 'default', className }:
             </>
           )}
         </DropdownMenuItem>
-        
+
         <DropdownMenuSeparator />
-        
+
         <div className="px-2 py-1.5 text-xs text-muted-foreground">
           Tip: Use Story Mode for shareable images
         </div>
@@ -91,4 +91,3 @@ export function ExportMenu({ variant = 'default', size = 'default', className }:
     </DropdownMenu>
   );
 }
-

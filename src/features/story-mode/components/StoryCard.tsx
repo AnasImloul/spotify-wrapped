@@ -15,13 +15,13 @@ interface StoryCardProps {
 export function StoryCard({ children, className, gradient, exportId }: StoryCardProps) {
   const defaultGradient = 'from-green-500/20 via-blue-500/20 to-purple-500/20';
   const { settings } = useBranding();
-  
+
   const positionClasses = {
     'bottom-left': 'bottom-4 left-4',
     'bottom-right': 'bottom-4 right-4',
     'bottom-center': 'bottom-4 left-1/2 -translate-x-1/2',
   };
-  
+
   return (
     <div
       id={exportId}
@@ -36,12 +36,12 @@ export function StoryCard({ children, className, gradient, exportId }: StoryCard
       {/* Background pattern */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(29,185,84,0.1),transparent_70%)]" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(59,130,246,0.1),transparent_50%)]" />
-      
+
       {/* Content */}
       <div className="relative z-10 w-full h-full flex flex-col items-center justify-center">
         {children}
       </div>
-      
+
       {/* Watermark */}
       {settings.showWatermark && (
         <div
@@ -58,4 +58,3 @@ export function StoryCard({ children, className, gradient, exportId }: StoryCard
     </div>
   );
 }
-

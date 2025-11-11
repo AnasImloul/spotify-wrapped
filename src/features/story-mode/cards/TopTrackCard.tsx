@@ -18,7 +18,10 @@ export function TopTrackCard({ name, artist, minutes, playCount }: TopTrackCardP
   });
 
   return (
-    <StoryCard gradient="from-purple-900/40 via-purple-800/30 to-pink-700/20" exportId="story-top-track">
+    <StoryCard
+      gradient="from-purple-900/40 via-purple-800/30 to-pink-700/20"
+      exportId="story-top-track"
+    >
       <div className="flex flex-col items-center text-center space-y-4 sm:space-y-6 px-4">
         {/* Icon */}
         <div className="relative">
@@ -53,25 +56,26 @@ export function TopTrackCard({ name, artist, minutes, playCount }: TopTrackCardP
             <p className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-purple-300 to-purple-500 bg-clip-text text-transparent">
               {formatNumber(animatedMinutes)}
             </p>
-            <p className="text-white/60 text-sm sm:text-base md:text-lg uppercase tracking-wider mt-1">Minutes</p>
+            <p className="text-white/60 text-sm sm:text-base md:text-lg uppercase tracking-wider mt-1">
+              Minutes
+            </p>
           </div>
           <div className="w-px h-10 sm:h-12 md:h-14 bg-white/20" />
           <div className="text-center">
             <p className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-pink-300 to-pink-500 bg-clip-text text-transparent">
               {formatNumber(animatedPlays)}
             </p>
-            <p className="text-white/60 text-sm sm:text-base md:text-lg uppercase tracking-wider mt-1">Plays</p>
+            <p className="text-white/60 text-sm sm:text-base md:text-lg uppercase tracking-wider mt-1">
+              Plays
+            </p>
           </div>
         </div>
 
         {/* Badge */}
         <div className="px-5 sm:px-6 md:px-7 py-2.5 sm:py-3 md:py-3.5 bg-white/10 backdrop-blur-md rounded-full border border-white/20">
-          <p className="text-purple-300 text-base sm:text-lg md:text-xl font-semibold">
-            On Repeat
-          </p>
+          <p className="text-purple-300 text-base sm:text-lg md:text-xl font-semibold">On Repeat</p>
         </div>
       </div>
     </StoryCard>
   );
 }
-

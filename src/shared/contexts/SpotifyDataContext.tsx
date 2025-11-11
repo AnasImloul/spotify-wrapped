@@ -56,17 +56,17 @@ export function SpotifyDataProvider({ children }: SpotifyDataProviderProps) {
     if (streamingHistory.length === 0) {
       return null;
     }
-    
+
     // Filter streaming history by date range
     const filteredHistory = streamingHistory.filter((entry) => {
       if (!startDate || !endDate) return true;
-      
+
       const entryDate = new Date(entry.endTime);
       const entryYearMonth = `${entryDate.getFullYear()}-${String(entryDate.getMonth() + 1).padStart(2, '0')}`;
-      
+
       return entryYearMonth >= startDate && entryYearMonth <= endDate;
     });
-    
+
     if (filteredHistory.length === 0) {
       return {
         totalListeningTime: 0,
@@ -79,12 +79,12 @@ export function SpotifyDataProvider({ children }: SpotifyDataProviderProps) {
         averageListeningPerDay: 0,
       };
     }
-    
+
     console.time('Stats calculation');
     // Process the already-filtered history
     const processedStats = processStreamingHistory(filteredHistory, startDate, endDate);
     console.timeEnd('Stats calculation');
-    
+
     return {
       totalListeningTime: processedStats.totalListeningTime || 0,
       totalTracks: processedStats.totalTracks || 0,
@@ -124,4 +124,3 @@ export function useSpotifyDataContext() {
   }
   return context;
 }
-

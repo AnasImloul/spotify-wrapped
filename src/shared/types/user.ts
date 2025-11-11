@@ -17,5 +17,3 @@ export interface UserData {
   mobileBrand?: string;
   creationTime: string;
 }
-
-

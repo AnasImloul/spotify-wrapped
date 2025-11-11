@@ -1,17 +1,17 @@
 // Re-export from urlSharing
-export { 
-  encodeDataToUrl, 
-  decodeDataFromUrl, 
+export {
+  encodeDataToUrl,
+  decodeDataFromUrl,
   shareableDataToStats,
   generateShareableUrl,
   getSharedDataFromUrl,
   clearShareFromUrl,
-  generateUrlShareText
+  generateUrlShareText,
 } from './urlSharing';
 export type { ShareableData } from './urlSharing';
 
-// Re-export from binaryEncoding  
-export { 
+// Re-export from binaryEncoding
+export {
   encodeAnalyticsToUrl,
   decodeAnalyticsFromUrl,
   generateCompactShareUrl,
@@ -19,7 +19,6 @@ export {
   getCompactDataFromUrl,
   estimateUrlSize,
   isUrlSizeSafe,
-  generateSummaryText
+  generateSummaryText,
 } from './binaryEncoding';
 export type { CompactShareData } from './binaryEncoding';
-

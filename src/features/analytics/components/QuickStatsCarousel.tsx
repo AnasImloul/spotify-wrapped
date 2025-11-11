@@ -1,5 +1,13 @@
 import { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, Music, Headphones, Clock, Trophy, TrendingUp } from 'lucide-react';
+import {
+  ChevronLeft,
+  ChevronRight,
+  Music,
+  Headphones,
+  Clock,
+  Trophy,
+  TrendingUp,
+} from 'lucide-react';
 import { Button } from '@/shared/components/ui/button';
 import { useFilteredStats } from '@/shared/hooks';
 import { formatNumber, msToMinutes } from '@/shared/utils';
@@ -10,9 +18,7 @@ export function QuickStatsCarousel() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [autoplay, setAutoplay] = useState(true);
 
-  if (!stats) return null;
-
-  const totalMinutes = msToMinutes(stats.totalListeningTime * 60 * 60 * 1000);
+  const totalMinutes = stats ? msToMinutes(stats.totalListeningTime * 60 * 60 * 1000) : 0;
   const totalHours = Math.round(totalMinutes / 60);
   const totalDays = Math.round(totalHours / 24);
 
@@ -27,28 +33,28 @@ export function QuickStatsCarousel() {
     {
       icon: Music,
       label: 'Songs Played',
-      value: formatNumber(stats.totalTracks),
+      value: formatNumber(stats?.totalTracks ?? 0),
       subtitle: 'Unique tracks',
       gradient: 'from-emerald-400 to-green-500',
     },
     {
       icon: Headphones,
       label: 'Artists Explored',
-      value: formatNumber(stats.totalArtists),
+      value: formatNumber(stats?.totalArtists ?? 0),
       subtitle: 'Different artists',
       gradient: 'from-green-600 to-emerald-700',
     },
     {
       icon: Trophy,
       label: 'Top Artist',
-      value: stats.topArtists[0]?.name || 'N/A',
-      subtitle: `${formatNumber(stats.topArtists[0]?.playCount || 0)} plays`,
+      value: stats?.topArtists[0]?.name ?? 'N/A',
+      subtitle: `${formatNumber(stats?.topArtists[0]?.playCount ?? 0)} plays`,
       gradient: 'from-emerald-500 to-green-600',
     },
     {
       icon: TrendingUp,
       label: 'Daily Average',
-      value: `${Math.round(stats.averageListeningPerDay || 0)} min`,
+      value: `${Math.round(stats?.averageListeningPerDay ?? 0)} min`,
       subtitle: 'Every single day',
       gradient: 'from-green-400 to-emerald-500',
     },
@@ -63,6 +69,8 @@ export function QuickStatsCarousel() {
 
     return () => clearInterval(interval);
   }, [autoplay, quickStats.length]);
+
+  if (!stats) return null;
 
   const goToPrev = () => {
     setAutoplay(false);
@@ -80,24 +88,26 @@ export function QuickStatsCarousel() {
   return (
     <div className="relative overflow-hidden rounded-2xl border-2 border-white/10 bg-gradient-to-br from-black/60 to-black/40 backdrop-blur-lg p-6 sm:p-8">
       {/* Background gradient effect */}
-      <div className={cn(
-        'absolute inset-0 bg-gradient-to-br opacity-10 transition-all duration-500',
-        currentStat.gradient
-      )} />
+      <div
+        className={cn(
+          'absolute inset-0 bg-gradient-to-br opacity-10 transition-all duration-500',
+          currentStat.gradient
+        )}
+      />
 
       {/* Content */}
       <div className="relative z-10">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
-            <div className={cn(
-              'w-12 h-12 rounded-full bg-gradient-to-br flex items-center justify-center shadow-lg',
-              currentStat.gradient
-            )}>
+            <div
+              className={cn(
+                'w-12 h-12 rounded-full bg-gradient-to-br flex items-center justify-center shadow-lg',
+                currentStat.gradient
+              )}
+            >
               <IconComponent className="w-6 h-6 text-white" />
             </div>
-            <p className="text-sm sm:text-base text-white/60 font-medium">
-              {currentStat.label}
-            </p>
+            <p className="text-sm sm:text-base text-white/60 font-medium">{currentStat.label}</p>
           </div>
 
           {/* Navigation */}
@@ -125,9 +135,7 @@ export function QuickStatsCarousel() {
           <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white truncate animate-fade-in">
             {currentStat.value}
           </h3>
-          <p className="text-sm sm:text-base text-white/70">
-            {currentStat.subtitle}
-          </p>
+          <p className="text-sm sm:text-base text-white/70">{currentStat.subtitle}</p>
         </div>
 
         {/* Dots indicator */}
@@ -141,9 +149,7 @@ export function QuickStatsCarousel() {
               }}
               className={cn(
                 'h-1.5 rounded-full transition-all duration-300',
-                index === currentIndex
-                  ? 'w-8 bg-white'
-                  : 'w-1.5 bg-white/30 hover:bg-white/50'
+                index === currentIndex ? 'w-8 bg-white' : 'w-1.5 bg-white/30 hover:bg-white/50'
               )}
             />
           ))}
@@ -152,4 +158,3 @@ export function QuickStatsCarousel() {
     </div>
   );
 }
-

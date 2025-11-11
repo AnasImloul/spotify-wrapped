@@ -1,17 +1,7 @@
 import { useNavigate } from 'react-router-dom';
-import {
-  AnalyticsLayout,
-  AnalyticsHeader,
-  AnalyticsFooter
-} from '@/shared/components/layout';
-import {
-  DateRangeSelector
-} from '@/features/data-import';
-import {
-  StatsOverview,
-  TopItems,
-  QuickStatsCarousel
-} from '@/features/analytics';
+import { AnalyticsLayout, AnalyticsHeader, AnalyticsFooter } from '@/shared/components/layout';
+import { DateRangeSelector } from '@/features/data-import';
+import { StatsOverview, TopItems, QuickStatsCarousel } from '@/features/analytics';
 import { ShareExportMenu } from '@/features/sharing';
 import { BarChart3, Trophy } from 'lucide-react';
 import { useSpotifyData, useDateRange } from '@/shared/hooks';
@@ -29,13 +19,15 @@ export default function OverviewPage() {
       <AnalyticsHeader
         hasData={!!stats}
         onShowStoryMode={() => navigate('/story')}
-        renderShareMenu={() => stats ? (
-          <ShareExportMenu
-            variant="ghost"
-            size="sm"
-            className="text-white/80 hover:text-white hover:bg-white/10"
-          />
-        ) : null}
+        renderShareMenu={() =>
+          stats ? (
+            <ShareExportMenu
+              variant="ghost"
+              size="sm"
+              className="text-white/80 hover:text-white hover:bg-white/10"
+            />
+          ) : null
+        }
       />
 
       {/* Main Content */}
@@ -49,7 +41,7 @@ export default function OverviewPage() {
             <div className="animate-fade-in">
               <QuickStatsCarousel />
             </div>
-            
+
             <div>
               <div className="glass-card rounded-xl p-4 border border-white/10">
                 <div className="flex items-center justify-between gap-4">
@@ -85,7 +77,7 @@ export default function OverviewPage() {
         {stats && (
           <div className="space-y-12 animate-fade-in">
             <div className="h-px bg-gradient-to-r from-transparent via-green-500/50 to-transparent" />
-            
+
             <div>
               <h3 className="text-3xl font-bold text-white mb-6 flex items-center gap-3">
                 <BarChart3 className="w-8 h-8 text-green-400" />
@@ -114,4 +106,3 @@ export default function OverviewPage() {
     </AnalyticsLayout>
   );
 }
-

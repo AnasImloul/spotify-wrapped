@@ -11,12 +11,12 @@ export function useSortedArtists() {
   const { sortBy } = useFilterContext();
 
   return useMemo(() => {
-    if (!stats || !stats.topArtists) {
+    if (!stats?.topArtists) {
       return [];
     }
 
     let sorted = [...stats.topArtists];
-    
+
     if (sortBy === 'plays') {
       sorted = sorted.sort((a, b) => b.playCount - a.playCount);
     } else {
@@ -31,4 +31,3 @@ export function useSortedArtists() {
     }));
   }, [stats, sortBy]);
 }
-

@@ -1,5 +1,15 @@
 import { useState } from 'react';
-import { Share2, Download, Copy, Check, Twitter, Facebook, Linkedin, MessageCircle, Send } from 'lucide-react';
+import {
+  Share2,
+  Download,
+  Copy,
+  Check,
+  Twitter,
+  Facebook,
+  Linkedin,
+  MessageCircle,
+  Send,
+} from 'lucide-react';
 import { Button } from '@/shared/components/ui/button';
 import {
   DropdownMenu,
@@ -58,20 +68,20 @@ export function ShareMenu({
   const handlePlatformShare = async (platform: SocialPlatform) => {
     const text = `Check out my Spotify Wrapped - ${cardName}!`;
     const hashtags = ['SpotifyWrapped', 'Music', 'Spotify'];
-    
+
     const shareUrl = generateShareUrl(platform, {
       text,
       hashtags,
       url: window.location.href,
     });
-    
+
     openShareWindow(shareUrl);
   };
 
   // Handle native share (mobile)
   const handleNativeShare = async () => {
     if (!isWebShareSupported()) return;
-    
+
     setIsSharing(true);
     try {
       const element = document.getElementById(elementId);
@@ -102,7 +112,7 @@ export function ShareMenu({
 
       const canvas = await elementToCanvas(element, { scale: 2 });
       const blob = await canvasToBlob(canvas, 'image/png');
-      
+
       await copyImageToClipboard(blob);
       setCopiedImage(true);
       setTimeout(() => setCopiedImage(false), 2000);
@@ -134,7 +144,7 @@ export function ShareMenu({
 
       const canvas = await elementToCanvas(element, { scale: 2 });
       const blob = await canvasToBlob(canvas, 'image/png');
-      
+
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
@@ -153,19 +163,14 @@ export function ShareMenu({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button
-          variant={variant}
-          size={size}
-          className={className}
-          disabled={isSharing}
-        >
+        <Button variant={variant} size={size} className={className} disabled={isSharing}>
           <Share2 className="w-5 h-5" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
         <DropdownMenuLabel>Share This Card</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        
+
         {/* Native share (mobile) */}
         {isWebShareSupported() && (
           <>
@@ -176,35 +181,35 @@ export function ShareMenu({
             <DropdownMenuSeparator />
           </>
         )}
-        
+
         {/* Social platforms */}
         <DropdownMenuItem onClick={() => handlePlatformShare('twitter')}>
           <Twitter className="w-4 h-4 mr-2" />
           Share on Twitter
         </DropdownMenuItem>
-        
+
         <DropdownMenuItem onClick={() => handlePlatformShare('facebook')}>
           <Facebook className="w-4 h-4 mr-2" />
           Share on Facebook
         </DropdownMenuItem>
-        
+
         <DropdownMenuItem onClick={() => handlePlatformShare('linkedin')}>
           <Linkedin className="w-4 h-4 mr-2" />
           Share on LinkedIn
         </DropdownMenuItem>
-        
+
         <DropdownMenuItem onClick={() => handlePlatformShare('whatsapp')}>
           <MessageCircle className="w-4 h-4 mr-2" />
           Share on WhatsApp
         </DropdownMenuItem>
-        
+
         <DropdownMenuItem onClick={() => handlePlatformShare('telegram')}>
           <Send className="w-4 h-4 mr-2" />
           Share on Telegram
         </DropdownMenuItem>
-        
+
         <DropdownMenuSeparator />
-        
+
         {/* Copy options */}
         <DropdownMenuItem onClick={handleCopyImage} disabled={isSharing}>
           {copiedImage ? (
@@ -219,7 +224,7 @@ export function ShareMenu({
             </>
           )}
         </DropdownMenuItem>
-        
+
         <DropdownMenuItem onClick={handleCopyText}>
           {copiedText ? (
             <>
@@ -233,9 +238,9 @@ export function ShareMenu({
             </>
           )}
         </DropdownMenuItem>
-        
+
         <DropdownMenuSeparator />
-        
+
         {/* Download */}
         <DropdownMenuItem onClick={handleDownload} disabled={isSharing}>
           <Download className="w-4 h-4 mr-2" />
@@ -245,4 +250,3 @@ export function ShareMenu({
     </DropdownMenu>
   );
 }
-

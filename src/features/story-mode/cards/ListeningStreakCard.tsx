@@ -14,7 +14,10 @@ export function ListeningStreakCard({ streak }: ListeningStreakCardProps) {
   });
 
   return (
-    <StoryCard gradient="from-orange-900/40 via-red-800/30 to-orange-700/20" exportId="story-streak">
+    <StoryCard
+      gradient="from-orange-900/40 via-red-800/30 to-orange-700/20"
+      exportId="story-streak"
+    >
       <div className="flex flex-col items-center text-center space-y-4 sm:space-y-6 px-4">
         {/* Icon */}
         <div className="relative">
@@ -37,7 +40,9 @@ export function ListeningStreakCard({ streak }: ListeningStreakCardProps) {
           <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold bg-gradient-to-r from-orange-300 via-red-400 to-orange-500 bg-clip-text text-transparent">
             {animatedStreak}
           </h1>
-          <p className="text-2xl sm:text-3xl md:text-4xl text-white/80 font-light">consecutive days</p>
+          <p className="text-2xl sm:text-3xl md:text-4xl text-white/80 font-light">
+            consecutive days
+          </p>
         </div>
 
         {/* Description */}
@@ -59,4 +64,3 @@ export function ListeningStreakCard({ streak }: ListeningStreakCardProps) {
     </StoryCard>
   );
 }
-

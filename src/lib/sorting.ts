@@ -57,4 +57,3 @@ export function sortArtists(artists: Artist[]): Artist[] {
 export function sortTracks(tracks: Track[]): Track[] {
   return sortTracksByTime(tracks);
 }
-

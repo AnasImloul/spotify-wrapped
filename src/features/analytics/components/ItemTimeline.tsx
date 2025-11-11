@@ -18,23 +18,18 @@ interface ItemTimelineProps {
   onClose: () => void;
 }
 
-export function ItemTimeline({
-  itemName,
-  itemType,
-  artistName,
-  onClose,
-}: ItemTimelineProps) {
+export function ItemTimeline({ itemName, itemType, artistName, onClose }: ItemTimelineProps) {
   const { streamingHistory } = useSpotifyData();
   const { startDate, endDate } = useDateRange();
   // Filter entries for this specific item
   const filteredEntries = streamingHistory.filter((entry) => {
     const entryDate = new Date(entry.endTime);
     const entryYearMonth = `${entryDate.getFullYear()}-${String(entryDate.getMonth() + 1).padStart(2, '0')}`;
-    
+
     // Date range filter
     if (startDate && entryYearMonth < startDate) return false;
     if (endDate && entryYearMonth > endDate) return false;
-    
+
     // Item filter
     if (itemType === 'artist') {
       return entry.artistName === itemName;
@@ -44,57 +39,68 @@ export function ItemTimeline({
   });
 
   // For artists, calculate top tracks
-  const topTracks = itemType === 'artist' ? (() => {
-    const trackMap = new Map<string, { plays: number; minutes: number }>();
-    
-    filteredEntries.forEach(entry => {
-      const existing = trackMap.get(entry.trackName) || { plays: 0, minutes: 0 };
-      trackMap.set(entry.trackName, {
-        plays: existing.plays + 1,
-        minutes: existing.minutes + (entry.msPlayed / 1000 / 60)
-      });
-    });
-    
-    return Array.from(trackMap.entries())
-      .map(([track, stats]) => ({
-        track,
-        plays: stats.plays,
-        minutes: Math.round(stats.minutes)
-      }))
-      .sort((a, b) => b.minutes - a.minutes)
-      .slice(0, 5);
-  })() : [];
+  const topTracks =
+    itemType === 'artist'
+      ? (() => {
+          const trackMap = new Map<string, { plays: number; minutes: number }>();
+
+          filteredEntries.forEach((entry) => {
+            const existing = trackMap.get(entry.trackName) || { plays: 0, minutes: 0 };
+            trackMap.set(entry.trackName, {
+              plays: existing.plays + 1,
+              minutes: existing.minutes + entry.msPlayed / 1000 / 60,
+            });
+          });
+
+          return Array.from(trackMap.entries())
+            .map(([track, stats]) => ({
+              track,
+              plays: stats.plays,
+              minutes: Math.round(stats.minutes),
+            }))
+            .sort((a, b) => b.minutes - a.minutes)
+            .slice(0, 5);
+        })()
+      : [];
 
   // Group by month
-  const monthlyData = filteredEntries.reduce((acc, entry) => {
-    const date = new Date(entry.endTime);
-    const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
-    
-    if (!acc[monthKey]) {
-      acc[monthKey] = {
-        month: monthKey,
-        plays: 0,
-        totalMinutes: 0,
-      };
-    }
-    
-    acc[monthKey].plays += 1;
-    acc[monthKey].totalMinutes += entry.msPlayed / 1000 / 60;
-    
-    return acc;
-  }, {} as Record<string, { month: string; plays: number; totalMinutes: number }>);
+  const monthlyData = filteredEntries.reduce(
+    (acc, entry) => {
+      const date = new Date(entry.endTime);
+      const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+
+      if (!acc[monthKey]) {
+        acc[monthKey] = {
+          month: monthKey,
+          plays: 0,
+          totalMinutes: 0,
+        };
+      }
+
+      acc[monthKey].plays += 1;
+      acc[monthKey].totalMinutes += entry.msPlayed / 1000 / 60;
+
+      return acc;
+    },
+    {} as Record<string, { month: string; plays: number; totalMinutes: number }>
+  );
 
   // Convert to array and sort by month
   const chartData = Object.values(monthlyData)
     .sort((a, b) => a.month.localeCompare(b.month))
-    .map(item => ({
-      month: new Date(item.month + '-01').toLocaleDateString('en-US', { month: 'short', year: 'numeric' }),
+    .map((item) => ({
+      month: new Date(`${item.month}-01`).toLocaleDateString('en-US', {
+        month: 'short',
+        year: 'numeric',
+      }),
       minutes: Math.round(item.totalMinutes),
       plays: item.plays,
     }));
 
   const totalPlays = filteredEntries.length;
-  const totalMinutes = Math.round(filteredEntries.reduce((sum, e) => sum + e.msPlayed / 1000 / 60, 0));
+  const totalMinutes = Math.round(
+    filteredEntries.reduce((sum, e) => sum + e.msPlayed / 1000 / 60, 0)
+  );
 
   return (
     <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
@@ -122,7 +128,7 @@ export function ItemTimeline({
             </button>
           </div>
         </CardHeader>
-        
+
         <CardContent className="p-6 flex-1 overflow-y-auto custom-scrollbar">
           <div className="space-y-4">
             {/* Summary Stats */}
@@ -157,7 +163,13 @@ export function ItemTimeline({
                         stroke="rgba(255,255,255,0.5)"
                         style={{ fontSize: '10px' }}
                         width={45}
-                        label={{ value: 'Minutes', angle: -90, position: 'insideLeft', fill: 'rgba(255,255,255,0.7)', style: { fontSize: '10px' } }}
+                        label={{
+                          value: 'Minutes',
+                          angle: -90,
+                          position: 'insideLeft',
+                          fill: 'rgba(255,255,255,0.7)',
+                          style: { fontSize: '10px' },
+                        }}
                       />
                       <Tooltip
                         contentStyle={{
@@ -165,12 +177,17 @@ export function ItemTimeline({
                           border: '1px solid rgba(29, 185, 84, 0.3)',
                           borderRadius: '8px',
                           color: 'white',
-                          fontSize: '11px'
+                          fontSize: '11px',
                         }}
                         formatter={(value: number, name: string) => {
-                          const dataPoint = chartData.find(d => d.minutes === value || d.plays === value);
+                          const dataPoint = chartData.find(
+                            (d) => d.minutes === value || d.plays === value
+                          );
                           if (name === 'minutes') {
-                            return [`${value} min (${dataPoint?.plays || 0} plays)`, 'Listening Time'];
+                            return [
+                              `${value} min (${dataPoint?.plays || 0} plays)`,
+                              'Listening Time',
+                            ];
                           }
                           return [value, name];
                         }}
@@ -208,11 +225,13 @@ export function ItemTimeline({
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-white truncate">{track.track}</p>
-                        <p className="text-xs text-white/60">{track.plays} plays • {track.minutes} min</p>
+                        <p className="text-xs text-white/60">
+                          {track.plays} plays • {track.minutes} min
+                        </p>
                       </div>
                       <div className="flex-shrink-0">
                         <div className="h-1.5 w-20 bg-white/10 rounded-full overflow-hidden">
-                          <div 
+                          <div
                             className="h-full bg-gradient-to-r from-green-500 to-green-400 rounded-full"
                             style={{ width: `${(track.minutes / topTracks[0].minutes) * 100}%` }}
                           />
@@ -229,4 +248,3 @@ export function ItemTimeline({
     </div>
   );
 }
-

@@ -34,17 +34,20 @@ A privacy-focused web application for visualizing and analyzing your Spotify lis
 ### Installation
 
 1. Clone the repository:
+
 ```bash
 git clone https://github.com/AnasImloul/spotify-wrapped
 cd spotify-wrapped
 ```
 
 2. Install dependencies:
+
 ```bash
 npm install
 ```
 
 3. Start the development server:
+
 ```bash
 npm run dev
 ```
@@ -111,17 +114,20 @@ src/
 ## Key Features Explained
 
 ### Statistics Dashboard
+
 - Aggregate listening metrics (total time, tracks, artists)
 - Daily listening averages
 - Most active listening day identification
 
 ### Advanced Charts
+
 - **Artist/Track Tables**: Paginated tables with fuzzy search, sortable by play count or listening time
 - **Individual Timelines**: Click any artist or track to view detailed monthly listening patterns
 - **Comparison Mode**: Compare up to 8 artists or tracks simultaneously on a single chart
 - **Interactive Tooltips**: Hover over any data point for detailed information
 
 ### Date Range Filtering
+
 - Custom month/year picker with modern UI
 - Filter all statistics by specific time periods
 - Defaults to current calendar year
@@ -137,6 +143,7 @@ src/
 ## Performance Considerations
 
 The application efficiently handles large datasets:
+
 - Streaming history files with 50,000+ entries
 - Pagination prevents UI lag with large result sets
 - Optimized React rendering with `useMemo` and `useCallback`
@@ -151,15 +158,40 @@ The application efficiently handles large datasets:
 
 Modern ES2020+ features are used, so older browsers are not supported.
 
+## Code Quality
+
+This project uses industry-standard tools to maintain code quality:
+
+- **Prettier** - Automatic code formatting
+- **ESLint** - Code linting with TypeScript support
+- **Husky** - Pre-commit hooks to ensure quality
+- **GitHub Actions** - Automated CI/CD pipeline
+
+### Quick Commands
+
+```bash
+# Format code
+npm run format
+
+# Lint and auto-fix
+npm run lint:fix
+
+# Run all quality checks
+npm run validate
+```
+
 ## Contributing
 
-Contributions are welcome. Please:
+Contributions are welcome! Please:
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/improvement`)
-3. Commit your changes (`git commit -m 'Add new feature'`)
-4. Push to the branch (`git push origin feature/improvement`)
-5. Open a Pull Request
+3. Run `npm run validate` to ensure code quality
+4. Commit your changes (pre-commit hooks will run automatically)
+5. Push to the branch (`git push origin feature/improvement`)
+6. Open a Pull Request
+
+All PRs must pass CI checks (linting, formatting, type-checking, and building).
 
 ## License
 

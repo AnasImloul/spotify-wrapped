@@ -5,7 +5,7 @@ import { useSpotifyDataContext } from '@/shared/contexts/SpotifyDataContext';
  */
 export function useSpotifyData() {
   const context = useSpotifyDataContext();
-  
+
   return {
     uploadedFiles: context.uploadedFiles,
     streamingHistory: context.streamingHistory,
@@ -15,4 +15,3 @@ export function useSpotifyData() {
     clearData: context.clearData,
   };
 }
-

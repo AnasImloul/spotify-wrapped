@@ -89,11 +89,7 @@ export function StoryMode({ onClose }: StoryModeProps) {
         playCount={storyData.topTrack.playCount}
       />
     ),
-    <TotalTimeCard
-      key="total-time"
-      minutes={storyData.totalMinutes}
-      funFact={storyData.funFact}
-    />,
+    <TotalTimeCard key="total-time" minutes={storyData.totalMinutes} funFact={storyData.funFact} />,
     <ListeningStreakCard key="streak" streak={storyData.listeningStreak} />,
     <DiscoveryCard
       key="discovery"
@@ -117,10 +113,7 @@ export function StoryMode({ onClose }: StoryModeProps) {
   return (
     <div className="fixed inset-0 z-50 bg-black/95 backdrop-blur-sm">
       {/* Story card container */}
-      <div
-        ref={swipeRef}
-        className="absolute inset-0 flex items-center justify-center sm:px-4"
-      >
+      <div ref={swipeRef} className="absolute inset-0 flex items-center justify-center sm:px-4">
         {/* Card wrapper with responsive sizing - full width on mobile, constrained on desktop */}
         <div className="relative w-full sm:max-w-[440px] h-full sm:h-[90vh] sm:rounded-3xl overflow-hidden shadow-2xl">
           {/* Current card */}
@@ -137,8 +130,8 @@ export function StoryMode({ onClose }: StoryModeProps) {
                     index === currentIndex
                       ? 'bg-white'
                       : index < currentIndex
-                      ? 'bg-white/70'
-                      : 'bg-white/30'
+                        ? 'bg-white/70'
+                        : 'bg-white/30'
                   )}
                 />
               ))}
@@ -193,4 +186,3 @@ export function StoryMode({ onClose }: StoryModeProps) {
     </div>
   );
 }
-

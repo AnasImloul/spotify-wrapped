@@ -6,10 +6,10 @@
 export const FEATURE_FLAGS = {
   // PWA install prompt
   PWA_INSTALL_PROMPT: true,
-  
+
   // Sample data feature
   SAMPLE_DATA: true,
-  
+
   // Advanced features (to be implemented)
   ACHIEVEMENTS: false,
   GENRE_ANALYSIS: false,
@@ -18,7 +18,7 @@ export const FEATURE_FLAGS = {
   FRIEND_COMPARISON: false,
   PLAYLIST_GENERATOR: false,
   ADVANCED_SEARCH: false,
-  
+
   // Experimental features
   AI_INSIGHTS: false,
   VOICE_SUMMARY: false,
@@ -50,4 +50,3 @@ export function getDisabledFeatures(): FeatureFlag[] {
     .filter(([_, enabled]) => !enabled)
     .map(([feature]) => feature as FeatureFlag);
 }
-

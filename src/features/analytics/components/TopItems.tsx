@@ -13,7 +13,16 @@ import { Badge } from '@/shared/components/ui/badge';
 import { Button } from '@/shared/components/ui/button';
 import { Input } from '@/shared/components/ui/input';
 import { formatNumber, msToMinutes } from '@/shared/utils';
-import { Music2, Trophy, ChevronLeft, ChevronRight, Search, X, TrendingUp, BarChart3 } from 'lucide-react';
+import {
+  Music2,
+  Trophy,
+  ChevronLeft,
+  ChevronRight,
+  Search,
+  X,
+  TrendingUp,
+  BarChart3,
+} from 'lucide-react';
 import { ItemTimeline } from './ItemTimeline';
 import { ArtistComparison } from './ArtistComparison';
 import { TrackComparison } from './TrackComparison';
@@ -30,14 +39,14 @@ export function TopItems() {
   const [trackSearch, setTrackSearch] = useState('');
   const [artistPageInput, setArtistPageInput] = useState('1');
   const [trackPageInput, setTrackPageInput] = useState('1');
-  
+
   // Timeline modal state
   const [timelineItem, setTimelineItem] = useState<{
     name: string;
     type: 'artist' | 'track';
     artistName?: string;
   } | null>(null);
-  
+
   // Comparison modal state
   const [showComparison, setShowComparison] = useState(false);
   const [showTrackComparison, setShowTrackComparison] = useState(false);
@@ -226,16 +235,14 @@ export function TopItems() {
             <TableBody>
               {paginatedArtists.length > 0 ? (
                 paginatedArtists.map((artist) => {
-                  const actualIndex = sortedArtists.findIndex(a => a.name === artist.name);
+                  const actualIndex = sortedArtists.findIndex((a) => a.name === artist.name);
                   return (
-                    <TableRow 
-                      key={actualIndex} 
+                    <TableRow
+                      key={actualIndex}
                       className="hover:bg-white/5 border-white/5 cursor-pointer group"
                       onClick={() => setTimelineItem({ name: artist.name, type: 'artist' })}
                     >
-                      <TableCell className="font-bold text-white/40">
-                        {actualIndex + 1}
-                      </TableCell>
+                      <TableCell className="font-bold text-white/40">{actualIndex + 1}</TableCell>
                       <TableCell className="font-medium text-white group-hover:text-green-300 transition-colors">
                         <div className="flex items-center gap-2">
                           <span className="truncate">{artist.name}</span>
@@ -243,12 +250,18 @@ export function TopItems() {
                         </div>
                       </TableCell>
                       <TableCell className="text-right align-top pt-4">
-                        <Badge variant="outline" className="border-green-500/30 text-green-300 inline-flex whitespace-nowrap">
+                        <Badge
+                          variant="outline"
+                          className="border-green-500/30 text-green-300 inline-flex whitespace-nowrap"
+                        >
                           {formatNumber(artist.playCount)}
                         </Badge>
                       </TableCell>
                       <TableCell className="text-right align-top pt-4">
-                        <Badge variant="secondary" className="bg-green-500/20 text-green-300 border-green-500/30 inline-flex whitespace-nowrap">
+                        <Badge
+                          variant="secondary"
+                          className="bg-green-500/20 text-green-300 border-green-500/30 inline-flex whitespace-nowrap"
+                        >
                           {formatNumber(msToMinutes(artist.totalMs))} min
                         </Badge>
                       </TableCell>
@@ -360,33 +373,43 @@ export function TopItems() {
               {paginatedTracks.length > 0 ? (
                 paginatedTracks.map((track) => {
                   const actualIndex = sortedTracks.findIndex(
-                    t => t.name === track.name && t.artist === track.artist
+                    (t) => t.name === track.name && t.artist === track.artist
                   );
                   return (
-                    <TableRow 
-                      key={actualIndex} 
+                    <TableRow
+                      key={actualIndex}
                       className="hover:bg-white/5 border-white/5 cursor-pointer group"
-                      onClick={() => setTimelineItem({ name: track.name, type: 'track', artistName: track.artist })}
+                      onClick={() =>
+                        setTimelineItem({
+                          name: track.name,
+                          type: 'track',
+                          artistName: track.artist,
+                        })
+                      }
                     >
-                      <TableCell className="font-bold text-white/40">
-                        {actualIndex + 1}
-                      </TableCell>
+                      <TableCell className="font-bold text-white/40">{actualIndex + 1}</TableCell>
                       <TableCell className="font-medium max-w-[200px] text-white group-hover:text-green-300 transition-colors">
                         <div className="flex items-center gap-2">
-                        <span className="truncate">{track.name}</span>
-                        <TrendingUp className="w-4 h-4 text-blue-400/60 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
+                          <span className="truncate">{track.name}</span>
+                          <TrendingUp className="w-4 h-4 text-blue-400/60 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
                         </div>
                       </TableCell>
                       <TableCell className="text-sm text-white/60 max-w-[150px] truncate">
                         {track.artist}
                       </TableCell>
                       <TableCell className="text-right align-top pt-4">
-                        <Badge variant="outline" className="border-blue-500/30 text-blue-300 inline-flex whitespace-nowrap">
+                        <Badge
+                          variant="outline"
+                          className="border-blue-500/30 text-blue-300 inline-flex whitespace-nowrap"
+                        >
                           {formatNumber(track.playCount)}
                         </Badge>
                       </TableCell>
                       <TableCell className="text-right align-top pt-4">
-                        <Badge variant="secondary" className="bg-blue-500/20 text-blue-300 border-blue-500/30 inline-flex whitespace-nowrap">
+                        <Badge
+                          variant="secondary"
+                          className="bg-blue-500/20 text-blue-300 border-blue-500/30 inline-flex whitespace-nowrap"
+                        >
                           {formatNumber(msToMinutes(track.totalMs))} min
                         </Badge>
                       </TableCell>
@@ -419,7 +442,7 @@ export function TopItems() {
       {showComparison && (
         <ArtistComparison
           onClose={() => setShowComparison(false)}
-          initialArtists={sortedArtists.slice(0, 3).map(a => a.name)}
+          initialArtists={sortedArtists.slice(0, 3).map((a) => a.name)}
         />
       )}
 
@@ -427,10 +450,9 @@ export function TopItems() {
       {showTrackComparison && (
         <TrackComparison
           onClose={() => setShowTrackComparison(false)}
-          initialTracks={sortedTracks.slice(0, 3).map(t => ({ name: t.name, artist: t.artist }))}
+          initialTracks={sortedTracks.slice(0, 3).map((t) => ({ name: t.name, artist: t.artist }))}
         />
       )}
     </div>
   );
 }
-

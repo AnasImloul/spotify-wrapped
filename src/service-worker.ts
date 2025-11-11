@@ -47,8 +47,7 @@ registerRoute(
 
 // Cache stylesheets and scripts with stale-while-revalidate
 registerRoute(
-  ({ request }) =>
-    request.destination === 'style' || request.destination === 'script',
+  ({ request }) => request.destination === 'style' || request.destination === 'script',
   new StaleWhileRevalidate({
     cacheName: 'static-resources',
   })
@@ -84,7 +83,7 @@ registerRoute(
 
 // Listen for messages from the client
 self.addEventListener('message', (event) => {
-  if (event.data && event.data.type === 'SKIP_WAITING') {
+  if (event.data?.type === 'SKIP_WAITING') {
     self.skipWaiting();
   }
 });
@@ -93,9 +92,9 @@ self.addEventListener('message', (event) => {
 self.addEventListener('fetch', (event: FetchEvent) => {
   if (event.request.mode === 'navigate') {
     event.respondWith(
-      fetch(event.request).catch(() => {
-        return caches.match('/').then(response => response || new Response('Offline'));
-      })
+      fetch(event.request).catch(() =>
+        caches.match('/').then((response) => response || new Response('Offline'))
+      )
     );
   }
 });
@@ -133,18 +132,13 @@ self.addEventListener('push', (event) => {
     ],
   };
 
-  event.waitUntil(
-    self.registration.showNotification('Spotify Wrapped', options)
-  );
+  event.waitUntil(self.registration.showNotification('Spotify Wrapped', options));
 });
 
 self.addEventListener('notificationclick', (event: NotificationEvent) => {
   event.notification.close();
 
   if (event.action === 'explore') {
-    event.waitUntil(
-      self.clients.openWindow('/')
-    );
+    event.waitUntil(self.clients.openWindow('/'));
   }
 });
-

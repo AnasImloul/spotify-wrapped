@@ -29,4 +29,3 @@ export default function ProtectedRoute() {
   // Render child routes
   return <Outlet />;
 }
-
