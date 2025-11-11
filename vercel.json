@@ -1,5 +1,5 @@
 {
-  "buildCommand": "npm run validate && npm run build",
+  "buildCommand": "npm run format:check && npm run type-check && npm run build",
   "outputDirectory": "dist",
   "installCommand": "npm install --legacy-peer-deps --no-audit --no-fund",
   "framework": "vite",
