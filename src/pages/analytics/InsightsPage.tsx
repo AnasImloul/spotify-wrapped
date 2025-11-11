@@ -1,5 +1,10 @@
 import { useNavigate } from 'react-router-dom';
-import { AnalyticsLayout, AnalyticsHeader, AnalyticsFooter } from '@/shared/components/layout';
+import {
+  AnalyticsLayout,
+  AnalyticsHeader,
+  AnalyticsFooter,
+  FilterToolbar,
+} from '@/shared/components/layout';
 import {
   ListeningHeatmap,
   MonthlyTrends,
@@ -31,6 +36,9 @@ export default function InsightsPage() {
           ) : null
         }
       />
+
+      {/* Filter Toolbar */}
+      {stats && <FilterToolbar />}
 
       {/* Main Content */}
       <main className="flex-grow container mx-auto px-4 py-12 space-y-12">

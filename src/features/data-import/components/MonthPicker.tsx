@@ -82,11 +82,11 @@ export function MonthPicker({ value, minDate, maxDate, onChange, label }: MonthP
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="w-full px-4 py-2.5 rounded-xl bg-black/40 backdrop-blur-md border border-green-500/20 text-white focus:outline-none focus:ring-2 focus:ring-green-500/40 focus:border-green-500/40 hover:bg-black/50 hover:border-green-500/30 transition-all duration-200 font-medium text-left flex items-center justify-between"
+          className="w-full px-4 py-2.5 rounded-xl bg-black/40 backdrop-blur-md border border-green-500/20 text-white focus:outline-none focus:ring-2 focus:ring-green-500/40 focus:border-green-500/40 hover:bg-black/50 hover:border-green-500/30 transition-all duration-200 font-medium text-left flex items-center justify-between gap-2"
         >
-          <span>{displayValue}</span>
+          <span className="whitespace-nowrap overflow-hidden text-ellipsis">{displayValue}</span>
           <ChevronDown
-            className={`w-4 h-4 text-green-400 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+            className={`w-4 h-4 text-green-400 transition-transform duration-200 flex-shrink-0 ${isOpen ? 'rotate-180' : ''}`}
           />
         </button>
 

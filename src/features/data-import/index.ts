@@ -6,5 +6,6 @@
 export { FileUpload } from './components/FileUpload';
 export { DataLoadingProgress } from './components/DataLoadingProgress';
 export { DateRangeSelector } from './components/DateRangeSelector';
+export { DateRangePopover } from './components/DateRangePopover';
 export { MonthPicker } from './components/MonthPicker';
 export * from './services';

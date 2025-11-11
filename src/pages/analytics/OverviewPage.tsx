@@ -1,16 +1,19 @@
 import { useNavigate } from 'react-router-dom';
-import { AnalyticsLayout, AnalyticsHeader, AnalyticsFooter } from '@/shared/components/layout';
-import { DateRangeSelector } from '@/features/data-import';
+import {
+  AnalyticsLayout,
+  AnalyticsHeader,
+  AnalyticsFooter,
+  FilterToolbar,
+} from '@/shared/components/layout';
 import { StatsOverview, TopItems, QuickStatsCarousel } from '@/features/analytics';
 import { ShareExportMenu } from '@/features/sharing';
 import { BarChart3, Trophy } from 'lucide-react';
-import { useSpotifyData, useDateRange } from '@/shared/hooks';
+import { useSpotifyData } from '@/shared/hooks';
 import { useFilterSettings } from '@/features/analytics/hooks';
 
 export default function OverviewPage() {
   const navigate = useNavigate();
   const { stats } = useSpotifyData();
-  const { minDate, maxDate } = useDateRange();
   const { sortBy, setSortBy } = useFilterSettings();
 
   return (
@@ -30,14 +33,13 @@ export default function OverviewPage() {
         }
       />
 
+      {/* Filter Toolbar */}
+      {stats && <FilterToolbar />}
+
       {/* Main Content */}
       <main className="flex-grow container mx-auto px-4 py-12 space-y-12">
-        {stats && minDate && maxDate && (
+        {stats && (
           <>
-            <div>
-              <DateRangeSelector />
-            </div>
-
             <div className="animate-fade-in">
               <QuickStatsCarousel />
             </div>
