@@ -84,33 +84,6 @@ Both formats are automatically detected and processed. Extended history provides
 
 **Note**: Wrapped and Userdata files are not supported. Only raw streaming history data is used for analysis.
 
-## Project Structure
-
-```
-src/
-├── components/
-│   ├── ui/                      # Base UI components (buttons, inputs, cards, etc.)
-│   ├── ArtistComparison.tsx     # Multi-artist comparison modal
-│   ├── DateRangeSelector.tsx    # Date filtering interface
-│   ├── FileUpload.tsx           # Drag-and-drop file upload
-│   ├── ItemTimeline.tsx         # Individual artist/track timeline modal
-│   ├── ListeningTrends.tsx      # Monthly trends chart
-│   ├── MonthPicker.tsx          # Custom month/year selector
-│   ├── MusicEvolution.tsx       # Music taste evolution display
-│   ├── StatsOverview.tsx        # Key statistics cards
-│   ├── TopItems.tsx             # Top artists and tracks tables
-│   └── TrackComparison.tsx      # Multi-track comparison modal
-├── lib/
-│   ├── dataProcessor.ts         # Data parsing and statistics calculation
-│   ├── sorting.ts               # Centralized sorting utilities
-│   └── utils.ts                 # Helper functions
-├── types/
-│   └── spotify.ts               # TypeScript type definitions
-├── App.tsx                      # Main application component
-├── main.tsx                     # Application entry point
-└── index.css                    # Global styles and theme
-```
-
 ## Key Features Explained
 
 ### Statistics Dashboard
