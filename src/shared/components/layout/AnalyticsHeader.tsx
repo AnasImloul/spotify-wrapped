@@ -4,11 +4,18 @@
  */
 
 import { useState } from 'react';
-import { Music2, Sparkles, HelpCircle } from 'lucide-react';
+import { Play, HelpCircle } from 'lucide-react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { Button, ConfirmModal } from '@/shared/components/ui';
 import { useSpotifyData } from '@/shared/hooks';
 import { InstructionsModal } from '@/shared';
+
+const navItems: { to: string; label: string }[] = [
+  { to: '/', label: 'Upload' },
+  { to: '/analytics/overview', label: 'Overview' },
+  { to: '/analytics/insights', label: 'Insights' },
+  { to: '/analytics/deep-dive', label: 'Deep Dive' },
+];
 
 interface AnalyticsHeaderProps {
   hasData: boolean;
@@ -55,112 +62,73 @@ export function AnalyticsHeader({
 
       <InstructionsModal open={showInstructionsModal} onOpenChange={setShowInstructionsModal} />
 
-      <header className="border-b border-white/10 bg-black/20 backdrop-blur-lg sticky top-0 z-50">
-        <div className="container mx-auto px-2 sm:px-4 py-2 sm:py-3 lg:py-4">
-          <div className="flex items-center justify-between gap-1 sm:gap-2 lg:gap-4">
-            <div className="flex items-center gap-2 sm:gap-4 lg:gap-6 min-w-0 flex-1">
-              {/* Logo */}
-              <button
-                onClick={handleLogoClick}
-                className="flex items-center gap-1.5 sm:gap-2 lg:gap-3 flex-shrink-0 hover:opacity-80 transition-opacity"
-                title={hasData ? 'Clear data and start over' : 'Go to home'}
+      <header className="border-b border-border bg-background/95 sticky top-0 z-50">
+        <div className="container mx-auto px-3 sm:px-4 flex flex-wrap md:flex-nowrap items-stretch justify-between gap-x-2 lg:gap-x-6">
+          <div className="contents md:flex md:items-stretch md:gap-6 lg:gap-8 md:min-w-0 md:flex-1">
+            <button
+              onClick={handleLogoClick}
+              className="h-14 lg:h-16 flex items-center gap-3 flex-shrink-0 hover:opacity-80 transition-opacity"
+              title={hasData ? 'Clear data and start over' : 'Go to home'}
+            >
+              <span className="code-strip" aria-hidden>
+                <i className="bg-code-green" />
+                <i className="bg-code-blue" />
+                <i className="bg-code-yellow" />
+                <i className="bg-code-orange" />
+              </span>
+              <span className="flex flex-col text-left leading-tight">
+                <span className="text-sm font-semibold uppercase tracking-[0.2em]">
+                  Spotify Wrapped
+                </span>
+                <span className="hidden xl:block text-xs text-muted-foreground">
+                  Your Year in Music, Visualized
+                </span>
+              </span>
+            </button>
+
+            {hasData && (
+              <nav
+                aria-label="Sections"
+                className="order-last basis-[calc(100%+1.5rem)] md:order-none md:basis-auto h-11 md:h-auto flex items-stretch gap-1 lg:gap-2 overflow-x-auto scrollbar-hide border-t border-border md:border-t-0 -mx-3 px-1 md:mx-0"
               >
-                <div className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center shadow-lg">
-                  <Music2 className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-white" />
-                </div>
-                <div className="hidden md:block text-left">
-                  <h1 className="text-lg lg:text-2xl font-bold text-white">Spotify Wrapped</h1>
-                  <p className="text-xs lg:text-sm text-green-400 hidden xs:block">
-                    Your Year in Music, Visualized
-                  </p>
-                </div>
-              </button>
-
-              {/* Tab Navigation */}
-              {hasData && (
-                <nav className="flex items-center gap-0.5 sm:gap-1 lg:gap-2 overflow-x-auto scrollbar-hide -mx-1 px-1">
+                {navItems.map((item) => (
                   <NavLink
-                    to="/"
-                    end
+                    key={item.to}
+                    to={item.to}
+                    end={item.to === '/'}
                     className={({ isActive }) =>
-                      `px-1.5 sm:px-2 lg:px-4 py-1 sm:py-1.5 lg:py-2 rounded-md lg:rounded-lg text-[10px] sm:text-xs lg:text-sm font-medium transition-all whitespace-nowrap ${
+                      `relative flex items-center px-2 lg:px-3 text-sm font-medium whitespace-nowrap transition-colors ${
                         isActive
-                          ? 'bg-green-500/20 text-green-300 border border-green-500/40'
-                          : 'text-white/70 hover:text-white hover:bg-white/5'
+                          ? 'text-foreground after:absolute after:inset-x-2 lg:after:inset-x-3 after:bottom-0 after:h-[3px] after:bg-primary'
+                          : 'text-muted-foreground hover:text-foreground'
                       }`
                     }
                   >
-                    Upload
+                    {item.label}
                   </NavLink>
-                  <NavLink
-                    to="/analytics/overview"
-                    className={({ isActive }) =>
-                      `px-1.5 sm:px-2 lg:px-4 py-1 sm:py-1.5 lg:py-2 rounded-md lg:rounded-lg text-[10px] sm:text-xs lg:text-sm font-medium transition-all whitespace-nowrap ${
-                        isActive
-                          ? 'bg-green-500/20 text-green-300 border border-green-500/40'
-                          : 'text-white/70 hover:text-white hover:bg-white/5'
-                      }`
-                    }
-                  >
-                    Overview
-                  </NavLink>
-                  <NavLink
-                    to="/analytics/insights"
-                    className={({ isActive }) =>
-                      `px-1.5 sm:px-2 lg:px-4 py-1 sm:py-1.5 lg:py-2 rounded-md lg:rounded-lg text-[10px] sm:text-xs lg:text-sm font-medium transition-all whitespace-nowrap ${
-                        isActive
-                          ? 'bg-green-500/20 text-green-300 border border-green-500/40'
-                          : 'text-white/70 hover:text-white hover:bg-white/5'
-                      }`
-                    }
-                  >
-                    Insights
-                  </NavLink>
-                  <NavLink
-                    to="/analytics/deep-dive"
-                    className={({ isActive }) =>
-                      `px-1.5 sm:px-2 lg:px-4 py-1 sm:py-1.5 lg:py-2 rounded-md lg:rounded-lg text-[10px] sm:text-xs lg:text-sm font-medium transition-all whitespace-nowrap ${
-                        isActive
-                          ? 'bg-green-500/20 text-green-300 border border-green-500/40'
-                          : 'text-white/70 hover:text-white hover:bg-white/5'
-                      }`
-                    }
-                  >
-                    <span className="hidden lg:inline">Deep Dive</span>
-                    <span className="lg:hidden">Deep</span>
-                  </NavLink>
-                </nav>
-              )}
-            </div>
-
-            {/* Header Actions */}
-            {hasData ? (
-              <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
-                {renderShareMenu?.()}
-                <Button
-                  onClick={onShowStoryMode}
-                  size="sm"
-                  className="bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-white border-0 px-2 sm:px-4 shadow-lg shadow-green-500/20"
-                >
-                  <Sparkles className="w-4 h-4 sm:mr-2" />
-                  <span className="hidden sm:inline">Story</span>
-                </Button>
-              </div>
-            ) : (
-              <div className="flex items-center gap-2 flex-shrink-0">
-                <Button
-                  onClick={() => setShowInstructionsModal(true)}
-                  size="sm"
-                  variant="outline"
-                  className="bg-green-500/10 hover:bg-green-500/20 text-green-400 border-green-500/30 hover:border-green-500/50 px-3 sm:px-4"
-                >
-                  <HelpCircle className="w-4 h-4 sm:mr-2" />
-                  <span className="hidden sm:inline">How to Get Your Data</span>
-                  <span className="sm:hidden">Help</span>
-                </Button>
-              </div>
+                ))}
+              </nav>
             )}
           </div>
+
+          {hasData ? (
+            <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
+              {renderShareMenu?.()}
+              <Button onClick={onShowStoryMode} size="sm" className="px-2.5 sm:px-4">
+                <Play className="w-4 h-4 fill-current" aria-hidden />
+                <span className="hidden sm:inline">Story</span>
+                <span className="sr-only sm:hidden">Story mode</span>
+              </Button>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <Button onClick={() => setShowInstructionsModal(true)} size="sm" variant="outline">
+                <HelpCircle className="w-4 h-4" aria-hidden />
+                <span className="hidden sm:inline">How to Get Your Data</span>
+                <span className="sm:hidden">Help</span>
+              </Button>
+            </div>
+          )}
         </div>
       </header>
     </>

@@ -133,7 +133,7 @@ export function ShareExportMenu({
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant={variant} size={size} className={className}>
-          <Share2 className="w-4 h-4 sm:mr-2" />
+          <Share2 className="w-4 h-4" />
           <span className="hidden sm:inline">Share</span>
         </Button>
       </DropdownMenuTrigger>
@@ -144,7 +144,7 @@ export function ShareExportMenu({
         <DropdownMenuItem onClick={handleCopyShareLink}>
           {copiedLink ? (
             <>
-              <Check className="w-4 h-4 mr-2 text-green-500" />
+              <Check className="w-4 h-4 mr-2 text-primary" />
               Link Copied!
             </>
           ) : (
@@ -172,7 +172,7 @@ export function ShareExportMenu({
         <DropdownMenuItem onClick={handleCopyAsText}>
           {copied ? (
             <>
-              <Check className="w-4 h-4 mr-2 text-green-500" />
+              <Check className="w-4 h-4 mr-2 text-primary" />
               Copied!
             </>
           ) : (

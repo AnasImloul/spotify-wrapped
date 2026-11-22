@@ -4,6 +4,7 @@ import {
   AnalyticsLayout,
   AnalyticsHeader,
   AnalyticsHero,
+  AnalyticsProofs,
   AnalyticsFooter,
 } from '@/shared/components/layout';
 import { FileUpload } from '@/features/data-import';
@@ -44,10 +45,18 @@ export default function UploadPage() {
       <AnalyticsHeader hasData={!!stats} onShowStoryMode={() => navigate('/story')} />
 
       {/* Main Content */}
-      <main className="flex-grow container mx-auto px-4 py-12 space-y-12">
-        <AnalyticsHero />
+      <main className="flex-grow container mx-auto px-4 py-8 lg:py-16 grid lg:grid-cols-12 lg:content-center gap-x-16 gap-y-8 items-start">
+        <div className="lg:col-span-5">
+          <AnalyticsHero />
+        </div>
 
-        <FileUpload />
+        <div className="lg:col-span-7 lg:row-span-2 lg:self-stretch flex flex-col">
+          <FileUpload />
+        </div>
+
+        <div className="lg:col-span-5">
+          <AnalyticsProofs />
+        </div>
       </main>
 
       <AnalyticsFooter />

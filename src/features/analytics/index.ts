@@ -10,7 +10,7 @@ export { ListeningHeatmap } from './components/ListeningHeatmap';
 export { MonthlyTrends } from './components/MonthlyTrends';
 export { ListeningPatterns } from './components/ListeningPatterns';
 export { ListeningTrends } from './components/ListeningTrends';
-export { QuickStatsCarousel } from './components/QuickStatsCarousel';
+export { ListeningPulse } from './components/ListeningPulse';
 
 // Advanced analytics
 export { PersonalRecords } from './components/PersonalRecords';

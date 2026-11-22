@@ -1,6 +1,5 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, type KeyboardEvent } from 'react';
 import Fuse from 'fuse.js';
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
 import {
   Table,
   TableBody,
@@ -9,26 +8,142 @@ import {
   TableHeader,
   TableRow,
 } from '@/shared/components/ui/table';
-import { Badge } from '@/shared/components/ui/badge';
 import { Button } from '@/shared/components/ui/button';
 import { Input } from '@/shared/components/ui/input';
 import { formatNumber, msToMinutes } from '@/shared/utils';
-import {
-  Music2,
-  Trophy,
-  ChevronLeft,
-  ChevronRight,
-  Search,
-  X,
-  TrendingUp,
-  BarChart3,
-} from 'lucide-react';
+import { ChevronLeft, ChevronRight, Search, X, TrendingUp, BarChart3 } from 'lucide-react';
 import { ItemTimeline } from './ItemTimeline';
 import { ArtistComparison } from './ArtistComparison';
 import { TrackComparison } from './TrackComparison';
 import { useSortedArtists, useSortedTracks } from '@/shared/hooks';
 
 const ITEMS_PER_PAGE = 10;
+
+interface PanelHeaderProps {
+  title: string;
+  compareLabel: string;
+  onCompare: () => void;
+  page: number;
+  totalPages: number;
+  pageInput: string;
+  onPageInputChange: (value: string) => void;
+  onPageJump: (value: string) => void;
+  onPrev: () => void;
+  onNext: () => void;
+  search: string;
+  onSearchChange: (value: string) => void;
+  searchPlaceholder: string;
+}
+
+function PanelHeader({
+  title,
+  compareLabel,
+  onCompare,
+  page,
+  totalPages,
+  pageInput,
+  onPageInputChange,
+  onPageJump,
+  onPrev,
+  onNext,
+  search,
+  onSearchChange,
+  searchPlaceholder,
+}: PanelHeaderProps) {
+  return (
+    <div className="space-y-3 px-4 pt-4 pb-3 border-b border-foreground">
+      <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
+        <h4 className="text-lg font-semibold whitespace-nowrap">{title}</h4>
+        <div className="flex items-center gap-1">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onCompare}
+            className="text-primary hover:text-primary"
+          >
+            <BarChart3 className="h-4 w-4" aria-hidden />
+            <span className="hidden sm:inline">{compareLabel}</span>
+            <span className="sm:hidden">Compare</span>
+          </Button>
+          <div className="w-px h-5 bg-border mx-1" aria-hidden />
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onPrev}
+            disabled={page === 1}
+            aria-label={`Previous page of ${title.toLowerCase()}`}
+            className="h-8 w-8"
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+          <div className="flex items-center gap-1 text-sm text-muted-foreground tabular-nums">
+            <input
+              type="text"
+              inputMode="numeric"
+              aria-label={`Page of ${title.toLowerCase()}`}
+              value={pageInput}
+              onChange={(e) => onPageInputChange(e.target.value)}
+              onBlur={(e) => onPageJump(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  onPageJump(pageInput);
+                  e.currentTarget.blur();
+                }
+              }}
+              className="w-9 h-7 text-center bg-transparent border border-input text-foreground focus:border-primary focus:outline-none"
+            />
+            <span aria-hidden>/</span>
+            <span>{totalPages}</span>
+          </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onNext}
+            disabled={page === totalPages}
+            aria-label={`Next page of ${title.toLowerCase()}`}
+            className="h-8 w-8"
+          >
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
+      <div className="relative">
+        <Search
+          className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"
+          aria-hidden
+        />
+        <Input
+          type="text"
+          placeholder={searchPlaceholder}
+          aria-label={searchPlaceholder.replace('...', '')}
+          value={search}
+          onChange={(e) => onSearchChange(e.target.value)}
+          className="pl-9 pr-9 h-9 bg-transparent border-input placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-primary"
+        />
+        {search && (
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => onSearchChange('')}
+            aria-label="Clear search"
+            className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7"
+          >
+            <X className="h-3.5 w-3.5" />
+          </Button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+const rowClass =
+  'border-border cursor-pointer group focus-visible:outline-none focus-visible:bg-white/[0.05] focus-visible:shadow-[inset_2px_0_0_hsl(var(--primary))]';
+const openOnKey = (open: () => void) => (e: KeyboardEvent) => {
+  if (e.key === 'Enter' || e.key === ' ') {
+    e.preventDefault();
+    open();
+  }
+};
 
 export function TopItems() {
   const sortedArtists = useSortedArtists();
@@ -98,8 +213,8 @@ export function TopItems() {
     setTrackPage(1);
   }, [trackSearch]);
 
-  const totalArtistPages = Math.ceil(filteredArtists.length / ITEMS_PER_PAGE);
-  const totalTrackPages = Math.ceil(filteredTracks.length / ITEMS_PER_PAGE);
+  const totalArtistPages = Math.max(1, Math.ceil(filteredArtists.length / ITEMS_PER_PAGE));
+  const totalTrackPages = Math.max(1, Math.ceil(filteredTracks.length / ITEMS_PER_PAGE));
 
   const paginatedArtists = filteredArtists.slice(
     (artistPage - 1) * ITEMS_PER_PAGE,
@@ -143,230 +258,112 @@ export function TopItems() {
   }, [trackPage]);
 
   return (
-    <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-      {/* Top Artists */}
-      <Card className="overflow-hidden border-green-500/30">
-        <CardHeader className="bg-gradient-to-r from-green-500/20 to-green-600/20 border-b border-green-500/20 space-y-3">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <CardTitle className="flex items-center gap-2 text-white text-lg sm:text-xl">
-              <Trophy className="w-5 h-5 text-green-400 flex-shrink-0" />
-              Your Top Artists
-            </CardTitle>
-            <div className="flex items-center gap-2 flex-wrap">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setShowComparison(true)}
-                className="text-green-400 hover:text-green-300 hover:bg-green-500/10 gap-2 text-xs sm:text-sm"
-              >
-                <BarChart3 className="h-4 w-4" />
-                <span className="hidden sm:inline">Compare Artists</span>
-                <span className="sm:hidden">Compare</span>
-              </Button>
-              <div className="w-px h-6 bg-white/10" />
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setArtistPage((p) => Math.max(1, p - 1))}
-                disabled={artistPage === 1}
-                className="h-8 w-8 text-white/60 hover:text-white hover:bg-white/10 disabled:opacity-30"
-              >
-                <ChevronLeft className="h-4 w-4" />
-              </Button>
-              <div className="flex items-center gap-1 text-sm text-white/60 min-w-[80px] justify-center">
-                <input
-                  type="text"
-                  value={artistPageInput}
-                  onChange={(e) => setArtistPageInput(e.target.value)}
-                  onBlur={(e) => handleArtistPageJump(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      handleArtistPageJump(artistPageInput);
-                      e.currentTarget.blur();
-                    }
-                  }}
-                  className="w-8 text-center bg-white/5 border border-white/10 rounded px-1 py-0.5 text-white focus:outline-none focus:ring-1 focus:ring-green-500/50 focus:border-green-500/50"
-                />
-                <span>/</span>
-                <span>{totalArtistPages}</span>
-              </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setArtistPage((p) => Math.min(totalArtistPages, p + 1))}
-                disabled={artistPage === totalArtistPages}
-                className="h-8 w-8 text-white/60 hover:text-white hover:bg-white/10 disabled:opacity-30"
-              >
-                <ChevronRight className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
-            <Input
-              type="text"
-              placeholder="Search artists..."
-              value={artistSearch}
-              onChange={(e) => setArtistSearch(e.target.value)}
-              className="pl-9 pr-9 bg-white/5 border-white/10 text-white placeholder:text-white/40 focus:border-green-500/50"
-            />
-            {artistSearch && (
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setArtistSearch('')}
-                className="absolute right-1 top-1/2 -translate-y-1/2 h-6 w-6 text-white/40 hover:text-white hover:bg-white/10"
-              >
-                <X className="h-3 w-3" />
-              </Button>
-            )}
-          </div>
-        </CardHeader>
-        <CardContent className="p-0 overflow-x-auto">
+    <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 xl:gap-8">
+      <section aria-label="Top artists" className="border border-border bg-card">
+        <PanelHeader
+          title="Top artists"
+          compareLabel="Compare artists"
+          onCompare={() => setShowComparison(true)}
+          page={artistPage}
+          totalPages={totalArtistPages}
+          pageInput={artistPageInput}
+          onPageInputChange={setArtistPageInput}
+          onPageJump={handleArtistPageJump}
+          onPrev={() => setArtistPage((p) => Math.max(1, p - 1))}
+          onNext={() => setArtistPage((p) => Math.min(totalArtistPages, p + 1))}
+          search={artistSearch}
+          onSearchChange={setArtistSearch}
+          searchPlaceholder="Search artists..."
+        />
+        <div className="overflow-x-auto">
           <Table>
             <TableHeader>
-              <TableRow className="border-white/10 hover:bg-transparent">
-                <TableHead className="w-12 text-white/60">#</TableHead>
-                <TableHead className="text-white/60 min-w-[150px]">Artist</TableHead>
-                <TableHead className="text-right text-white/60">Plays</TableHead>
-                <TableHead className="text-right text-white/60 min-w-[100px]">Minutes</TableHead>
+              <TableRow className="border-border hover:bg-transparent">
+                <TableHead className="w-12">#</TableHead>
+                <TableHead>Artist</TableHead>
+                <TableHead className="text-right">Plays</TableHead>
+                <TableHead className="text-right min-w-[100px] hidden sm:table-cell">
+                  Minutes
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {paginatedArtists.length > 0 ? (
                 paginatedArtists.map((artist) => {
                   const actualIndex = sortedArtists.findIndex((a) => a.name === artist.name);
+                  const open = () => setTimelineItem({ name: artist.name, type: 'artist' });
                   return (
                     <TableRow
                       key={actualIndex}
-                      className="hover:bg-white/5 border-white/5 cursor-pointer group"
-                      onClick={() => setTimelineItem({ name: artist.name, type: 'artist' })}
+                      tabIndex={0}
+                      aria-label={`${artist.name}: open listening timeline`}
+                      className={rowClass}
+                      onClick={open}
+                      onKeyDown={openOnKey(open)}
                     >
-                      <TableCell className="font-bold text-white/40">{actualIndex + 1}</TableCell>
-                      <TableCell className="font-medium text-white group-hover:text-green-300 transition-colors">
+                      <TableCell className="py-2.5 tabular-nums text-muted-foreground">
+                        {actualIndex + 1}
+                      </TableCell>
+                      <TableCell className="py-2.5 font-medium group-hover:text-primary transition-colors">
                         <div className="flex items-center gap-2">
                           <span className="truncate">{artist.name}</span>
-                          <TrendingUp className="w-4 h-4 text-green-400/60 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
+                          <TrendingUp
+                            className="w-4 h-4 text-primary opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity flex-shrink-0"
+                            aria-hidden
+                          />
                         </div>
                       </TableCell>
-                      <TableCell className="text-right align-top pt-4">
-                        <Badge
-                          variant="outline"
-                          className="border-green-500/30 text-green-300 inline-flex whitespace-nowrap"
-                        >
-                          {formatNumber(artist.playCount)}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-right align-top pt-4">
-                        <Badge
-                          variant="secondary"
-                          className="bg-green-500/20 text-green-300 border-green-500/30 inline-flex whitespace-nowrap"
-                        >
+                      <TableCell className="py-2.5 text-right tabular-nums whitespace-nowrap">
+                        {formatNumber(artist.playCount)}
+                        <span className="block sm:hidden text-xs text-muted-foreground">
                           {formatNumber(msToMinutes(artist.totalMs))} min
-                        </Badge>
+                        </span>
+                      </TableCell>
+                      <TableCell className="py-2.5 text-right tabular-nums whitespace-nowrap text-muted-foreground hidden sm:table-cell">
+                        {formatNumber(msToMinutes(artist.totalMs))} min
                       </TableCell>
                     </TableRow>
                   );
                 })
               ) : (
-                <TableRow>
-                  <TableCell colSpan={4} className="text-center text-white/40 py-8">
+                <TableRow className="hover:bg-transparent">
+                  <TableCell colSpan={4} className="text-center text-muted-foreground py-10">
                     No artists found matching "{artistSearch}"
                   </TableCell>
                 </TableRow>
               )}
             </TableBody>
           </Table>
-        </CardContent>
-      </Card>
+        </div>
+      </section>
 
-      {/* Top Tracks */}
-      <Card className="overflow-hidden border-blue-500/30">
-        <CardHeader className="bg-gradient-to-r from-blue-500/20 to-blue-600/20 border-b border-blue-500/20 space-y-3">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <CardTitle className="flex items-center gap-2 text-white text-lg sm:text-xl">
-              <Music2 className="w-5 h-5 text-blue-400 flex-shrink-0" />
-              Your Top Tracks
-            </CardTitle>
-            <div className="flex items-center gap-2 flex-wrap">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setShowTrackComparison(true)}
-                className="text-blue-400 hover:text-blue-300 hover:bg-blue-500/10 gap-2 text-xs sm:text-sm"
-              >
-                <BarChart3 className="h-4 w-4" />
-                <span className="hidden sm:inline">Compare Tracks</span>
-                <span className="sm:hidden">Compare</span>
-              </Button>
-              <div className="w-px h-6 bg-white/10" />
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setTrackPage((p) => Math.max(1, p - 1))}
-                disabled={trackPage === 1}
-                className="h-8 w-8 text-white/60 hover:text-white hover:bg-white/10 disabled:opacity-30"
-              >
-                <ChevronLeft className="h-4 w-4" />
-              </Button>
-              <div className="flex items-center gap-1 text-sm text-white/60 min-w-[80px] justify-center">
-                <input
-                  type="text"
-                  value={trackPageInput}
-                  onChange={(e) => setTrackPageInput(e.target.value)}
-                  onBlur={(e) => handleTrackPageJump(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      handleTrackPageJump(trackPageInput);
-                      e.currentTarget.blur();
-                    }
-                  }}
-                  className="w-8 text-center bg-white/5 border border-white/10 rounded px-1 py-0.5 text-white focus:outline-none focus:ring-1 focus:ring-blue-500/50 focus:border-blue-500/50"
-                />
-                <span>/</span>
-                <span>{totalTrackPages}</span>
-              </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setTrackPage((p) => Math.min(totalTrackPages, p + 1))}
-                disabled={trackPage === totalTrackPages}
-                className="h-8 w-8 text-white/60 hover:text-white hover:bg-white/10 disabled:opacity-30"
-              >
-                <ChevronRight className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
-            <Input
-              type="text"
-              placeholder="Search tracks or artists..."
-              value={trackSearch}
-              onChange={(e) => setTrackSearch(e.target.value)}
-              className="pl-9 pr-9 bg-white/5 border-white/10 text-white placeholder:text-white/40 focus:border-blue-500/50"
-            />
-            {trackSearch && (
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setTrackSearch('')}
-                className="absolute right-1 top-1/2 -translate-y-1/2 h-6 w-6 text-white/40 hover:text-white hover:bg-white/10"
-              >
-                <X className="h-3 w-3" />
-              </Button>
-            )}
-          </div>
-        </CardHeader>
-        <CardContent className="p-0 overflow-x-auto">
+      <section aria-label="Top tracks" className="border border-border bg-card">
+        <PanelHeader
+          title="Top tracks"
+          compareLabel="Compare tracks"
+          onCompare={() => setShowTrackComparison(true)}
+          page={trackPage}
+          totalPages={totalTrackPages}
+          pageInput={trackPageInput}
+          onPageInputChange={setTrackPageInput}
+          onPageJump={handleTrackPageJump}
+          onPrev={() => setTrackPage((p) => Math.max(1, p - 1))}
+          onNext={() => setTrackPage((p) => Math.min(totalTrackPages, p + 1))}
+          search={trackSearch}
+          onSearchChange={setTrackSearch}
+          searchPlaceholder="Search tracks or artists..."
+        />
+        <div className="overflow-x-auto">
           <Table>
             <TableHeader>
-              <TableRow className="border-white/10 hover:bg-transparent">
-                <TableHead className="w-12 text-white/60">#</TableHead>
-                <TableHead className="text-white/60 min-w-[150px]">Track</TableHead>
-                <TableHead className="text-white/60 min-w-[120px]">Artist</TableHead>
-                <TableHead className="text-right text-white/60">Plays</TableHead>
-                <TableHead className="text-right text-white/60 min-w-[100px]">Minutes</TableHead>
+              <TableRow className="border-border hover:bg-transparent">
+                <TableHead className="w-12">#</TableHead>
+                <TableHead className="md:min-w-[150px]">Track</TableHead>
+                <TableHead className="min-w-[120px] hidden md:table-cell">Artist</TableHead>
+                <TableHead className="text-right">Plays</TableHead>
+                <TableHead className="text-right min-w-[100px] hidden sm:table-cell">
+                  Minutes
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -375,58 +372,60 @@ export function TopItems() {
                   const actualIndex = sortedTracks.findIndex(
                     (t) => t.name === track.name && t.artist === track.artist
                   );
+                  const open = () =>
+                    setTimelineItem({ name: track.name, type: 'track', artistName: track.artist });
                   return (
                     <TableRow
                       key={actualIndex}
-                      className="hover:bg-white/5 border-white/5 cursor-pointer group"
-                      onClick={() =>
-                        setTimelineItem({
-                          name: track.name,
-                          type: 'track',
-                          artistName: track.artist,
-                        })
-                      }
+                      tabIndex={0}
+                      aria-label={`${track.name} by ${track.artist}: open listening timeline`}
+                      className={rowClass}
+                      onClick={open}
+                      onKeyDown={openOnKey(open)}
                     >
-                      <TableCell className="font-bold text-white/40">{actualIndex + 1}</TableCell>
-                      <TableCell className="font-medium max-w-[200px] text-white group-hover:text-green-300 transition-colors">
-                        <div className="flex items-center gap-2">
-                          <span className="truncate">{track.name}</span>
-                          <TrendingUp className="w-4 h-4 text-blue-400/60 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
+                      <TableCell className="py-2.5 tabular-nums text-muted-foreground">
+                        {actualIndex + 1}
+                      </TableCell>
+                      <TableCell className="py-2.5 font-medium max-w-[220px] group-hover:text-primary transition-colors">
+                        <div className="flex items-center gap-2 min-w-0">
+                          <span className="min-w-0">
+                            <span className="block truncate">{track.name}</span>
+                            <span className="block md:hidden truncate text-xs font-normal text-muted-foreground">
+                              {track.artist}
+                            </span>
+                          </span>
+                          <TrendingUp
+                            className="w-4 h-4 text-primary opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity flex-shrink-0"
+                            aria-hidden
+                          />
                         </div>
                       </TableCell>
-                      <TableCell className="text-sm text-white/60 max-w-[150px] truncate">
+                      <TableCell className="py-2.5 text-muted-foreground max-w-[160px] truncate hidden md:table-cell">
                         {track.artist}
                       </TableCell>
-                      <TableCell className="text-right align-top pt-4">
-                        <Badge
-                          variant="outline"
-                          className="border-blue-500/30 text-blue-300 inline-flex whitespace-nowrap"
-                        >
-                          {formatNumber(track.playCount)}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-right align-top pt-4">
-                        <Badge
-                          variant="secondary"
-                          className="bg-blue-500/20 text-blue-300 border-blue-500/30 inline-flex whitespace-nowrap"
-                        >
+                      <TableCell className="py-2.5 text-right tabular-nums whitespace-nowrap">
+                        {formatNumber(track.playCount)}
+                        <span className="block sm:hidden text-xs text-muted-foreground">
                           {formatNumber(msToMinutes(track.totalMs))} min
-                        </Badge>
+                        </span>
+                      </TableCell>
+                      <TableCell className="py-2.5 text-right tabular-nums whitespace-nowrap text-muted-foreground hidden sm:table-cell">
+                        {formatNumber(msToMinutes(track.totalMs))} min
                       </TableCell>
                     </TableRow>
                   );
                 })
               ) : (
-                <TableRow>
-                  <TableCell colSpan={5} className="text-center text-white/40 py-8">
+                <TableRow className="hover:bg-transparent">
+                  <TableCell colSpan={5} className="text-center text-muted-foreground py-10">
                     No tracks found matching "{trackSearch}"
                   </TableCell>
                 </TableRow>
               )}
             </TableBody>
           </Table>
-        </CardContent>
-      </Card>
+        </div>
+      </section>
 
       {/* Timeline Modal */}
       {timelineItem && (

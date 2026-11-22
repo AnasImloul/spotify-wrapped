@@ -30,15 +30,7 @@ export default function AnalyticsPageLayout() {
       <AnalyticsHeader
         hasData={!!stats}
         onShowStoryMode={() => navigate('/story')}
-        renderShareMenu={() =>
-          stats ? (
-            <ShareExportMenu
-              variant="ghost"
-              size="sm"
-              className="text-white/80 hover:text-white hover:bg-white/10"
-            />
-          ) : null
-        }
+        renderShareMenu={() => (stats ? <ShareExportMenu variant="ghost" size="sm" /> : null)}
       />
 
       {/* Filter Toolbar */}
@@ -47,7 +39,7 @@ export default function AnalyticsPageLayout() {
           <FilterToolbar />
 
           {/* Page Content - Rendered by child routes */}
-          <main className="flex-grow container mx-auto px-4 pb-12 pt-6 space-y-12">
+          <main className="flex-grow container mx-auto px-4 pb-12 pt-6 lg:pt-8 space-y-12">
             <Outlet context={{ stats } satisfies AnalyticsOutletContext} />
           </main>
         </>
