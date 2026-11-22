@@ -70,12 +70,7 @@ export function AnalyticsHeader({
               className="h-14 lg:h-16 flex items-center gap-3 flex-shrink-0 hover:opacity-80 transition-opacity"
               title={hasData ? 'Clear data and start over' : 'Go to home'}
             >
-              <span className="code-strip" aria-hidden>
-                <i className="bg-code-green" />
-                <i className="bg-code-blue" />
-                <i className="bg-code-yellow" />
-                <i className="bg-code-orange" />
-              </span>
+              <span className="block h-3 w-3 bg-primary shrink-0" aria-hidden />
               <span className="flex flex-col text-left leading-tight">
                 <span className="text-sm font-semibold uppercase tracking-[0.2em]">
                   Spotify Wrapped

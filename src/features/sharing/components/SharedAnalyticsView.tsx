@@ -81,12 +81,7 @@ export function SharedAnalyticsView({ onClose, shareId }: SharedAnalyticsViewPro
       <header className="border-b border-border bg-background/95 sticky top-0 z-50">
         <div className="container mx-auto px-4 py-3 flex items-center justify-between gap-3">
           <div className="flex items-center gap-3 min-w-0">
-            <span className="code-strip" aria-hidden>
-              <i className="bg-code-green" />
-              <i className="bg-code-blue" />
-              <i className="bg-code-yellow" />
-              <i className="bg-code-orange" />
-            </span>
+            <span className="block h-3 w-3 bg-primary shrink-0" aria-hidden />
             <div className="min-w-0">
               <h1 className="text-sm font-semibold uppercase tracking-[0.2em] truncate">
                 Shared Spotify Analytics
