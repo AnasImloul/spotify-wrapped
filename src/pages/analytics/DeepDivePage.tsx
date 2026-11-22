@@ -4,48 +4,26 @@ import {
   MoodEnergyAnalysis,
   YearOverYearComparison,
 } from '@/features/analytics';
-import { Trophy, Flame, Sparkles, BarChart3 } from 'lucide-react';
+
+const sections = [
+  { title: 'Personal Records', Component: PersonalRecords },
+  { title: 'Listening Consistency', Component: ListeningStreak },
+  { title: 'Mood & Energy', Component: MoodEnergyAnalysis },
+  { title: 'Year-over-Year Analysis', Component: YearOverYearComparison },
+];
 
 export default function DeepDivePage() {
   return (
-    <div className="space-y-12 animate-fade-in">
-      <div>
-        <h3 className="text-3xl font-bold text-white mb-6 flex items-center gap-3">
-          <Trophy className="w-8 h-8 text-yellow-400" />
-          Personal Records
-        </h3>
-        <PersonalRecords />
-      </div>
-
-      <div className="h-px bg-gradient-to-r from-transparent via-green-500/50 to-transparent" />
-
-      <div>
-        <h3 className="text-3xl font-bold text-white mb-6 flex items-center gap-3">
-          <Flame className="w-8 h-8 text-orange-400" />
-          Listening Consistency
-        </h3>
-        <ListeningStreak />
-      </div>
-
-      <div className="h-px bg-gradient-to-r from-transparent via-green-500/50 to-transparent" />
-
-      <div>
-        <h3 className="text-3xl font-bold text-white mb-6 flex items-center gap-3">
-          <Sparkles className="w-8 h-8 text-yellow-400" />
-          Mood & Energy
-        </h3>
-        <MoodEnergyAnalysis />
-      </div>
-
-      <div className="h-px bg-gradient-to-r from-transparent via-green-500/50 to-transparent" />
-
-      <div>
-        <h3 className="text-3xl font-bold text-white mb-6 flex items-center gap-3">
-          <BarChart3 className="w-8 h-8 text-blue-400" />
-          Year-over-Year Analysis
-        </h3>
-        <YearOverYearComparison />
-      </div>
+    <div className="space-y-14 [&>h2+section]:mt-0">
+      <h2 className="sr-only">Deep Dive</h2>
+      {sections.map(({ title, Component }) => (
+        <section key={title} className="space-y-5">
+          <h3 className="text-2xl lg:text-3xl font-semibold tracking-[-0.01em] border-b border-border pb-4">
+            {title}
+          </h3>
+          <Component />
+        </section>
+      ))}
     </div>
   );
 }
