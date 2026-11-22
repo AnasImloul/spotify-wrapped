@@ -1,6 +1,5 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, type ReactNode } from 'react';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
-import { Button } from '@/shared/components/ui/button';
 import { useStoryData, useSwipeNavigation } from '@/shared/hooks';
 import { TopArtistCard } from '../cards/TopArtistCard';
 import { TopTrackCard } from '../cards/TopTrackCard';
@@ -10,24 +9,110 @@ import { DiscoveryCard } from '../cards/DiscoveryCard';
 import { TimeOfDayCard } from '../cards/TimeOfDayCard';
 import { SummaryCard } from '../cards/SummaryCard';
 import { ShareMenu } from './ShareMenu';
+import { STORY_FIELDS, type StoryField } from './storyFields';
 import { cn } from '@/shared/utils';
 
 interface StoryModeProps {
   onClose: () => void;
 }
 
+interface StoryEntry {
+  id: string;
+  name: string;
+  field: StoryField;
+  node: ReactNode;
+}
+
+function compact<T>(items: (T | null | undefined | false)[]): T[] {
+  return items.filter((item): item is T => Boolean(item));
+}
+
 export function StoryMode({ onClose }: StoryModeProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const storyData = useStoryData();
 
-  const totalCards = 7; // Number of story cards
+  const entries: StoryEntry[] = storyData
+    ? compact<StoryEntry>([
+        storyData.topArtist && {
+          id: 'story-top-artist',
+          name: 'Top Artist',
+          field: 'green',
+          node: (
+            <TopArtistCard
+              name={storyData.topArtist.name}
+              minutes={storyData.topArtist.minutes}
+              playCount={storyData.topArtist.playCount}
+            />
+          ),
+        },
+        storyData.topTrack && {
+          id: 'story-top-track',
+          name: 'Top Track',
+          field: 'blue',
+          node: (
+            <TopTrackCard
+              name={storyData.topTrack.name}
+              artist={storyData.topTrack.artist}
+              minutes={storyData.topTrack.minutes}
+              playCount={storyData.topTrack.playCount}
+            />
+          ),
+        },
+        {
+          id: 'story-total-time',
+          name: 'Total Time',
+          field: 'yellow',
+          node: <TotalTimeCard minutes={storyData.totalMinutes} funFact={storyData.funFact} />,
+        },
+        {
+          id: 'story-streak',
+          name: 'Listening Streak',
+          field: 'orange',
+          node: <ListeningStreakCard streak={storyData.listeningStreak} />,
+        },
+        {
+          id: 'story-discovery',
+          name: 'Discovery',
+          field: 'white',
+          node: (
+            <DiscoveryCard
+              uniqueArtists={storyData.uniqueArtists}
+              uniqueTracks={storyData.uniqueTracks}
+            />
+          ),
+        },
+        {
+          id: 'story-time-of-day',
+          name: 'Time of Day',
+          field: 'black',
+          node: (
+            <TimeOfDayCard timeOfDay={storyData.timeOfDay} peakHour={storyData.peakListeningHour} />
+          ),
+        },
+        {
+          id: 'story-summary',
+          name: 'Summary',
+          field: 'green',
+          node: (
+            <SummaryCard
+              totalTracks={storyData.totalTracks}
+              uniqueArtists={storyData.uniqueArtists}
+              uniqueTracks={storyData.uniqueTracks}
+              dateRange={{ start: storyData.startDate, end: storyData.endDate }}
+            />
+          ),
+        },
+      ])
+    : [];
+
+  const totalCards = entries.length;
 
   const goToNext = useCallback(() => {
-    setCurrentIndex((prev) => (prev + 1) % totalCards);
+    setCurrentIndex((prev) => (totalCards ? (prev + 1) % totalCards : 0));
   }, [totalCards]);
 
   const goToPrev = useCallback(() => {
-    setCurrentIndex((prev) => (prev - 1 + totalCards) % totalCards);
+    setCurrentIndex((prev) => (totalCards ? (prev - 1 + totalCards) % totalCards : 0));
   }, [totalCards]);
 
   const swipeRef = useSwipeNavigation({
@@ -35,7 +120,6 @@ export function StoryMode({ onClose }: StoryModeProps) {
     onPrev: goToPrev,
   });
 
-  // Handle ESC key to close
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -47,138 +131,103 @@ export function StoryMode({ onClose }: StoryModeProps) {
     return () => window.removeEventListener('keydown', handleEscape);
   }, [onClose]);
 
-  if (!storyData) {
+  if (!storyData || totalCards === 0) {
     return null;
   }
 
-  const cardIds = [
-    'story-top-artist',
-    'story-top-track',
-    'story-total-time',
-    'story-streak',
-    'story-discovery',
-    'story-time-of-day',
-    'story-summary',
-  ];
+  const current = entries[Math.min(currentIndex, totalCards - 1)];
+  const theme = STORY_FIELDS[current.field];
+  const control = cn(
+    'h-10 w-10 inline-flex items-center justify-center border transition-colors',
+    current.field === 'black'
+      ? 'border-input text-foreground hover:border-foreground hover:bg-white/5'
+      : 'border-[#121212] text-[#121212] hover:bg-[#121212]/10'
+  );
 
-  const cardNames = [
-    'Top Artist',
-    'Top Track',
-    'Total Time',
-    'Listening Streak',
-    'Discovery',
-    'Time of Day',
-    'Summary',
-  ];
-
-  const cards = [
-    storyData.topArtist && (
-      <TopArtistCard
-        key="top-artist"
-        name={storyData.topArtist.name}
-        minutes={storyData.topArtist.minutes}
-        playCount={storyData.topArtist.playCount}
-      />
-    ),
-    storyData.topTrack && (
-      <TopTrackCard
-        key="top-track"
-        name={storyData.topTrack.name}
-        artist={storyData.topTrack.artist}
-        minutes={storyData.topTrack.minutes}
-        playCount={storyData.topTrack.playCount}
-      />
-    ),
-    <TotalTimeCard key="total-time" minutes={storyData.totalMinutes} funFact={storyData.funFact} />,
-    <ListeningStreakCard key="streak" streak={storyData.listeningStreak} />,
-    <DiscoveryCard
-      key="discovery"
-      uniqueArtists={storyData.uniqueArtists}
-      uniqueTracks={storyData.uniqueTracks}
-    />,
-    <TimeOfDayCard
-      key="time-of-day"
-      timeOfDay={storyData.timeOfDay}
-      peakHour={storyData.peakListeningHour}
-    />,
-    <SummaryCard
-      key="summary"
-      totalTracks={storyData.totalTracks}
-      uniqueArtists={storyData.uniqueArtists}
-      uniqueTracks={storyData.uniqueTracks}
-      dateRange={{ start: storyData.startDate, end: storyData.endDate }}
-    />,
-  ].filter(Boolean);
+  const outerControl =
+    'h-10 w-10 inline-flex items-center justify-center border border-input text-foreground hover:border-foreground hover:bg-white/5 transition-colors';
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/95 backdrop-blur-sm">
-      {/* Story card container */}
+    <div className="fixed inset-0 z-50 bg-[#0A0A0A]">
       <div ref={swipeRef} className="absolute inset-0 flex items-center justify-center sm:px-4">
-        {/* Card wrapper with responsive sizing - full width on mobile, constrained on desktop */}
-        <div className="relative w-full sm:max-w-[440px] h-full sm:h-[90vh] sm:rounded-3xl overflow-hidden shadow-2xl">
-          {/* Current card */}
-          <div className="w-full h-full">{cards[currentIndex]}</div>
+        <div className="relative w-full sm:max-w-[440px] h-full sm:h-[90vh]">
+          <div
+            role="region"
+            aria-roledescription="carousel"
+            aria-label="Your listening story"
+            className="relative w-full h-full overflow-hidden shadow-[0_24px_64px_rgba(0,0,0,0.6)]"
+          >
+            <div
+              key={current.id}
+              role="group"
+              aria-roledescription="slide"
+              aria-label={`${currentIndex + 1} of ${totalCards}: ${current.name}`}
+              className="w-full h-full animate-in fade-in-0 slide-in-from-bottom-2 duration-500 ease-out motion-reduce:animate-none"
+            >
+              {current.node}
+            </div>
 
-          {/* Progress indicators */}
-          <div className="absolute top-4 left-0 right-0 z-20 px-4">
-            <div className="flex gap-1">
-              {cards.map((_, index) => (
+            <div className="absolute top-4 left-5 right-5 z-20 flex gap-1" aria-hidden>
+              {entries.map((entry, index) => (
                 <div
-                  key={index}
+                  key={entry.id}
                   className={cn(
-                    'h-1 flex-1 rounded-full transition-all duration-300',
-                    index === currentIndex
-                      ? 'bg-white'
-                      : index < currentIndex
-                        ? 'bg-white/70'
-                        : 'bg-white/30'
+                    'h-1 flex-1 transition-colors duration-300',
+                    index <= currentIndex ? theme.segment : theme.segmentDim
                   )}
                 />
               ))}
             </div>
-          </div>
 
-          {/* Top controls */}
-          <div className="absolute top-12 right-4 z-20 flex gap-2">
-            <ShareMenu
-              elementId={cardIds[currentIndex]}
-              cardName={cardNames[currentIndex]}
-              storyData={storyData}
-              variant="ghost"
-              size="icon"
-              className="bg-black/30 backdrop-blur-sm hover:bg-black/50 text-white border border-white/20"
-            />
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={onClose}
-              className="bg-black/30 backdrop-blur-sm hover:bg-black/50 text-white border border-white/20"
-            >
-              <X className="w-5 h-5" />
-            </Button>
+            <div className="absolute top-10 left-5 right-5 z-20 flex items-center justify-between">
+              <span
+                className={cn(
+                  'text-[11px] font-bold uppercase tracking-[0.18em] tabular-nums',
+                  theme.ink
+                )}
+              >
+                {String(currentIndex + 1).padStart(2, '0')} / {String(totalCards).padStart(2, '0')}
+              </span>
+              <div className="flex gap-2">
+                <ShareMenu
+                  elementId={current.id}
+                  cardName={current.name}
+                  storyData={storyData}
+                  variant="ghost"
+                  size="icon"
+                  className={cn(control, 'bg-transparent')}
+                />
+                <button
+                  type="button"
+                  onClick={onClose}
+                  aria-label="Close story"
+                  className={control}
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
           </div>
-
-          {/* Navigation buttons (desktop) */}
           <div className="hidden sm:block">
             {currentIndex > 0 && (
-              <Button
-                variant="ghost"
-                size="icon"
+              <button
+                type="button"
                 onClick={goToPrev}
-                className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-black/30 backdrop-blur-sm hover:bg-black/50 text-white border border-white/20"
+                aria-label="Previous card"
+                className={cn(outerControl, 'absolute -left-16 top-1/2 -translate-y-1/2 z-20')}
               >
-                <ChevronLeft className="w-6 h-6" />
-              </Button>
+                <ChevronLeft className="w-5 h-5" />
+              </button>
             )}
-            {currentIndex < cards.length - 1 && (
-              <Button
-                variant="ghost"
-                size="icon"
+            {currentIndex < totalCards - 1 && (
+              <button
+                type="button"
                 onClick={goToNext}
-                className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-black/30 backdrop-blur-sm hover:bg-black/50 text-white border border-white/20"
+                aria-label="Next card"
+                className={cn(outerControl, 'absolute -right-16 top-1/2 -translate-y-1/2 z-20')}
               >
-                <ChevronRight className="w-6 h-6" />
-              </Button>
+                <ChevronRight className="w-5 h-5" />
+              </button>
             )}
           </div>
         </div>
