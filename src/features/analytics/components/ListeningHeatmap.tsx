@@ -294,8 +294,8 @@ export function ListeningHeatmap({ timeUnit = 'hours' }: ListeningHeatmapProps) 
         <div className="overflow-x-auto overflow-y-visible">
           {viewMode === 'detailed' ? (
             // Detailed view - hourly heatmap by day of week
-            <div className="flex flex-col items-center w-full pt-8 pb-2 overflow-x-auto">
-              <div className="min-w-max">
+            <div className="w-full pt-8 pb-2 overflow-x-auto">
+              <div className="w-max mx-auto">
                 {/* Hour labels */}
                 <div className="flex mb-2 gap-1">
                   <div className="w-8 flex-shrink-0"></div>

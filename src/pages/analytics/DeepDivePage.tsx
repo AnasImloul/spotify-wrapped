@@ -14,10 +14,9 @@ const sections = [
 
 export default function DeepDivePage() {
   return (
-    <div className="space-y-14 [&>h2+section]:mt-0">
-      <h2 className="sr-only">Deep Dive</h2>
+    <div className="space-y-16">
       {sections.map(({ title, Component }) => (
-        <section key={title} className="space-y-5">
+        <section key={title} className="space-y-6">
           <h3 className="text-2xl lg:text-3xl font-semibold tracking-[-0.01em] border-b border-border pb-4">
             {title}
           </h3>

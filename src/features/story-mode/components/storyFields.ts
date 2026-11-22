@@ -7,7 +7,7 @@ export const STORY_FIELDS: Record<
   green: {
     bg: 'bg-code-green',
     ink: 'text-[#121212]',
-    muted: 'text-[#121212]/70',
+    muted: 'text-[#121212]/80',
     rule: 'border-[#121212]',
     segment: 'bg-[#121212]',
     segmentDim: 'bg-[#121212]/25',
@@ -15,7 +15,7 @@ export const STORY_FIELDS: Record<
   blue: {
     bg: 'bg-code-blue',
     ink: 'text-[#121212]',
-    muted: 'text-[#121212]/70',
+    muted: 'text-[#121212]/80',
     rule: 'border-[#121212]',
     segment: 'bg-[#121212]',
     segmentDim: 'bg-[#121212]/25',
@@ -23,7 +23,7 @@ export const STORY_FIELDS: Record<
   yellow: {
     bg: 'bg-code-yellow',
     ink: 'text-[#121212]',
-    muted: 'text-[#121212]/70',
+    muted: 'text-[#121212]/80',
     rule: 'border-[#121212]',
     segment: 'bg-[#121212]',
     segmentDim: 'bg-[#121212]/25',
@@ -31,7 +31,7 @@ export const STORY_FIELDS: Record<
   orange: {
     bg: 'bg-code-orange',
     ink: 'text-[#121212]',
-    muted: 'text-[#121212]/75',
+    muted: 'text-[#121212]/80',
     rule: 'border-[#121212]',
     segment: 'bg-[#121212]',
     segmentDim: 'bg-[#121212]/25',
@@ -39,7 +39,7 @@ export const STORY_FIELDS: Record<
   white: {
     bg: 'bg-white',
     ink: 'text-[#121212]',
-    muted: 'text-[#121212]/65',
+    muted: 'text-[#121212]/80',
     rule: 'border-[#121212]',
     segment: 'bg-[#121212]',
     segmentDim: 'bg-[#121212]/20',

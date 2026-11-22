@@ -15,7 +15,13 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from 'recharts';
-import { CHART_AXIS, CHART_COLORS, CHART_GRID, CHART_TOOLTIP } from '@/shared/constants/charts';
+import {
+  CHART_AXIS,
+  CHART_COLORS,
+  CHART_GRID,
+  CHART_TOOLTIP,
+  CHART_X_AXIS,
+} from '@/shared/constants/charts';
 import { useSpotifyData, useDateRange } from '@/shared/hooks';
 import { generateMonthlyTrends } from '@/shared/services';
 import { formatNumber, formatMinutes, type TimeUnit } from '@/shared/utils';
@@ -113,14 +119,7 @@ export function MonthlyTrends() {
               margin={{ top: 5, right: 10, left: timeUnit === 'minutes' ? 10 : 0, bottom: 5 }}
             >
               <CartesianGrid {...CHART_GRID} />
-              <XAxis
-                dataKey="month"
-                tickFormatter={formatMonthLabel}
-                {...CHART_AXIS}
-                angle={-45}
-                textAnchor="end"
-                height={80}
-              />
+              <XAxis dataKey="month" tickFormatter={formatMonthLabel} {...CHART_X_AXIS} />
               <YAxis
                 {...CHART_AXIS}
                 axisLine={false}
@@ -148,6 +147,7 @@ export function MonthlyTrends() {
               />
               <Tooltip content={<CustomTooltip />} cursor={CHART_TOOLTIP.cursor} />
               <Line
+                isAnimationActive={false}
                 type="monotone"
                 dataKey="minutes"
                 stroke={CHART_COLORS.primary}

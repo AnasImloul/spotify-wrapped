@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { Sun, Moon, Sunrise, Sunset, Zap, Heart, Coffee, Music } from 'lucide-react';
+import { TIME_OF_DAY_SWATCH } from '@/shared/constants/charts';
 import { useSpotifyData } from '@/shared/hooks';
 import { cn } from '@/shared/utils';
 
@@ -128,36 +128,32 @@ export function MoodEnergyAnalysis() {
       id: 'morning',
       label: 'Morning',
       time: '6 AM - 12 PM',
-      icon: Sunrise,
       mood: moodProfile.morningMood,
-      swatch: 'bg-code-yellow',
+      swatch: TIME_OF_DAY_SWATCH.morning,
       description: 'Energetic & Fresh',
     },
     {
       id: 'afternoon',
       label: 'Afternoon',
       time: '12 PM - 6 PM',
-      icon: Sun,
       mood: moodProfile.afternoonMood,
-      swatch: 'bg-code-orange',
+      swatch: TIME_OF_DAY_SWATCH.afternoon,
       description: 'Focused & Productive',
     },
     {
       id: 'evening',
       label: 'Evening',
       time: '6 PM - 12 AM',
-      icon: Sunset,
       mood: moodProfile.eveningMood,
-      swatch: 'bg-code-blue',
+      swatch: TIME_OF_DAY_SWATCH.evening,
       description: 'Relaxed & Chill',
     },
     {
       id: 'night',
       label: 'Night',
       time: '12 AM - 6 AM',
-      icon: Moon,
       mood: moodProfile.nightMood,
-      swatch: 'bg-foreground',
+      swatch: TIME_OF_DAY_SWATCH.night,
       description: 'Calm & Introspective',
     },
   ];
@@ -166,32 +162,26 @@ export function MoodEnergyAnalysis() {
     energetic: {
       title: 'Energetic Listener',
       description: 'You used music to fuel your energy and start your days strong',
-      icon: Zap,
     },
     focused: {
       title: 'Focused Listener',
       description: 'Music helped you stay productive and concentrate during this period',
-      icon: Coffee,
     },
     relaxed: {
       title: 'Relaxed Listener',
       description: 'You wound down with music, using it to relax and unwind',
-      icon: Heart,
     },
     varied: {
       title: 'Balanced Listener',
       description: 'You enjoyed music at all times throughout your listening history',
-      icon: Music,
     },
   };
 
   const profile = dominantProfiles[moodProfile.dominant];
-  const ProfileIcon = profile.icon;
 
   return (
     <div className="space-y-8">
-      <div className="flex items-start gap-4">
-        <ProfileIcon className="w-7 h-7 text-primary flex-shrink-0 mt-1" aria-hidden />
+      <div>
         <div>
           <p className="text-3xl lg:text-4xl font-medium leading-tight tracking-[-0.02em]">
             {profile.title}
@@ -201,22 +191,17 @@ export function MoodEnergyAnalysis() {
       </div>
 
       <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 border-t border-border">
-        {timeOfDayData.map((period) => {
-          const Icon = period.icon;
-
-          return (
-            <li key={period.id} className="py-4 border-b border-border">
-              <div className="flex items-center gap-2 mb-3">
-                <span className={cn('h-2.5 w-2.5 flex-shrink-0', period.swatch)} aria-hidden />
-                <h4 className="label-caps">{period.label}</h4>
-                <Icon className="w-4 h-4 text-muted-foreground ml-auto" aria-hidden />
-              </div>
-              <p className="text-lg font-medium">{period.mood}</p>
-              <p className="text-sm text-muted-foreground mt-1">{period.description}</p>
-              <p className="text-xs text-muted-foreground mt-2 tabular-nums">{period.time}</p>
-            </li>
-          );
-        })}
+        {timeOfDayData.map((period) => (
+          <li key={period.id} className="py-4 border-b border-border">
+            <div className="flex items-center gap-2 mb-3">
+              <span className={cn('h-2.5 w-2.5 flex-shrink-0', period.swatch)} aria-hidden />
+              <h4 className="label-caps">{period.label}</h4>
+            </div>
+            <p className="text-lg font-medium">{period.mood}</p>
+            <p className="text-sm text-muted-foreground mt-1">{period.description}</p>
+            <p className="text-xs text-muted-foreground mt-2 tabular-nums">{period.time}</p>
+          </li>
+        ))}
       </ul>
 
       <div>

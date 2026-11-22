@@ -19,6 +19,7 @@ import {
   CHART_GRID,
   CHART_SERIES,
   CHART_TOOLTIP,
+  CHART_X_AXIS,
 } from '@/shared/constants/charts';
 import { msToMinutes, formatNumber } from '@/shared/utils';
 import { useSpotifyData, useDateRange, useSortedTracks } from '@/shared/hooks';
@@ -224,7 +225,7 @@ export function TrackComparison({ onClose, initialTracks = [] }: TrackComparison
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                       onFocus={() => setShowAutocomplete(true)}
-                      className="bg-white/[0.03] border-border text-foreground placeholder:text-muted-foreground"
+                      className="bg-transparent border-input placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-primary"
                       autoComplete="off"
                     />
                   </div>
@@ -272,14 +273,7 @@ export function TrackComparison({ onClose, initialTracks = [] }: TrackComparison
                   <ResponsiveContainer width="100%" height={400}>
                     <LineChart data={chartData}>
                       <CartesianGrid {...CHART_GRID} />
-                      <XAxis
-                        dataKey="month"
-                        {...CHART_AXIS}
-                        style={{ fontSize: '11px' }}
-                        angle={-45}
-                        textAnchor="end"
-                        height={70}
-                      />
+                      <XAxis dataKey="month" {...CHART_X_AXIS} />
                       <YAxis
                         {...CHART_AXIS}
                         style={{ fontSize: '11px' }}
@@ -301,7 +295,7 @@ export function TrackComparison({ onClose, initialTracks = [] }: TrackComparison
                           paddingTop: '10px',
                           color: CHART_COLORS.textMuted,
                         }}
-                        iconType="line"
+                        iconType="square"
                       />
                       {selectedTracks.map((track, index) => {
                         const displayName = `${track.name} - ${track.artist}`;
@@ -312,7 +306,7 @@ export function TrackComparison({ onClose, initialTracks = [] }: TrackComparison
                             dataKey={displayName}
                             stroke={COLORS[index]}
                             strokeWidth={2.5}
-                            dot={{ fill: COLORS[index], r: 3 }}
+                            dot={false}
                             activeDot={{ r: 5 }}
                           />
                         );

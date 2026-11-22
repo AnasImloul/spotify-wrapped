@@ -10,6 +10,7 @@ import { useSpotifyData, useDateRange } from '@/shared/hooks';
 import { analyzeListeningPatterns } from '@/shared/services';
 import { formatMinutes, type TimeUnit } from '@/shared/utils';
 import { Clock } from 'lucide-react';
+import { TIME_OF_DAY_SWATCH } from '@/shared/constants/charts';
 
 export function ListeningPatterns() {
   const [timeUnit, setTimeUnit] = useState<TimeUnit>('minutes');
@@ -69,13 +70,13 @@ export function ListeningPatterns() {
           label: 'Avg Weekday',
           value: avgWeekdayMinutes,
           swatch: 'bg-code-green',
-          notes: [`(${patterns.weekdayCount} days)`],
+          notes: [`(${patterns.weekdayCount.toLocaleString('en-US')} days)`],
         },
         {
           label: 'Avg Weekend Day',
           value: avgWeekendMinutes,
           swatch: 'bg-code-blue',
-          notes: [`(${patterns.weekendCount} days)`],
+          notes: [`(${patterns.weekendCount.toLocaleString('en-US')} days)`],
         },
       ],
     },
@@ -84,16 +85,24 @@ export function ListeningPatterns() {
       cols: 'grid-cols-2',
       items: [
         {
-          label: 'Avg Day (6AM-6PM)',
+          label: 'Avg Day',
+          range: '6AM-6PM',
           value: avgDayMinutes,
           swatch: 'bg-code-yellow',
-          notes: [`${patterns.dayPercentage}% of total`, `(${patterns.dayCount} days)`],
+          notes: [
+            `${patterns.dayPercentage}% of total`,
+            `(${patterns.dayCount.toLocaleString('en-US')} days)`,
+          ],
         },
         {
-          label: 'Avg Night (6PM-6AM)',
+          label: 'Avg Night',
+          range: '6PM-6AM',
           value: avgNightMinutes,
           swatch: 'bg-code-blue',
-          notes: [`${patterns.nightPercentage}% of total`, `(${patterns.dayCount} days)`],
+          notes: [
+            `${patterns.nightPercentage}% of total`,
+            `(${patterns.dayCount.toLocaleString('en-US')} days)`,
+          ],
         },
       ],
     },
@@ -105,28 +114,28 @@ export function ListeningPatterns() {
           label: 'Morning',
           range: '6AM-12PM',
           value: avgMorningMinutes,
-          swatch: 'bg-code-yellow',
+          swatch: TIME_OF_DAY_SWATCH.morning,
           notes: [],
         },
         {
           label: 'Afternoon',
           range: '12PM-6PM',
           value: avgAfternoonMinutes,
-          swatch: 'bg-code-orange',
+          swatch: TIME_OF_DAY_SWATCH.afternoon,
           notes: [],
         },
         {
           label: 'Evening',
           range: '6PM-12AM',
           value: avgEveningMinutes,
-          swatch: 'bg-code-green',
+          swatch: TIME_OF_DAY_SWATCH.evening,
           notes: [],
         },
         {
           label: 'Late Night',
           range: '12AM-6AM',
           value: avgLateNightMinutes,
-          swatch: 'bg-code-blue',
+          swatch: TIME_OF_DAY_SWATCH.night,
           notes: [],
         },
       ],
@@ -175,19 +184,22 @@ export function ListeningPatterns() {
             </div>
             <dl className={`grid ${group.cols} gap-x-6 border-t border-border`}>
               {group.items.map((item) => (
-                <div key={item.label} className="py-3 border-b border-border">
-                  <dt className="flex items-center gap-2">
+                <div key={item.label} className="flex flex-col py-3 border-b border-border min-w-0">
+                  <dt className="order-2 flex items-center gap-2 mt-1">
                     <span className={`h-2.5 w-2.5 flex-shrink-0 ${item.swatch}`} aria-hidden />
-                    <span className="label-caps">{item.label}</span>
+                    <span className="label-caps whitespace-nowrap">{item.label}</span>
                   </dt>
-                  {item.range && (
-                    <dd className="text-xs text-muted-foreground mt-0.5">{item.range}</dd>
-                  )}
-                  <dd className="text-2xl font-medium tabular-nums mt-1">
+                  <dd className="order-1 text-2xl font-medium tabular-nums">
                     {formatMinutes(item.value, timeUnit)}
                   </dd>
+                  {item.range && (
+                    <dd className="order-3 text-xs text-muted-foreground mt-0.5">{item.range}</dd>
+                  )}
                   {item.notes.map((note) => (
-                    <dd key={note} className="text-xs text-muted-foreground mt-0.5 tabular-nums">
+                    <dd
+                      key={note}
+                      className="order-3 text-xs text-muted-foreground mt-0.5 tabular-nums"
+                    >
                       {note}
                     </dd>
                   ))}

@@ -32,6 +32,20 @@ export const CHART_AXIS = {
   tickLine: false,
 } as const;
 
+export const CHART_X_AXIS = {
+  ...CHART_AXIS,
+  interval: 'preserveStartEnd',
+  minTickGap: 36,
+  height: 28,
+} as const;
+
+export const TIME_OF_DAY_SWATCH = {
+  morning: 'bg-code-yellow',
+  afternoon: 'bg-code-orange',
+  evening: 'bg-code-green',
+  night: 'bg-code-blue',
+} as const;
+
 export const CHART_GRID = {
   stroke: CHART_COLORS.grid,
   vertical: false,

@@ -112,7 +112,7 @@ export function ListeningStreak() {
         </span>
         , with your best streak being{' '}
         <span className="font-semibold text-foreground">
-          {streakData.longestStreak} consecutive days
+          {formatNumber(streakData.longestStreak)} consecutive days
         </span>
         . On active days, you averaged{' '}
         <span className="font-semibold text-foreground">

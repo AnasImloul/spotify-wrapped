@@ -9,7 +9,13 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from 'recharts';
-import { CHART_AXIS, CHART_COLORS, CHART_GRID, CHART_TOOLTIP } from '@/shared/constants/charts';
+import {
+  CHART_AXIS,
+  CHART_COLORS,
+  CHART_GRID,
+  CHART_TOOLTIP,
+  CHART_X_AXIS,
+} from '@/shared/constants/charts';
 import { useSpotifyData, useDateRange } from '@/shared/hooks';
 
 interface ItemTimelineProps {
@@ -155,14 +161,7 @@ export function ItemTimeline({ itemName, itemType, artistName, onClose }: ItemTi
                   <ResponsiveContainer width="100%" height={220}>
                     <LineChart data={chartData}>
                       <CartesianGrid {...CHART_GRID} />
-                      <XAxis
-                        dataKey="month"
-                        {...CHART_AXIS}
-                        style={{ fontSize: '10px' }}
-                        angle={-45}
-                        textAnchor="end"
-                        height={60}
-                      />
+                      <XAxis dataKey="month" {...CHART_X_AXIS} />
                       <YAxis
                         {...CHART_AXIS}
                         style={{ fontSize: '10px' }}
