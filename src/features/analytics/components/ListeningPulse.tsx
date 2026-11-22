@@ -214,16 +214,18 @@ export function ListeningPulse() {
               const dimmed = activeIndex !== null && !isShown;
               return (
                 <g key={rows[i].key}>
-                  <path d={p.fill} fill="hsl(var(--background))" />
+                  <path d={p.fill} style={{ fill: 'hsl(var(--background))' }} />
                   <path
                     d={p.line}
                     fill="none"
-                    stroke={isBusiest ? 'hsl(var(--primary))' : 'hsl(var(--foreground))'}
                     strokeOpacity={dimmed ? 0.35 : 1}
                     strokeWidth={isShown || isBusiest ? 2.25 : 1}
                     vectorEffect="non-scaling-stroke"
                     strokeLinejoin="round"
-                    style={{ transition: 'stroke-opacity 160ms ease-out' }}
+                    style={{
+                      stroke: isBusiest ? 'hsl(var(--primary))' : 'hsl(var(--foreground))',
+                      transition: 'stroke-opacity 160ms ease-out',
+                    }}
                   />
                 </g>
               );
@@ -233,7 +235,9 @@ export function ListeningPulse() {
                 key={`top-${rows[i].key}`}
                 d={geometry.paths[i].line}
                 fill="none"
-                stroke={i === busiestIndex ? 'hsl(var(--primary))' : 'hsl(var(--foreground))'}
+                style={{
+                  stroke: i === busiestIndex ? 'hsl(var(--primary))' : 'hsl(var(--foreground))',
+                }}
                 strokeOpacity={activeIndex !== null && i !== shown ? 0.35 : 1}
                 strokeWidth={2.25}
                 vectorEffect="non-scaling-stroke"

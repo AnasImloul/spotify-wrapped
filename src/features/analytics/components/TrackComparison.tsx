@@ -1,6 +1,6 @@
 import { useState, useMemo, useRef, useEffect } from 'react';
 import Fuse from 'fuse.js';
-import { X, TrendingUp, Trash2 } from 'lucide-react';
+import { X, Trash2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
 import { Input } from '@/shared/components/ui/input';
 import {
@@ -13,6 +13,13 @@ import {
   ResponsiveContainer,
   Legend,
 } from 'recharts';
+import {
+  CHART_AXIS,
+  CHART_COLORS,
+  CHART_GRID,
+  CHART_SERIES,
+  CHART_TOOLTIP,
+} from '@/shared/constants/charts';
 import { msToMinutes, formatNumber } from '@/shared/utils';
 import { useSpotifyData, useDateRange, useSortedTracks } from '@/shared/hooks';
 
@@ -21,16 +28,7 @@ interface TrackComparisonProps {
   initialTracks?: Array<{ name: string; artist: string }>;
 }
 
-const COLORS = [
-  '#1DB954', // Spotify Green
-  '#1E90FF', // Dodger Blue
-  '#FF6B6B', // Coral Red
-  '#FFD700', // Gold
-  '#9B59B6', // Purple
-  '#FF1493', // Deep Pink
-  '#00CED1', // Dark Turquoise
-  '#FF8C00', // Dark Orange
-];
+const COLORS = CHART_SERIES;
 
 export function TrackComparison({ onClose, initialTracks = [] }: TrackComparisonProps) {
   const { streamingHistory } = useSpotifyData();
@@ -162,56 +160,56 @@ export function TrackComparison({ onClose, initialTracks = [] }: TrackComparison
   };
 
   return (
-    <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-      <Card className="w-full max-w-6xl h-[90vh] flex flex-col border-blue-500/30 bg-black/90">
-        <CardHeader className="border-b border-blue-500/20 bg-gradient-to-r from-blue-500/10 to-transparent flex-shrink-0">
+    <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4 bg-card">
+      <Card
+        role="dialog"
+        aria-modal="true"
+        className="w-full max-w-6xl h-full sm:h-[90vh] flex flex-col border-border bg-popover shadow-[0_24px_64px_rgba(0,0,0,0.6)]"
+      >
+        <CardHeader className="border-b border-foreground flex-shrink-0 p-4 sm:p-6">
           <div className="flex items-start justify-between">
             <div className="flex-1">
-              <CardTitle className="text-white text-2xl mb-2 flex items-center gap-2">
-                <TrendingUp className="w-6 h-6 text-blue-400" />
+              <CardTitle className="text-xl sm:text-2xl font-semibold mb-1">
                 Track Comparison
               </CardTitle>
-              <p className="text-sm text-white/60">
+              <p className="text-sm text-muted-foreground">
                 Compare listening patterns across multiple tracks
               </p>
             </div>
             <button
               onClick={onClose}
-              className="p-2 rounded-lg hover:bg-white/10 transition-colors"
+              className="p-2 -mr-2 hover:bg-white/5 transition-colors"
               aria-label="Close"
             >
-              <X className="w-5 h-5 text-white/70" />
+              <X className="w-5 h-5 text-muted-foreground" />
             </button>
           </div>
         </CardHeader>
 
-        <CardContent className="p-6 flex-1 overflow-y-auto custom-scrollbar">
-          <div className="space-y-4">
+        <CardContent className="p-4 sm:p-6 flex-1 overflow-y-auto custom-scrollbar">
+          <div className="space-y-6">
             {/* Track Selection */}
             <div>
-              <h3 className="text-white font-semibold mb-3">
-                Selected Tracks ({selectedTracks.length}/8)
-              </h3>
+              <h3 className="label-caps mb-3">Selected Tracks ({selectedTracks.length}/8)</h3>
               <div className="flex flex-wrap gap-2 mb-4">
                 {selectedTracks.map((track, index) => (
                   <div
                     key={`${track.name}-${track.artist}`}
-                    className="flex items-center gap-2 bg-white/5 border rounded-lg px-3 py-2 hover:border-blue-500/30 transition-colors"
-                    style={{ borderColor: `${COLORS[index]}40` }}
+                    className="flex items-center gap-2 border border-border px-3 py-2"
                   >
                     <div
-                      className="w-3 h-3 rounded-full"
+                      className="w-2.5 h-2.5 flex-shrink-0"
                       style={{ backgroundColor: COLORS[index] }}
                     />
                     <div className="flex flex-col">
-                      <span className="text-sm text-white">{track.name}</span>
-                      <span className="text-xs text-white/50">{track.artist}</span>
+                      <span className="text-sm text-foreground">{track.name}</span>
+                      <span className="text-xs text-muted-foreground">{track.artist}</span>
                     </div>
                     <button
                       onClick={() => removeTrack(track)}
-                      className="p-0.5 rounded hover:bg-white/10 transition-colors ml-2"
+                      className="p-1 -mr-1 hover:bg-white/5 transition-colors ml-2"
                     >
-                      <Trash2 className="w-3 h-3 text-white/60" />
+                      <Trash2 className="w-3 h-3 text-muted-foreground" />
                     </button>
                   </div>
                 ))}
@@ -226,37 +224,37 @@ export function TrackComparison({ onClose, initialTracks = [] }: TrackComparison
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                       onFocus={() => setShowAutocomplete(true)}
-                      className="bg-white/5 border-white/10 text-white placeholder:text-white/40"
+                      className="bg-white/[0.03] border-border text-foreground placeholder:text-muted-foreground"
                       autoComplete="off"
                     />
                   </div>
                   {showAutocomplete && (searchTerm || filteredTracks.length > 0) && (
-                    <div className="bg-black/80 backdrop-blur-sm border border-white/10 rounded-lg max-h-60 overflow-y-auto custom-scrollbar">
+                    <div className="bg-popover border border-border max-h-60 overflow-y-auto custom-scrollbar shadow-[0_16px_40px_rgba(0,0,0,0.55)]">
                       {filteredTracks.length > 0 ? (
                         filteredTracks.map((track) => (
                           <button
                             key={`${track.name}-${track.artist}`}
                             onClick={() => addTrack({ name: track.name, artist: track.artist })}
-                            className="w-full text-left px-3 py-2 text-sm text-white hover:bg-white/10 transition-colors flex items-center justify-between group"
+                            className="w-full text-left px-3 py-2 text-sm text-foreground hover:bg-white/[0.03] transition-colors flex items-center justify-between group"
                           >
                             <div className="flex items-center gap-2 flex-1 min-w-0">
-                              <span className="text-xs font-semibold text-blue-400 w-8 text-center flex-shrink-0">
+                              <span className="text-xs font-semibold text-code-blue w-8 text-center flex-shrink-0">
                                 #{track.rank}
                               </span>
                               <div className="flex flex-col flex-1 min-w-0">
                                 <span className="truncate">{track.name}</span>
-                                <span className="text-xs text-white/50 truncate">
+                                <span className="text-xs text-muted-foreground truncate">
                                   {track.artist}
                                 </span>
                               </div>
                             </div>
-                            <div className="text-xs text-white/40 ml-2 flex-shrink-0">
+                            <div className="text-xs text-muted-foreground ml-2 flex-shrink-0">
                               {formatNumber(msToMinutes(track.totalMs))} min
                             </div>
                           </button>
                         ))
                       ) : (
-                        <div className="px-3 py-4 text-sm text-white/40 text-center">
+                        <div className="px-3 py-4 text-sm text-muted-foreground text-center">
                           No tracks found matching "{searchTerm}"
                         </div>
                       )}
@@ -269,42 +267,40 @@ export function TrackComparison({ onClose, initialTracks = [] }: TrackComparison
             {/* Chart */}
             {selectedTracks.length > 0 && chartData.length > 0 ? (
               <div>
-                <h3 className="text-white font-semibold mb-3">Listening Activity Over Time</h3>
-                <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+                <h3 className="label-caps mb-3">Listening Activity Over Time</h3>
+                <div className="border border-border p-3 sm:p-4">
                   <ResponsiveContainer width="100%" height={400}>
                     <LineChart data={chartData}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+                      <CartesianGrid {...CHART_GRID} />
                       <XAxis
                         dataKey="month"
-                        stroke="rgba(255,255,255,0.5)"
+                        {...CHART_AXIS}
                         style={{ fontSize: '11px' }}
                         angle={-45}
                         textAnchor="end"
                         height={70}
                       />
                       <YAxis
-                        stroke="rgba(255,255,255,0.5)"
+                        {...CHART_AXIS}
                         style={{ fontSize: '11px' }}
                         label={{
                           value: 'Minutes',
                           angle: -90,
                           position: 'insideLeft',
-                          fill: 'rgba(255,255,255,0.7)',
+                          fill: CHART_COLORS.textMuted,
                           style: { fontSize: '11px' },
                         }}
                       />
                       <Tooltip
-                        contentStyle={{
-                          backgroundColor: 'rgba(0, 0, 0, 0.95)',
-                          border: '1px solid rgba(59, 130, 246, 0.3)',
-                          borderRadius: '8px',
-                          color: 'white',
-                          fontSize: '12px',
-                        }}
+                        {...CHART_TOOLTIP}
                         formatter={(value: number, name: string) => [`${value} min`, name]}
                       />
                       <Legend
-                        wrapperStyle={{ fontSize: '12px', paddingTop: '10px' }}
+                        wrapperStyle={{
+                          fontSize: '12px',
+                          paddingTop: '10px',
+                          color: CHART_COLORS.textMuted,
+                        }}
                         iconType="line"
                       />
                       {selectedTracks.map((track, index) => {
@@ -326,7 +322,7 @@ export function TrackComparison({ onClose, initialTracks = [] }: TrackComparison
                 </div>
               </div>
             ) : (
-              <div className="text-center py-12 text-white/60 bg-white/5 rounded-lg border border-white/10">
+              <div className="text-center py-12 text-muted-foreground border border-dashed border-input">
                 {selectedTracks.length === 0
                   ? 'Add tracks to start comparing their listening patterns'
                   : 'No listening data available for the selected date range'}
@@ -336,7 +332,7 @@ export function TrackComparison({ onClose, initialTracks = [] }: TrackComparison
             {/* Summary Stats */}
             {selectedTracks.length > 0 && chartData.length > 0 && (
               <div>
-                <h3 className="text-white font-semibold mb-3">Total Listening Time</h3>
+                <h3 className="label-caps mb-3">Total Listening Time</h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                   {selectedTracks.map((track, index) => {
                     const displayName = `${track.name} - ${track.artist}`;
@@ -345,22 +341,20 @@ export function TrackComparison({ onClose, initialTracks = [] }: TrackComparison
                       0
                     );
                     return (
-                      <div
-                        key={displayName}
-                        className="bg-white/5 border rounded-lg p-3 hover:border-opacity-100 transition-colors"
-                        style={{ borderColor: `${COLORS[index]}40` }}
-                      >
+                      <div key={displayName} className="border-t border-border pt-3">
                         <div className="flex items-center gap-2 mb-1">
                           <div
-                            className="w-2 h-2 rounded-full"
+                            className="w-2.5 h-2.5 flex-shrink-0"
                             style={{ backgroundColor: COLORS[index] }}
                           />
                           <div className="flex flex-col flex-1 min-w-0">
-                            <p className="text-xs text-white/90 truncate">{track.name}</p>
-                            <p className="text-[10px] text-white/50 truncate">{track.artist}</p>
+                            <p className="text-xs text-foreground truncate">{track.name}</p>
+                            <p className="text-[10px] text-muted-foreground truncate">
+                              {track.artist}
+                            </p>
                           </div>
                         </div>
-                        <p className="text-lg font-bold text-white">
+                        <p className="text-xl font-medium tabular-nums">
                           {totalMinutes.toLocaleString()} min
                         </p>
                       </div>
