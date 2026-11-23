@@ -526,12 +526,8 @@ export function calculatePersonalRecords(
 function calculateListeningStreak(history: StreamingHistoryEntry[]): number {
   if (history.length === 0) return 0;
 
-  const sortedHistory = [...history].sort(
-    (a, b) => new Date(b.endTime).getTime() - new Date(a.endTime).getTime()
-  );
-
   const uniqueDays = new Set<string>();
-  sortedHistory.forEach((entry) => {
+  history.forEach((entry) => {
     const date = new Date(entry.endTime);
     const dayKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
     uniqueDays.add(dayKey);
@@ -611,51 +607,44 @@ function calculateLongestSession(history: StreamingHistoryEntry[]): {
 } {
   if (history.length === 0) return { minutes: 0, date: '' };
 
-  const sortedHistory = [...history].sort(
-    (a, b) => new Date(a.endTime).getTime() - new Date(b.endTime).getTime()
-  );
+  const sorted = history
+    .map((entry) => ({ time: Date.parse(entry.endTime), minutes: entry.msPlayed / 1000 / 60 }))
+    .sort((a, b) => a.time - b.time);
 
   let maxSession = 0;
-  let maxSessionDate = '';
+  let maxSessionStart = sorted[0].time;
   let currentSession = 0;
-  let currentSessionDate = '';
-  let lastEndTime: Date | null = null;
+  let currentSessionStart = sorted[0].time;
+  let lastEndTime: number | null = null;
 
-  sortedHistory.forEach((entry) => {
-    const endTime = new Date(entry.endTime);
-
-    if (lastEndTime && (endTime.getTime() - lastEndTime.getTime()) / 1000 / 60 > 30) {
+  for (const entry of sorted) {
+    if (lastEndTime !== null && (entry.time - lastEndTime) / 1000 / 60 > 30) {
       // Gap of more than 30 minutes - new session
       if (currentSession > maxSession) {
         maxSession = currentSession;
-        maxSessionDate = currentSessionDate;
+        maxSessionStart = currentSessionStart;
       }
-      currentSession = entry.msPlayed / 1000 / 60;
-      currentSessionDate = endTime.toLocaleDateString('en-US', {
-        month: 'long',
-        day: 'numeric',
-        year: 'numeric',
-      });
+      currentSession = entry.minutes;
+      currentSessionStart = entry.time;
     } else {
-      if (!lastEndTime) {
-        currentSessionDate = endTime.toLocaleDateString('en-US', {
-          month: 'long',
-          day: 'numeric',
-          year: 'numeric',
-        });
-      }
-      currentSession += entry.msPlayed / 1000 / 60;
+      currentSession += entry.minutes;
     }
-
-    lastEndTime = endTime;
-  });
+    lastEndTime = entry.time;
+  }
 
   if (currentSession > maxSession) {
     maxSession = currentSession;
-    maxSessionDate = currentSessionDate;
+    maxSessionStart = currentSessionStart;
   }
 
-  return { minutes: Math.floor(maxSession), date: maxSessionDate };
+  return {
+    minutes: Math.floor(maxSession),
+    date: new Date(maxSessionStart).toLocaleDateString('en-US', {
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric',
+    }),
+  };
 }
 
 function calculateBusiestWeek(history: StreamingHistoryEntry[]): {

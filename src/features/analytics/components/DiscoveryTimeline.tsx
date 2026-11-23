@@ -46,11 +46,11 @@ export function DiscoveryTimeline() {
     >();
 
     // Sort by oldest first
-    const sortedHistory = [...streamingHistory].sort(
-      (a, b) => new Date(a.endTime).getTime() - new Date(b.endTime).getTime()
-    );
+    const sortedHistory = streamingHistory
+      .map((entry) => ({ entry, time: Date.parse(entry.endTime) }))
+      .sort((a, b) => a.time - b.time);
 
-    sortedHistory.forEach((entry) => {
+    sortedHistory.forEach(({ entry, time }) => {
       // Only consider streams that meet minimum duration
       if (entry.msPlayed < DISCOVERY_CONFIG.MIN_STREAM_DURATION_MS) {
         return; // Skip this entry
@@ -58,7 +58,7 @@ export function DiscoveryTimeline() {
 
       const artistKey = `artist:${entry.artistName}`;
       const trackKey = `track:${entry.trackName}|||${entry.artistName}`;
-      const date = new Date(entry.endTime);
+      const date = new Date(time);
 
       // Get week key (year + week number)
       const weekKey = getWeekKey(date);

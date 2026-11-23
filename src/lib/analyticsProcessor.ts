@@ -52,7 +52,7 @@ export function generateHeatmap(history: StreamingHistoryEntry[]): HeatmapData {
 
   // Track unique dates for each day/hour combination
   const uniqueDates = Array.from({ length: 7 }, () =>
-    Array.from({ length: 24 }, () => new Set<string>())
+    Array.from({ length: 24 }, () => new Set<number>())
   );
 
   // Aggregate listening time by day of week and hour
@@ -61,7 +61,8 @@ export function generateHeatmap(history: StreamingHistoryEntry[]): HeatmapData {
     const dayOfWeek = date.getDay(); // 0 (Sunday) to 6 (Saturday)
     const hour = date.getHours(); // 0 to 23
     const minutes = entry.msPlayed / 1000 / 60;
-    const dateKey = date.toISOString().split('T')[0]; // YYYY-MM-DD
+    // Same calendar day as toISOString().split('T')[0] (UTC), as a number
+    const dateKey = date.getUTCFullYear() * 10000 + date.getUTCMonth() * 100 + date.getUTCDate();
 
     heatmap[dayOfWeek][hour] += minutes;
     uniqueDates[dayOfWeek][hour].add(dateKey);
@@ -130,17 +131,18 @@ export function analyzeListeningPatterns(history: StreamingHistoryEntry[]): List
   let lateNightMinutes = 0; // 12 AM - 6 AM
 
   // Track unique dates for weekdays and weekends
-  const uniqueWeekdays = new Set<string>();
-  const uniqueWeekendDays = new Set<string>();
+  const uniqueWeekdays = new Set<number>();
+  const uniqueWeekendDays = new Set<number>();
   // Track unique dates overall for day/night average calculation
-  const uniqueDays = new Set<string>();
+  const uniqueDays = new Set<number>();
 
   history.forEach((entry) => {
     const date = new Date(entry.endTime);
     const dayOfWeek = date.getDay();
     const hour = date.getHours();
     const minutes = entry.msPlayed / 1000 / 60;
-    const dateKey = date.toISOString().split('T')[0]; // YYYY-MM-DD
+    // Same calendar day as toISOString().split('T')[0] (UTC), as a number
+    const dateKey = date.getUTCFullYear() * 10000 + date.getUTCMonth() * 100 + date.getUTCDate();
 
     // Track unique days overall
     uniqueDays.add(dateKey);
