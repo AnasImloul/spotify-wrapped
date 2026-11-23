@@ -1,13 +1,5 @@
-import { Share2, Link, Check } from 'lucide-react';
+import { Share2, Check } from 'lucide-react';
 import { Button } from '@/shared/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/shared/components/ui/dropdown-menu';
 import { useState } from 'react';
 import { useFilteredStats, useDateRange } from '@/shared/hooks';
 import { encodeAnalyticsToUrl, generateCompactShareUrl } from '@/shared/services/sharing';
@@ -55,37 +47,21 @@ export function ShareExportMenu({
   if (!stats) return null;
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant={variant} size={size} className={className}>
-          <Share2 className="w-4 h-4" />
-          <span className="hidden sm:inline">Share</span>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-56">
-        <DropdownMenuLabel>Share Options</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-
-        <DropdownMenuItem onClick={handleCopyShareLink}>
-          {copiedLink ? (
-            <>
-              <Check className="w-4 h-4 mr-2 text-primary" />
-              Link Copied!
-            </>
-          ) : (
-            <>
-              <Link className="w-4 h-4 mr-2" />
-              Copy Share Link
-            </>
-          )}
-        </DropdownMenuItem>
-
-        <DropdownMenuSeparator />
-
-        <div className="px-2 py-1.5 text-xs text-muted-foreground">
-          Tip: Use Story Mode for shareable images
-        </div>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <Button
+      variant={variant}
+      size={size}
+      className={className}
+      onClick={handleCopyShareLink}
+      aria-label={copiedLink ? 'Share link copied' : 'Copy share link'}
+    >
+      {copiedLink ? (
+        <Check className="w-4 h-4 text-primary" aria-hidden />
+      ) : (
+        <Share2 className="w-4 h-4" aria-hidden />
+      )}
+      <span className="hidden sm:inline" aria-live="polite">
+        {copiedLink ? 'Link copied!' : 'Share'}
+      </span>
+    </Button>
   );
 }
