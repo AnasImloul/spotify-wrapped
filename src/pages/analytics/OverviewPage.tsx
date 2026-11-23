@@ -1,5 +1,6 @@
 import { useOutletContext } from 'react-router-dom';
 import { StatsOverview, TopItems, ListeningPulse } from '@/features/analytics';
+import { DeferredSection, ChartSkeleton, RowsSkeleton } from '@/shared/components/ui';
 import { useFilterSettings } from '@/features/analytics/hooks';
 import type { AnalyticsOutletContext } from './AnalyticsPageLayout';
 
@@ -26,7 +27,11 @@ export default function OverviewPage() {
       <section className="grid lg:grid-cols-12 gap-10 lg:gap-12 items-start">
         <h2 className="sr-only">Overview</h2>
         <div className="lg:col-span-7 xl:col-span-8">
-          <ListeningPulse />
+          <DeferredSection
+            fallback={<ChartSkeleton label="Loading listening pulse" height="h-[26rem]" />}
+          >
+            <ListeningPulse />
+          </DeferredSection>
         </div>
         <div className="lg:col-span-5 xl:col-span-4">
           <StatsOverview />
@@ -45,7 +50,11 @@ export default function OverviewPage() {
               </div>
             </div>
           </div>
-          <TopItems />
+          <DeferredSection
+            fallback={<RowsSkeleton label="Loading top artists and tracks" count={10} />}
+          >
+            <TopItems />
+          </DeferredSection>
         </section>
       )}
     </>

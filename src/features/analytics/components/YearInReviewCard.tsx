@@ -1,11 +1,11 @@
 import { useMemo } from 'react';
 import { Card, CardContent } from '@/shared/components/ui/card';
-import { useFilteredStats, useDateRange } from '@/shared/hooks';
+import { useFilteredStats, useStatsRange } from '@/shared/hooks';
 import { formatNumber, msToMinutes } from '@/shared/utils';
 
 export function YearInReviewCard() {
   const stats = useFilteredStats();
-  const { startDate, endDate } = useDateRange();
+  const { startDate, endDate } = useStatsRange();
 
   const summary = useMemo(() => {
     if (!stats) return null;

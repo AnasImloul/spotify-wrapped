@@ -22,7 +22,7 @@ import {
   CHART_X_AXIS,
 } from '@/shared/constants/charts';
 import { msToMinutes, formatNumber } from '@/shared/utils';
-import { useSpotifyData, useDateRange, useSortedArtists } from '@/shared/hooks';
+import { useSpotifyData, useStatsRange, useSortedArtists } from '@/shared/hooks';
 
 interface ArtistComparisonProps {
   onClose: () => void;
@@ -33,7 +33,7 @@ const COLORS = CHART_SERIES;
 
 export function ArtistComparison({ onClose, initialArtists = [] }: ArtistComparisonProps) {
   const { streamingHistory } = useSpotifyData();
-  const { startDate, endDate } = useDateRange();
+  const { startDate, endDate } = useStatsRange();
   const sortedArtists = useSortedArtists();
   const [selectedArtists, setSelectedArtists] = useState<string[]>(initialArtists.slice(0, 5));
   const [searchTerm, setSearchTerm] = useState('');

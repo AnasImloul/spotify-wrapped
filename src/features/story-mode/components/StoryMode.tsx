@@ -11,6 +11,7 @@ import { SummaryCard } from '../cards/SummaryCard';
 import { ShareMenu } from './ShareMenu';
 import { STORY_FIELDS, type StoryField } from './storyFields';
 import { cn } from '@/shared/utils';
+import { Skeleton } from '@/shared/components/ui/skeleton';
 
 interface StoryModeProps {
   onClose: () => void;
@@ -130,6 +131,46 @@ export function StoryMode({ onClose }: StoryModeProps) {
     window.addEventListener('keydown', handleEscape);
     return () => window.removeEventListener('keydown', handleEscape);
   }, [onClose]);
+
+  if (storyData === undefined) {
+    return (
+      <div className="fixed inset-0 z-50 bg-[#0A0A0A]">
+        <div className="absolute inset-0 flex items-center justify-center sm:px-4">
+          <div
+            role="status"
+            className="relative w-full sm:max-w-[440px] h-full sm:h-[90vh] bg-background px-5 pt-4 pb-8 flex flex-col"
+          >
+            <span className="sr-only">Loading your story</span>
+            <div className="flex gap-1" aria-hidden>
+              {Array.from({ length: 7 }, (_, i) => (
+                <div key={i} className="h-1 flex-1 bg-foreground/15" />
+              ))}
+            </div>
+            <div className="mt-6 flex items-center justify-between">
+              <Skeleton className="h-3 w-14" />
+              <button
+                type="button"
+                onClick={onClose}
+                aria-label="Close story"
+                className="h-10 w-10 inline-flex items-center justify-center border border-input text-foreground hover:border-foreground hover:bg-white/5 transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <Skeleton className="mt-10 h-3 w-36" />
+            <div className="flex-1 flex flex-col justify-center gap-4">
+              <Skeleton className="h-16 w-4/5" />
+              <Skeleton className="h-16 w-3/5" />
+            </div>
+            <div className="border-t-2 border-foreground/15 pt-4 grid grid-cols-2 gap-4">
+              <Skeleton className="h-10" />
+              <Skeleton className="h-10" />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (!storyData || totalCards === 0) {
     return null;

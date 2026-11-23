@@ -7,6 +7,8 @@ export * from './useSpotifyData';
 export * from './useDateRange';
 export * from './useAnimatedNumber';
 export * from './useSwipeNavigation';
+export * from './useDeferredComputation';
+export * from './useStatsRange';
 
 // Re-export feature hooks for convenience (these are in their feature folders)
 export { useFilteredStats } from '@/features/analytics/hooks/useFilteredStats';

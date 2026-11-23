@@ -22,7 +22,7 @@ import {
   CHART_X_AXIS,
 } from '@/shared/constants/charts';
 import { msToMinutes, formatNumber } from '@/shared/utils';
-import { useSpotifyData, useDateRange, useSortedTracks } from '@/shared/hooks';
+import { useSpotifyData, useStatsRange, useSortedTracks } from '@/shared/hooks';
 
 interface TrackComparisonProps {
   onClose: () => void;
@@ -33,7 +33,7 @@ const COLORS = CHART_SERIES;
 
 export function TrackComparison({ onClose, initialTracks = [] }: TrackComparisonProps) {
   const { streamingHistory } = useSpotifyData();
-  const { startDate, endDate } = useDateRange();
+  const { startDate, endDate } = useStatsRange();
   const sortedTracks = useSortedTracks();
   const [selectedTracks, setSelectedTracks] = useState<Array<{ name: string; artist: string }>>(
     initialTracks.slice(0, 5)

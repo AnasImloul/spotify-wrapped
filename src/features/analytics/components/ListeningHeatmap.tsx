@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from '@/shared/components/ui/card';
 import { Button } from '@/shared/components/ui/button';
-import { useSpotifyData, useDateRange } from '@/shared/hooks';
+import { useSpotifyData, useStatsRange } from '@/shared/hooks';
 import { generateHeatmap } from '@/shared/services';
 import { Grid3x3, Calendar as CalendarIcon, ChevronLeft, ChevronRight } from 'lucide-react';
 import { createPortal } from 'react-dom';
@@ -53,7 +53,7 @@ interface ListeningHeatmapProps {
 
 export function ListeningHeatmap({ timeUnit = 'hours' }: ListeningHeatmapProps) {
   const { streamingHistory } = useSpotifyData();
-  const { startDate, endDate } = useDateRange();
+  const { startDate, endDate } = useStatsRange();
   const [viewMode, setViewMode] = useState<'detailed' | 'calendar'>('detailed');
   const [selectedYear, setSelectedYear] = useState<number | null>(null);
   const [tooltip, setTooltip] = useState<{

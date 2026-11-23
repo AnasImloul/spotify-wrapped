@@ -10,6 +10,8 @@ import {
 } from '@/shared/components/ui/table';
 import { Button } from '@/shared/components/ui/button';
 import { Input } from '@/shared/components/ui/input';
+import { DeferredSection } from '@/shared/components/ui/deferred-section';
+import { ModalSkeleton } from '@/shared/components/ui/skeleton';
 import { formatNumber, msToMinutes } from '@/shared/utils';
 import { ChevronLeft, ChevronRight, Search, X, TrendingUp, BarChart3 } from 'lucide-react';
 import { ItemTimeline } from './ItemTimeline';
@@ -429,28 +431,43 @@ export function TopItems() {
 
       {/* Timeline Modal */}
       {timelineItem && (
-        <ItemTimeline
-          itemName={timelineItem.name}
-          itemType={timelineItem.type}
-          artistName={timelineItem.artistName}
-          onClose={() => setTimelineItem(null)}
-        />
+        <DeferredSection
+          key={`${timelineItem.type}-${timelineItem.name}-${timelineItem.artistName ?? ''}`}
+          fallback={<ModalSkeleton label="Loading listening timeline" />}
+        >
+          <ItemTimeline
+            itemName={timelineItem.name}
+            itemType={timelineItem.type}
+            artistName={timelineItem.artistName}
+            onClose={() => setTimelineItem(null)}
+          />
+        </DeferredSection>
       )}
 
       {/* Artist Comparison Modal */}
       {showComparison && (
-        <ArtistComparison
-          onClose={() => setShowComparison(false)}
-          initialArtists={sortedArtists.slice(0, 3).map((a) => a.name)}
-        />
+        <DeferredSection
+          fallback={<ModalSkeleton label="Loading artist comparison" width="max-w-6xl" />}
+        >
+          <ArtistComparison
+            onClose={() => setShowComparison(false)}
+            initialArtists={sortedArtists.slice(0, 3).map((a) => a.name)}
+          />
+        </DeferredSection>
       )}
 
       {/* Track Comparison Modal */}
       {showTrackComparison && (
-        <TrackComparison
-          onClose={() => setShowTrackComparison(false)}
-          initialTracks={sortedTracks.slice(0, 3).map((t) => ({ name: t.name, artist: t.artist }))}
-        />
+        <DeferredSection
+          fallback={<ModalSkeleton label="Loading track comparison" width="max-w-6xl" />}
+        >
+          <TrackComparison
+            onClose={() => setShowTrackComparison(false)}
+            initialTracks={sortedTracks
+              .slice(0, 3)
+              .map((t) => ({ name: t.name, artist: t.artist }))}
+          />
+        </DeferredSection>
       )}
     </div>
   );

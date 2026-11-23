@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useCallback, useContext, useState, ReactNode } from 'react';
 import { UploadedFile } from '@/shared/types';
 import { getDateRangeFromFiles } from '@/lib/dataProcessor';
 
@@ -72,7 +72,7 @@ export function DateRangeProvider({ children }: DateRangeProviderProps) {
     }
   };
 
-  const updateDateRangeFromFiles = (files: UploadedFile[]) => {
+  const updateDateRangeFromFiles = useCallback((files: UploadedFile[]) => {
     if (files.length === 0) {
       setMinDate('');
       setMaxDate('');
@@ -100,7 +100,7 @@ export function DateRangeProvider({ children }: DateRangeProviderProps) {
         return currentEnd;
       });
     }
-  };
+  }, []);
 
   return (
     <DateRangeContext.Provider

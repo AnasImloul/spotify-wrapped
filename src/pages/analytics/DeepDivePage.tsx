@@ -4,6 +4,7 @@ import {
   MoodEnergyAnalysis,
   YearOverYearComparison,
 } from '@/features/analytics';
+import { DeferredSection, ReadoutsSkeleton } from '@/shared/components/ui';
 
 const sections = [
   { title: 'Personal Records', Component: PersonalRecords },
@@ -20,7 +21,11 @@ export default function DeepDivePage() {
           <h3 className="text-2xl lg:text-3xl font-semibold tracking-[-0.01em] border-b border-border pb-4">
             {title}
           </h3>
-          <Component />
+          <DeferredSection
+            fallback={<ReadoutsSkeleton label={`Loading ${title.toLowerCase()}`} count={6} />}
+          >
+            <Component />
+          </DeferredSection>
         </section>
       ))}
     </div>

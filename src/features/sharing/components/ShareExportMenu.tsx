@@ -1,7 +1,7 @@
 import { Share2, Check } from 'lucide-react';
 import { Button } from '@/shared/components/ui/button';
 import { useState } from 'react';
-import { useFilteredStats, useDateRange } from '@/shared/hooks';
+import { useFilteredStats, useStatsRange } from '@/shared/hooks';
 import { encodeAnalyticsToUrl, generateCompactShareUrl } from '@/shared/services/sharing';
 import { useSortedArtists, useSortedTracks } from '@/shared/hooks';
 import { copyTextToClipboard } from '@/lib/social';
@@ -18,7 +18,7 @@ export function ShareExportMenu({
   className,
 }: ShareExportMenuProps) {
   const stats = useFilteredStats();
-  const { startDate, endDate } = useDateRange();
+  const { startDate, endDate } = useStatsRange();
   const sortedArtists = useSortedArtists();
   const sortedTracks = useSortedTracks();
 

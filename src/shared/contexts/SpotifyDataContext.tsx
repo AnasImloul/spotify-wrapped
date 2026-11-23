@@ -1,18 +1,29 @@
-import { createContext, useContext, useState, useEffect, ReactNode, useMemo } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  ReactNode,
+} from 'react';
 import { UploadedFile, ProcessedStats, StreamingHistoryEntry } from '@/shared/types';
 import { getStreamingHistoryFromFiles, processStreamingHistory } from '@/lib/dataProcessor';
 import { useDateRangeContext } from './DateRangeContext';
+import { useDeferredComputation } from '@/shared/hooks/useDeferredComputation';
 
 interface SpotifyDataContextType {
   uploadedFiles: UploadedFile[];
   streamingHistory: StreamingHistoryEntry[];
   stats: ProcessedStats | null;
   isProcessing: boolean;
+  statsRange: { startDate: string; endDate: string };
   handleFilesProcessed: (files: UploadedFile[]) => void;
   clearData: () => void;
 }
 
 const SpotifyDataContext = createContext<SpotifyDataContextType | undefined>(undefined);
+const StatsPendingContext = createContext(false);
 
 interface SpotifyDataProviderProps {
   children: ReactNode;
@@ -24,16 +35,19 @@ export function SpotifyDataProvider({ children }: SpotifyDataProviderProps) {
   const [streamingHistory, setStreamingHistory] = useState<StreamingHistoryEntry[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
 
-  const handleFilesProcessed = (files: UploadedFile[]) => {
-    setUploadedFiles(files);
-    updateDateRangeFromFiles(files);
-  };
+  const handleFilesProcessed = useCallback(
+    (files: UploadedFile[]) => {
+      setUploadedFiles(files);
+      updateDateRangeFromFiles(files);
+    },
+    [updateDateRangeFromFiles]
+  );
 
-  const clearData = () => {
+  const clearData = useCallback(() => {
     setUploadedFiles([]);
     setStreamingHistory([]);
     updateDateRangeFromFiles([]);
-  };
+  }, [updateDateRangeFromFiles]);
 
   // Extract streaming history only when files change (not on date range change)
   useEffect(() => {
@@ -51,8 +65,7 @@ export function SpotifyDataProvider({ children }: SpotifyDataProviderProps) {
     }
   }, [uploadedFiles]);
 
-  // Memoize stats calculation - only recalculate when dependencies actually change
-  const stats = useMemo(() => {
+  const computeStats = (): ProcessedStats | null => {
     if (streamingHistory.length === 0) {
       return null;
     }
@@ -80,10 +93,7 @@ export function SpotifyDataProvider({ children }: SpotifyDataProviderProps) {
       };
     }
 
-    console.time('Stats calculation');
-    // Process the already-filtered history
     const processedStats = processStreamingHistory(filteredHistory, startDate, endDate);
-    console.timeEnd('Stats calculation');
 
     return {
       totalListeningTime: processedStats.totalListeningTime || 0,
@@ -99,22 +109,54 @@ export function SpotifyDataProvider({ children }: SpotifyDataProviderProps) {
       mostActiveDay: processedStats.mostActiveDay,
       mostActiveDayMinutes: processedStats.mostActiveDayMinutes,
     };
-  }, [streamingHistory, startDate, endDate]);
+  };
+
+  // Stats are computed after the frame paints so filter changes stay responsive.
+  // The previous result stays visible (marked pending) until the new one is ready.
+  const { data: statsResult, isPending } = useDeferredComputation(
+    () => ({ history: streamingHistory, startDate, endDate, stats: computeStats() }),
+    [streamingHistory, startDate, endDate]
+  );
+  const statsMatchHistory = statsResult?.history === streamingHistory;
+  const stats = statsMatchHistory ? statsResult.stats : null;
+  const isAwaitingFirstStats = streamingHistory.length > 0 && !statsMatchHistory;
+  const isStatsPending = isPending && stats !== null;
+  const rangeStart = statsMatchHistory && statsResult ? statsResult.startDate : startDate;
+  const rangeEnd = statsMatchHistory && statsResult ? statsResult.endDate : endDate;
+  const processing = isProcessing || isAwaitingFirstStats;
+
+  const value = useMemo(
+    () => ({
+      uploadedFiles,
+      streamingHistory,
+      stats,
+      isProcessing: processing,
+      statsRange: { startDate: rangeStart, endDate: rangeEnd },
+      handleFilesProcessed,
+      clearData,
+    }),
+    [
+      uploadedFiles,
+      streamingHistory,
+      stats,
+      processing,
+      rangeStart,
+      rangeEnd,
+      handleFilesProcessed,
+      clearData,
+    ]
+  );
 
   return (
-    <SpotifyDataContext.Provider
-      value={{
-        uploadedFiles,
-        streamingHistory,
-        stats,
-        isProcessing,
-        handleFilesProcessed,
-        clearData,
-      }}
-    >
-      {children}
+    <SpotifyDataContext.Provider value={value}>
+      <StatsPendingContext.Provider value={isStatsPending}>{children}</StatsPendingContext.Provider>
     </SpotifyDataContext.Provider>
   );
+}
+
+/** True while stats for a new date range are being computed; the old stats stay visible. */
+export function useStatsPending() {
+  return useContext(StatsPendingContext);
 }
 
 export function useSpotifyDataContext() {

@@ -16,7 +16,7 @@ import {
   CHART_TOOLTIP,
   CHART_X_AXIS,
 } from '@/shared/constants/charts';
-import { useSpotifyData, useDateRange } from '@/shared/hooks';
+import { useSpotifyData, useStatsRange } from '@/shared/hooks';
 
 interface ItemTimelineProps {
   itemName: string;
@@ -27,7 +27,7 @@ interface ItemTimelineProps {
 
 export function ItemTimeline({ itemName, itemType, artistName, onClose }: ItemTimelineProps) {
   const { streamingHistory } = useSpotifyData();
-  const { startDate, endDate } = useDateRange();
+  const { startDate, endDate } = useStatsRange();
   // Filter entries for this specific item
   const filteredEntries = streamingHistory.filter((entry) => {
     const entryDate = new Date(entry.endTime);

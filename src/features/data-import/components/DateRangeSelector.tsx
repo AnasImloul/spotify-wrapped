@@ -1,5 +1,5 @@
 import { MonthPicker } from './MonthPicker';
-import { useDateRange } from '@/shared/hooks';
+import { useDateRange, useStatsPending } from '@/shared/hooks';
 import { useMemo } from 'react';
 
 export function DateRangeSelector() {
@@ -13,6 +13,7 @@ export function DateRangeSelector() {
     setDateRange,
     resetToFullRange,
   } = useDateRange();
+  const isStatsPending = useStatsPending();
 
   // Get available years from the data range
   const availableYears = useMemo(() => {
@@ -109,8 +110,14 @@ export function DateRangeSelector() {
         />
       </div>
 
-      <p className="text-xs text-muted-foreground lg:ml-auto">
-        Every number on this page uses this range
+      <p className="text-xs text-muted-foreground lg:ml-auto" aria-live="polite">
+        {isStatsPending ? (
+          <span className="text-foreground animate-pulse motion-reduce:animate-none">
+            Updating to this range…
+          </span>
+        ) : (
+          'Every number on this page uses this range'
+        )}
       </p>
     </div>
   );

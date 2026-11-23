@@ -1,6 +1,6 @@
-import { useMemo } from 'react';
 import { useSpotifyDataContext } from '@/shared/contexts/SpotifyDataContext';
-import { useDateRange } from '@/shared/hooks/useDateRange';
+import { useStatsRange } from '@/shared/hooks/useStatsRange';
+import { useDeferredComputation } from '@/shared/hooks/useDeferredComputation';
 import { msToMinutes } from '@/shared/utils';
 
 export interface StoryInsights {
@@ -32,13 +32,14 @@ export interface StoryInsights {
 }
 
 /**
- * Hook to compute insights for story cards
+ * Hook to compute insights for story cards. Returns undefined while the
+ * insights are being computed (after the first paint), null when there is no data.
  */
-export function useStoryData(): StoryInsights | null {
+export function useStoryData(): StoryInsights | null | undefined {
   const { stats, streamingHistory } = useSpotifyDataContext();
-  const { startDate, endDate } = useDateRange();
+  const { startDate, endDate } = useStatsRange();
 
-  return useMemo(() => {
+  const { data } = useDeferredComputation((): StoryInsights | null => {
     if (!stats) return null;
 
     // Top artist
@@ -87,6 +88,8 @@ export function useStoryData(): StoryInsights | null {
       endDate,
     };
   }, [stats, streamingHistory, startDate, endDate]);
+
+  return data;
 }
 
 /**

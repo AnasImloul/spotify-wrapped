@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/shared/components/ui/card';
-import { useSpotifyData, useDateRange } from '@/shared/hooks';
+import { useSpotifyData, useStatsRange } from '@/shared/hooks';
 import { analyzeListeningPatterns } from '@/shared/services';
 import { formatMinutes, type TimeUnit } from '@/shared/utils';
 import { Clock } from 'lucide-react';
@@ -15,7 +15,7 @@ import { TIME_OF_DAY_SWATCH } from '@/shared/constants/charts';
 export function ListeningPatterns() {
   const [timeUnit, setTimeUnit] = useState<TimeUnit>('minutes');
   const { streamingHistory } = useSpotifyData();
-  const { startDate, endDate } = useDateRange();
+  const { startDate, endDate } = useStatsRange();
 
   // Filter streaming history by global date range
   const filteredHistory = useMemo(() => {

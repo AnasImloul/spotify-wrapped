@@ -22,7 +22,7 @@ import {
   CHART_TOOLTIP,
   CHART_X_AXIS,
 } from '@/shared/constants/charts';
-import { useSpotifyData, useDateRange } from '@/shared/hooks';
+import { useSpotifyData, useStatsRange } from '@/shared/hooks';
 import { generateMonthlyTrends } from '@/shared/services';
 import { formatNumber, formatMinutes, type TimeUnit } from '@/shared/utils';
 import { Clock } from 'lucide-react';
@@ -30,7 +30,7 @@ import { Clock } from 'lucide-react';
 export function MonthlyTrends() {
   const [timeUnit, setTimeUnit] = useState<TimeUnit>('minutes');
   const { streamingHistory } = useSpotifyData();
-  const { startDate, endDate } = useDateRange();
+  const { startDate, endDate } = useStatsRange();
 
   // Filter streaming history by global date range
   const filteredHistory = useMemo(() => {

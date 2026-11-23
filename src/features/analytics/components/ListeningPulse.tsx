@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, type KeyboardEvent, type PointerEvent } from 'react';
 import { useSpotifyDataContext } from '@/shared/contexts/SpotifyDataContext';
-import { useDateRange } from '@/shared/hooks';
+import { useStatsRange } from '@/shared/hooks';
 import { formatNumber } from '@/shared/utils';
 
 const WIDE = 800;
@@ -48,7 +48,7 @@ const formatHour = (h: number) => `${String(h).padStart(2, '0')}:00`;
 
 export function ListeningPulse() {
   const { streamingHistory } = useSpotifyDataContext();
-  const { startDate, endDate } = useDateRange();
+  const { startDate, endDate } = useStatsRange();
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [narrow, setNarrow] = useState(() => window.matchMedia(NARROW_QUERY).matches);
 
