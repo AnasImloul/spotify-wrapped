@@ -384,7 +384,7 @@ export function calculatePersonalRecords(
     records.push({
       id: 'total-time',
       title: 'Total Music Time',
-      value: `${totalDays} days`,
+      value: `${totalDays.toLocaleString('en-US')} days`,
       description: `That's ${totalHours.toLocaleString()} hours!`,
       icon: 'time',
       category: 'time',
@@ -406,7 +406,7 @@ export function calculatePersonalRecords(
     records.push({
       id: 'longest-session',
       title: 'Longest Session',
-      value: `${longestSession.minutes} min`,
+      value: `${longestSession.minutes.toLocaleString('en-US')} min`,
       description: longestSession.date,
       icon: 'time',
       category: 'time',
@@ -419,7 +419,7 @@ export function calculatePersonalRecords(
     records.push({
       id: 'most-active-day',
       title: 'Most Active Day',
-      value: `${stats.mostActiveDayMinutes} min`,
+      value: `${(stats.mostActiveDayMinutes ?? 0).toLocaleString('en-US')} min`,
       description: date.toLocaleDateString('en-US', {
         month: 'long',
         day: 'numeric',
@@ -436,7 +436,7 @@ export function calculatePersonalRecords(
     records.push({
       id: 'current-streak',
       title: 'Current Streak',
-      value: `${currentStreak} days`,
+      value: `${currentStreak.toLocaleString('en-US')} days`,
       description: 'Keep it up!',
       icon: 'streak',
       category: 'streak',
@@ -512,7 +512,7 @@ export function calculatePersonalRecords(
     records.push({
       id: 'busiest-week',
       title: 'Busiest Week',
-      value: `${Math.floor(busiestWeek.minutes)} min`,
+      value: `${Math.floor(busiestWeek.minutes).toLocaleString('en-US')} min`,
       description: busiestWeek.weekStart,
       icon: 'time',
       category: 'time',

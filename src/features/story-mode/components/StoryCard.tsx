@@ -1,59 +1,105 @@
 import { ReactNode } from 'react';
 import { cn } from '@/shared/utils';
 import { useBranding } from '@/features/sharing/contexts';
+import { STORY_FIELDS, STRIP, type StoryField } from './storyFields';
 
-interface StoryCardProps {
-  children: ReactNode;
-  className?: string;
-  gradient?: string;
-  exportId?: string;
+export interface StoryReadout {
+  value: ReactNode;
+  label: string;
 }
 
-/**
- * Base wrapper for story cards - provides consistent styling
- */
-export function StoryCard({ children, className, gradient, exportId }: StoryCardProps) {
-  const defaultGradient = 'from-green-500/20 via-blue-500/20 to-purple-500/20';
+interface StoryCardProps {
+  field: StoryField;
+  exportId?: string;
+  label: string;
+  children: ReactNode;
+  readouts?: StoryReadout[];
+  foot?: ReactNode;
+  className?: string;
+}
+
+export function StoryCard({
+  field,
+  exportId,
+  label,
+  children,
+  readouts,
+  foot,
+  className,
+}: StoryCardProps) {
+  const theme = STORY_FIELDS[field];
   const { settings } = useBranding();
 
   const positionClasses = {
-    'bottom-left': 'bottom-4 left-4',
-    'bottom-right': 'bottom-4 right-4',
+    'bottom-left': 'bottom-4 left-5',
+    'bottom-right': 'bottom-4 right-5',
     'bottom-center': 'bottom-4 left-1/2 -translate-x-1/2',
   };
 
   return (
     <div
       id={exportId}
+      style={{ containerType: 'inline-size' }}
       className={cn(
-        'relative w-full h-full flex flex-col items-center justify-center p-8',
-        'bg-gradient-to-br',
-        gradient || defaultGradient,
-        'backdrop-blur-xl',
+        'relative w-full h-full flex flex-col px-5 pt-[104px]',
+        settings.showWatermark ? 'pb-12' : 'pb-8',
+        theme.bg,
+        theme.ink,
         className
       )}
     >
-      {/* Background pattern */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(29,185,84,0.1),transparent_70%)]" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(59,130,246,0.1),transparent_50%)]" />
+      <p className="text-[11px] font-bold uppercase tracking-[0.18em]">{label}</p>
 
-      {/* Content */}
-      <div className="relative z-10 w-full h-full flex flex-col items-center justify-center">
-        {children}
-      </div>
+      <div className="flex-1 min-h-0 flex flex-col justify-center py-4">{children}</div>
 
-      {/* Watermark */}
+      {readouts && readouts.length > 0 && (
+        <div className={cn('border-t-2 pt-4', theme.rule)}>
+          <dl
+            className="grid gap-4"
+            style={{ gridTemplateColumns: `repeat(${readouts.length}, minmax(0, 1fr))` }}
+          >
+            {readouts.map((readout) => (
+              <div key={readout.label} className="flex flex-col min-w-0">
+                <dt className="order-2 mt-1.5 text-[11px] font-bold uppercase tracking-[0.18em]">
+                  {readout.label}
+                </dt>
+                <dd
+                  className={cn(
+                    'order-1 leading-none font-semibold tracking-[-0.02em] tabular-nums truncate',
+                    readouts.length > 2 ? 'text-[8cqw]' : 'text-[11cqw]'
+                  )}
+                >
+                  {readout.value}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      )}
+
+      {foot && (
+        <div className="mt-6 flex items-center justify-between gap-4">
+          <div className="flex-1 text-[11px] font-bold uppercase tracking-[0.18em] min-w-0">
+            {foot}
+          </div>
+          <span className="code-strip shrink-0" aria-hidden>
+            {STRIP.map(([square, cls]) => (
+              <i key={square} className={square === field ? 'bg-[#121212]' : cls} />
+            ))}
+          </span>
+        </div>
+      )}
+
       {settings.showWatermark && (
-        <div
+        <p
           className={cn(
-            'absolute z-10 px-3 py-1 bg-black/20 backdrop-blur-sm rounded-full border border-white/10',
+            'absolute text-[10px] font-medium whitespace-nowrap',
+            theme.muted,
             positionClasses[settings.watermarkPosition]
           )}
         >
-          <p className="text-white/60 text-[10px] font-medium whitespace-nowrap">
-            {settings.watermarkText}
-          </p>
-        </div>
+          {settings.watermarkText}
+        </p>
       )}
     </div>
   );

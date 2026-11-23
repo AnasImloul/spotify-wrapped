@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
 import { Card, CardContent } from '@/shared/components/ui/card';
-import { Music, Headphones, Clock, Trophy, Sparkles } from 'lucide-react';
 import { useFilteredStats, useDateRange } from '@/shared/hooks';
 import { formatNumber, msToMinutes } from '@/shared/utils';
 
@@ -47,111 +46,84 @@ export function YearInReviewCard() {
 
   if (!stats || !summary) return null;
 
+  const readouts = [
+    { label: 'Hours Listened', value: formatNumber(summary.totalHours) },
+    { label: 'Different Songs', value: formatNumber(summary.totalTracks) },
+    { label: 'Artists Explored', value: formatNumber(summary.totalArtists) },
+    { label: 'Min Per Day', value: String(summary.avgDaily) },
+  ];
+
   return (
-    <Card className="bg-black/40 border-white/10 overflow-hidden">
+    <Card className="overflow-hidden">
       <CardContent className="p-0">
-        {/* Shareable Card */}
-        <div
-          id="year-in-review-card"
-          className="relative bg-gradient-to-br from-slate-950 via-green-950 to-slate-950 p-8 sm:p-12"
-        >
-          {/* Background decorative elements */}
-          <div className="absolute inset-0 overflow-hidden opacity-10">
-            <div className="absolute top-0 right-0 w-96 h-96 bg-green-500 rounded-full blur-3xl" />
-            <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-500 rounded-full blur-3xl" />
-          </div>
-
-          {/* Content */}
-          <div className="relative z-10 space-y-8">
-            {/* Header */}
-            <div className="text-center space-y-2">
-              <div className="flex items-center justify-center gap-3 mb-4">
-                <div className="w-14 h-14 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center shadow-lg">
-                  <Music className="w-7 h-7 text-white" />
-                </div>
-              </div>
-              <h2 className="text-5xl sm:text-6xl font-bold text-white">{summary.year}</h2>
-              <p className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent">
-                Wrapped
-              </p>
-            </div>
-
-            {/* Stats Grid */}
-            <div className="grid grid-cols-2 gap-4">
-              {/* Total Time */}
-              <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
-                <Clock className="w-8 h-8 text-green-400 mb-3" />
-                <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-1">
-                  {formatNumber(summary.totalHours)}
+        <div id="year-in-review-card" className="relative bg-card p-6 sm:p-10">
+          <div className="grid lg:grid-cols-12 gap-8 lg:gap-12">
+            <div className="lg:col-span-5 flex flex-col justify-between gap-6">
+              <span className="code-strip" aria-hidden>
+                <i className="bg-code-green" />
+                <i className="bg-code-blue" />
+                <i className="bg-code-yellow" />
+                <i className="bg-code-orange" />
+              </span>
+              <div>
+                <h2 className="text-7xl sm:text-8xl font-medium leading-none tracking-[-0.03em] tabular-nums">
+                  {summary.year}
+                </h2>
+                <p className="text-2xl sm:text-3xl font-semibold uppercase tracking-[0.2em] text-primary mt-3">
+                  Wrapped
                 </p>
-                <p className="text-sm text-white/60">Hours Listened</p>
-              </div>
-
-              {/* Total Tracks */}
-              <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
-                <Music className="w-8 h-8 text-blue-400 mb-3" />
-                <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-1">
-                  {formatNumber(summary.totalTracks)}
-                </p>
-                <p className="text-sm text-white/60">Different Songs</p>
-              </div>
-
-              {/* Total Artists */}
-              <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
-                <Headphones className="w-8 h-8 text-purple-400 mb-3" />
-                <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-1">
-                  {formatNumber(summary.totalArtists)}
-                </p>
-                <p className="text-sm text-white/60">Artists Explored</p>
-              </div>
-
-              {/* Daily Average */}
-              <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
-                <Sparkles className="w-8 h-8 text-yellow-400 mb-3" />
-                <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-1">
-                  {summary.avgDaily}
-                </p>
-                <p className="text-sm text-white/60">Min Per Day</p>
               </div>
             </div>
 
-            {/* Top Items */}
-            {summary.topArtist && (
-              <div className="bg-gradient-to-br from-green-500/20 to-emerald-600/20 backdrop-blur-sm rounded-2xl p-6 border-2 border-green-500/30">
-                <div className="flex items-center gap-2 mb-3">
-                  <Trophy className="w-6 h-6 text-green-400" />
-                  <p className="text-sm font-semibold text-green-400 uppercase tracking-wider">
-                    Top Artist
-                  </p>
-                </div>
-                <p className="text-2xl font-bold text-white mb-2 truncate">
-                  {summary.topArtist.name}
-                </p>
-                <div className="flex items-center gap-3 text-white/70 text-sm">
-                  <span>{formatNumber(summary.topArtist.plays)} plays</span>
-                  <span>•</span>
-                  <span>{formatNumber(summary.topArtist.minutes)} minutes</span>
-                </div>
-              </div>
-            )}
+            <div className="lg:col-span-7 space-y-6">
+              <dl className="grid grid-cols-2 gap-x-6 border-t border-border">
+                {readouts.map((item) => (
+                  <div key={item.label} className="flex flex-col py-3 border-b border-border">
+                    <dt className="label-caps mt-1 order-2">{item.label}</dt>
+                    <dd className="order-1 text-3xl lg:text-4xl font-medium tabular-nums">
+                      {item.value}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
 
-            {summary.topTrack && (
-              <div className="bg-gradient-to-br from-blue-500/20 to-cyan-600/20 backdrop-blur-sm rounded-2xl p-6 border-2 border-blue-500/30">
-                <div className="flex items-center gap-2 mb-3">
-                  <Trophy className="w-6 h-6 text-blue-400" />
-                  <p className="text-sm font-semibold text-blue-400 uppercase tracking-wider">
-                    Top Track
-                  </p>
-                </div>
-                <p className="text-2xl font-bold text-white mb-1 truncate">
-                  {summary.topTrack.name}
-                </p>
-                <p className="text-white/60 mb-2 truncate">{summary.topTrack.artist}</p>
-                <p className="text-white/70 text-sm">
-                  {formatNumber(summary.topTrack.plays)} plays
-                </p>
-              </div>
-            )}
+              {(summary.topArtist ?? summary.topTrack) && (
+                <dl className="border-t border-foreground">
+                  {summary.topArtist && (
+                    <div className="grid grid-cols-[0.625rem_1fr] gap-x-3 py-3 border-b border-border">
+                      <span className="h-2.5 w-2.5 bg-code-green mt-1.5" aria-hidden />
+                      <div className="min-w-0">
+                        <dt className="label-caps">Top Artist</dt>
+                        <dd className="text-xl font-semibold truncate mt-1">
+                          {summary.topArtist.name}
+                        </dd>
+                        <dd className="text-sm text-muted-foreground tabular-nums">
+                          {formatNumber(summary.topArtist.plays)} plays ·{' '}
+                          {formatNumber(summary.topArtist.minutes)} minutes
+                        </dd>
+                      </div>
+                    </div>
+                  )}
+                  {summary.topTrack && (
+                    <div className="grid grid-cols-[0.625rem_1fr] gap-x-3 py-3 border-b border-border">
+                      <span className="h-2.5 w-2.5 bg-code-blue mt-1.5" aria-hidden />
+                      <div className="min-w-0">
+                        <dt className="label-caps">Top Track</dt>
+                        <dd className="text-xl font-semibold truncate mt-1">
+                          {summary.topTrack.name}
+                        </dd>
+                        <dd className="text-sm text-muted-foreground truncate">
+                          {summary.topTrack.artist} ·{' '}
+                          <span className="tabular-nums">
+                            {formatNumber(summary.topTrack.plays)} plays
+                          </span>
+                        </dd>
+                      </div>
+                    </div>
+                  )}
+                </dl>
+              )}
+            </div>
           </div>
         </div>
       </CardContent>

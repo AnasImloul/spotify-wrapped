@@ -6,7 +6,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/shared/components/ui/card';
-import { Button } from '@/shared/components/ui/button';
 import {
   LineChart,
   Line,
@@ -16,6 +15,13 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from 'recharts';
+import {
+  CHART_AXIS,
+  CHART_COLORS,
+  CHART_GRID,
+  CHART_TOOLTIP,
+  CHART_X_AXIS,
+} from '@/shared/constants/charts';
 import { useSpotifyData, useDateRange } from '@/shared/hooks';
 import { generateMonthlyTrends } from '@/shared/services';
 import { formatNumber, formatMinutes, type TimeUnit } from '@/shared/utils';
@@ -60,11 +66,11 @@ export function MonthlyTrends() {
     if (active && payload?.length) {
       const data = payload[0].payload;
       return (
-        <div className="bg-black/90 backdrop-blur-sm border border-white/20 rounded-lg p-3 shadow-xl">
-          <p className="text-white font-semibold mb-2">{formatMonthLabel(data.month)}</p>
-          <div className="space-y-1 text-sm">
-            <p className="text-green-400">{formatMinutes(data.minutes, timeUnit)}</p>
-            <p className="text-white/60">{formatNumber(data.trackCount)} tracks played</p>
+        <div className="bg-popover border border-input p-3 shadow-[0_16px_40px_rgba(0,0,0,0.55)]">
+          <p className="text-muted-foreground text-xs mb-1">{formatMonthLabel(data.month)}</p>
+          <div className="space-y-0.5 text-sm tabular-nums">
+            <p className="font-semibold text-primary">{formatMinutes(data.minutes, timeUnit)}</p>
+            <p className="text-muted-foreground">{formatNumber(data.trackCount)} tracks played</p>
           </div>
         </div>
       );
@@ -73,67 +79,56 @@ export function MonthlyTrends() {
   };
 
   return (
-    <Card className="bg-black/40 border-white/10">
-      <CardHeader>
-        <div className="flex items-start justify-between gap-4">
+    <Card>
+      <CardHeader className="border-b border-border">
+        <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <CardTitle className="text-2xl font-bold text-white">Monthly Trends</CardTitle>
-            <CardDescription className="text-white/60">
-              Your listening activity over time
-            </CardDescription>
+            <CardTitle className="text-xl">Monthly Trends</CardTitle>
+            <CardDescription>Your listening activity over time</CardDescription>
           </div>
 
-          {/* Time Unit Toggle */}
-          <div className="flex gap-2 flex-shrink-0">
-            <Button
-              variant={timeUnit === 'minutes' ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setTimeUnit('minutes')}
-              className={timeUnit === 'minutes' ? 'bg-green-500 hover:bg-green-600' : ''}
-            >
-              <Clock className="w-4 h-4 mr-1 sm:mr-2" />
-              <span className="sm:hidden">min</span>
-              <span className="hidden sm:inline">Minutes</span>
-            </Button>
-            <Button
-              variant={timeUnit === 'hours' ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setTimeUnit('hours')}
-              className={timeUnit === 'hours' ? 'bg-green-500 hover:bg-green-600' : ''}
-            >
-              <Clock className="w-4 h-4 mr-1 sm:mr-2" />
-              <span className="sm:hidden">hr</span>
-              <span className="hidden sm:inline">Hours</span>
-            </Button>
+          <div
+            role="group"
+            aria-label="Time unit"
+            className="flex border border-input flex-shrink-0"
+          >
+            {(['minutes', 'hours'] as const).map((unit) => (
+              <button
+                key={unit}
+                onClick={() => setTimeUnit(unit)}
+                aria-pressed={timeUnit === unit}
+                className={`h-8 px-3 inline-flex items-center gap-1.5 text-sm font-medium transition-colors border-r border-input last:border-r-0 ${
+                  timeUnit === unit
+                    ? 'bg-primary text-primary-foreground'
+                    : 'text-muted-foreground hover:bg-white/5 hover:text-foreground'
+                }`}
+              >
+                <Clock className="w-4 h-4" aria-hidden />
+                <span className="sm:hidden">{unit === 'minutes' ? 'min' : 'hr'}</span>
+                <span className="hidden sm:inline">{unit === 'minutes' ? 'Minutes' : 'Hours'}</span>
+              </button>
+            ))}
           </div>
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="pt-6">
         <div className="h-[300px] sm:h-[400px] w-full">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart
               data={trendsData}
               margin={{ top: 5, right: 10, left: timeUnit === 'minutes' ? 10 : 0, bottom: 5 }}
             >
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-              <XAxis
-                dataKey="month"
-                tickFormatter={formatMonthLabel}
-                stroke="rgba(255,255,255,0.6)"
-                tick={{ fill: 'rgba(255,255,255,0.6)', fontSize: 12 }}
-                angle={-45}
-                textAnchor="end"
-                height={80}
-              />
+              <CartesianGrid {...CHART_GRID} />
+              <XAxis dataKey="month" tickFormatter={formatMonthLabel} {...CHART_X_AXIS} />
               <YAxis
-                stroke="rgba(255,255,255,0.6)"
-                tick={{ fill: 'rgba(255,255,255,0.6)', fontSize: 11 }}
+                {...CHART_AXIS}
+                axisLine={false}
                 width={timeUnit === 'minutes' ? 55 : 45}
                 label={{
                   value: timeUnit === 'hours' ? 'Hours' : 'Minutes',
                   angle: -90,
                   position: 'insideLeft',
-                  style: { fill: 'rgba(255,255,255,0.6)', fontSize: 12 },
+                  style: { fill: CHART_COLORS.textMuted, fontSize: 11 },
                   offset: timeUnit === 'minutes' ? 10 : 0,
                 }}
                 tickFormatter={(value) => {
@@ -150,49 +145,47 @@ export function MonthlyTrends() {
                   return `${rounded}`;
                 }}
               />
-              <Tooltip content={<CustomTooltip />} />
+              <Tooltip content={<CustomTooltip />} cursor={CHART_TOOLTIP.cursor} />
               <Line
+                isAnimationActive={false}
                 type="monotone"
                 dataKey="minutes"
-                stroke="#1db954"
-                strokeWidth={3}
-                dot={{ fill: '#1db954', strokeWidth: 2, r: 4 }}
-                activeDot={{ r: 6, strokeWidth: 2 }}
+                stroke={CHART_COLORS.primary}
+                strokeWidth={2}
+                dot={false}
+                activeDot={{ r: 4, strokeWidth: 0, fill: CHART_COLORS.primary }}
               />
             </LineChart>
           </ResponsiveContainer>
         </div>
 
-        {/* Summary stats */}
-        <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <div className="text-center">
-            <p className="text-2xl font-bold text-green-400">{trendsData.length}</p>
-            <p className="text-sm text-white/60">Months</p>
-          </div>
-          <div className="text-center">
-            <p className="text-2xl font-bold text-green-400">
-              {formatMinutes(
+        <dl className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-x-6 border-t border-border">
+          {[
+            { label: 'Months', value: String(trendsData.length) },
+            {
+              label: 'Avg/Month',
+              value: formatMinutes(
                 Math.round(trendsData.reduce((sum, m) => sum + m.minutes, 0) / trendsData.length),
                 timeUnit
-              )}
-            </p>
-            <p className="text-sm text-white/60">Avg/Month</p>
-          </div>
-          <div className="text-center">
-            <p className="text-2xl font-bold text-green-400">
-              {formatMinutes(Math.max(...trendsData.map((m) => m.minutes)), timeUnit)}
-            </p>
-            <p className="text-sm text-white/60">Peak</p>
-          </div>
-          <div className="text-center">
-            <p className="text-2xl font-bold text-green-400">
-              {formatMonthLabel(
+              ),
+            },
+            {
+              label: 'Peak',
+              value: formatMinutes(Math.max(...trendsData.map((m) => m.minutes)), timeUnit),
+            },
+            {
+              label: 'Peak Month',
+              value: formatMonthLabel(
                 trendsData.reduce((max, m) => (m.minutes > max.minutes ? m : max)).month
-              )}
-            </p>
-            <p className="text-sm text-white/60">Peak Month</p>
-          </div>
-        </div>
+              ),
+            },
+          ].map((stat) => (
+            <div key={stat.label} className="flex flex-col py-3 border-b border-border">
+              <dt className="label-caps mt-1 order-2">{stat.label}</dt>
+              <dd className="order-1 text-2xl font-medium tabular-nums">{stat.value}</dd>
+            </div>
+          ))}
+        </dl>
       </CardContent>
     </Card>
   );

@@ -33,7 +33,7 @@ function Tooltip({
 
   return createPortal(
     <div
-      className="fixed px-2 py-1 bg-black/90 text-white text-xs rounded whitespace-nowrap z-[9999] pointer-events-none"
+      className="fixed px-2.5 py-1.5 bg-popover border border-input text-foreground text-xs leading-relaxed tabular-nums whitespace-nowrap z-[9999] pointer-events-none shadow-[0_16px_40px_rgba(0,0,0,0.55)]"
       style={{
         left: `${x}px`,
         top: `${y}px`,
@@ -210,15 +210,15 @@ export function ListeningHeatmap({ timeUnit = 'hours' }: ListeningHeatmapProps) 
 
   // Get color intensity based on value for both views
   const getColor = (value: number, maxVal: number): string => {
-    if (value === 0) return 'bg-gray-800/30';
+    if (value === 0) return 'bg-white/[0.06]';
 
     const intensity = value / maxVal;
 
-    if (intensity < 0.2) return 'bg-green-500/20';
-    if (intensity < 0.4) return 'bg-green-500/40';
-    if (intensity < 0.6) return 'bg-green-500/60';
-    if (intensity < 0.8) return 'bg-green-500/80';
-    return 'bg-green-500';
+    if (intensity < 0.2) return 'bg-primary/20';
+    if (intensity < 0.4) return 'bg-primary/40';
+    if (intensity < 0.6) return 'bg-primary/60';
+    if (intensity < 0.8) return 'bg-primary/80';
+    return 'bg-primary';
   };
 
   // Format date for display
@@ -231,75 +231,79 @@ export function ListeningHeatmap({ timeUnit = 'hours' }: ListeningHeatmapProps) 
     });
 
   return (
-    <Card className="bg-black/40 border-white/10">
-      <CardHeader>
-        <div className="flex items-start justify-between gap-4">
+    <Card>
+      <CardHeader className="border-b border-border">
+        <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <CardTitle className="text-2xl font-bold text-white">Listening Heatmap</CardTitle>
-            <CardDescription className="text-white/60">
-              Your listening activity by day of week and hour
-            </CardDescription>
+            <CardTitle className="text-xl">Listening Heatmap</CardTitle>
+            <CardDescription>Your listening activity by day of week and hour</CardDescription>
           </div>
-          <div className="flex flex-col gap-2">
-            {/* Year Navigation */}
-            <div className="flex items-center gap-2 justify-end">
+          <div className="flex flex-wrap items-center gap-3">
+            <div className="flex items-center border border-input">
               <Button
-                variant="outline"
-                size="sm"
+                variant="ghost"
+                size="icon"
                 onClick={handlePreviousYear}
                 disabled={!canGoPrevious}
-                className="px-2"
+                aria-label="Previous year"
+                className="h-8 w-8"
               >
                 <ChevronLeft className="w-4 h-4" />
               </Button>
-              <span className="text-white font-semibold min-w-[60px] text-center">
+              <span className="font-semibold tabular-nums min-w-[56px] text-center text-sm">
                 {selectedYear || 'All'}
               </span>
               <Button
-                variant="outline"
-                size="sm"
+                variant="ghost"
+                size="icon"
                 onClick={handleNextYear}
                 disabled={!canGoNext}
-                className="px-2"
+                aria-label="Next year"
+                className="h-8 w-8"
               >
                 <ChevronRight className="w-4 h-4" />
               </Button>
             </div>
-            {/* View Mode Toggle */}
-            <div className="flex gap-2">
-              <Button
-                variant={viewMode === 'detailed' ? 'default' : 'outline'}
-                size="sm"
-                onClick={() => setViewMode('detailed')}
-                className={viewMode === 'detailed' ? 'bg-green-500 hover:bg-green-600' : ''}
-              >
-                <Grid3x3 className="w-4 h-4 mr-2" />
-                <span className="hidden sm:inline">Hourly</span>
-              </Button>
-              <Button
-                variant={viewMode === 'calendar' ? 'default' : 'outline'}
-                size="sm"
-                onClick={() => setViewMode('calendar')}
-                className={viewMode === 'calendar' ? 'bg-green-500 hover:bg-green-600' : ''}
-              >
-                <CalendarIcon className="w-4 h-4 mr-2" />
-                <span className="hidden sm:inline">Daily</span>
-              </Button>
+            <div role="group" aria-label="Heatmap view" className="flex border border-input">
+              {(
+                [
+                  { mode: 'detailed', label: 'Hourly', Icon: Grid3x3 },
+                  { mode: 'calendar', label: 'Daily', Icon: CalendarIcon },
+                ] as const
+              ).map(({ mode, label, Icon }) => (
+                <button
+                  key={mode}
+                  onClick={() => setViewMode(mode)}
+                  aria-pressed={viewMode === mode}
+                  aria-label={label}
+                  className={`h-8 px-3 inline-flex items-center gap-1.5 text-sm font-medium transition-colors border-r border-input last:border-r-0 ${
+                    viewMode === mode
+                      ? 'bg-primary text-primary-foreground'
+                      : 'text-muted-foreground hover:bg-white/5 hover:text-foreground'
+                  }`}
+                >
+                  <Icon className="w-4 h-4" aria-hidden />
+                  <span className="hidden sm:inline">{label}</span>
+                </button>
+              ))}
             </div>
           </div>
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="pt-2">
         <div className="overflow-x-auto overflow-y-visible">
           {viewMode === 'detailed' ? (
             // Detailed view - hourly heatmap by day of week
-            <div className="flex flex-col items-center w-full pt-8 pb-2 overflow-x-auto">
-              <div className="min-w-max">
+            <div className="w-full pt-8 pb-2 overflow-x-auto">
+              <div className="w-max mx-auto">
                 {/* Hour labels */}
                 <div className="flex mb-2 gap-1">
                   <div className="w-8 flex-shrink-0"></div>
                   {HOURS.map((hour) => (
-                    <div key={hour} className="w-4 text-center text-[9px] text-white/60">
+                    <div
+                      key={hour}
+                      className="w-4 md:w-6 lg:w-8 text-center text-[10px] tabular-nums text-muted-foreground"
+                    >
                       {hour % 3 === 0 ? (hour === 0 ? '0' : hour) : ''}
                     </div>
                   ))}
@@ -309,7 +313,7 @@ export function ListeningHeatmap({ timeUnit = 'hours' }: ListeningHeatmapProps) 
                 {DAYS.map((day, dayIndex) => (
                   <div key={day} className="flex items-center mb-1 gap-1">
                     {/* Day label */}
-                    <div className="w-8 text-[10px] text-white/80 font-medium flex-shrink-0 text-right pr-1">
+                    <div className="w-8 text-[11px] text-muted-foreground flex-shrink-0 text-right pr-2 self-center">
                       {day}
                     </div>
 
@@ -322,8 +326,7 @@ export function ListeningHeatmap({ timeUnit = 'hours' }: ListeningHeatmapProps) 
                         return (
                           <div
                             key={hour}
-                            className={`w-4 h-4 rounded-sm ${getColor(value, heatmapData.maxValue)} 
-                              transition-all hover:scale-150 hover:z-50 hover:ring-1 hover:ring-white/50 cursor-pointer`}
+                            className={`w-4 h-4 md:w-6 md:h-6 lg:w-8 lg:h-8 ${getColor(value, heatmapData.maxValue)} cursor-pointer hover:outline hover:outline-1 hover:outline-foreground`}
                             onMouseEnter={(e) =>
                               handleMouseEnter(
                                 e,
@@ -352,7 +355,7 @@ export function ListeningHeatmap({ timeUnit = 'hours' }: ListeningHeatmapProps) 
               <div className="flex flex-col w-full pt-8 pb-2 overflow-x-auto">
                 {/* Year label */}
                 <div className="flex gap-1 mb-2 justify-center">
-                  <div className="text-sm text-white/80 font-semibold">{selectedYear}</div>
+                  <div className="text-sm font-semibold tabular-nums">{selectedYear}</div>
                 </div>
 
                 {/* Center wrapper */}
@@ -363,7 +366,7 @@ export function ListeningHeatmap({ timeUnit = 'hours' }: ListeningHeatmapProps) 
                       {['Mon', 'Wed', 'Fri'].map((day) => (
                         <div
                           key={day}
-                          className="h-3 flex items-center text-[10px] text-white/60"
+                          className="h-3 flex items-center text-[10px] text-muted-foreground"
                           style={{ marginBottom: '6px' }}
                         >
                           {day}
@@ -384,16 +387,16 @@ export function ListeningHeatmap({ timeUnit = 'hours' }: ListeningHeatmapProps) 
                               <div key={`${weekIndex}-${dayIndex}`} className="relative">
                                 {/* Month label above first day of month */}
                                 {dayIndex === 0 && monthLabel && (
-                                  <div className="absolute -top-4 left-0 text-[10px] text-white/60 whitespace-nowrap">
+                                  <div className="absolute -top-4 left-0 text-[10px] text-muted-foreground whitespace-nowrap">
                                     {monthLabel}
                                   </div>
                                 )}
                                 <div
-                                  className={`w-3 h-3 rounded-sm ${
+                                  className={`w-3 h-3 ${
                                     day.dateKey
                                       ? getColor(day.minutes, calendarData.maxValue)
                                       : 'bg-transparent'
-                                  } ${day.dateKey ? 'transition-all hover:scale-150 hover:z-50 hover:ring-1 hover:ring-white/50 cursor-pointer' : ''}`}
+                                  } ${day.dateKey ? 'cursor-pointer hover:outline hover:outline-1 hover:outline-foreground' : ''}`}
                                   onMouseEnter={
                                     day.dateKey
                                       ? (e) =>
@@ -421,16 +424,19 @@ export function ListeningHeatmap({ timeUnit = 'hours' }: ListeningHeatmapProps) 
             )
           )}
 
-          {/* Legend */}
-          <div className="mt-6 flex items-center justify-center gap-2 text-xs text-white/60">
+          <div className="mt-6 flex items-center justify-center gap-2 text-xs text-muted-foreground">
             <span>Less</span>
             <div className="flex gap-1">
-              <div className="w-4 h-4 rounded-sm bg-gray-800/30"></div>
-              <div className="w-4 h-4 rounded-sm bg-green-500/20"></div>
-              <div className="w-4 h-4 rounded-sm bg-green-500/40"></div>
-              <div className="w-4 h-4 rounded-sm bg-green-500/60"></div>
-              <div className="w-4 h-4 rounded-sm bg-green-500/80"></div>
-              <div className="w-4 h-4 rounded-sm bg-green-500"></div>
+              {[
+                'bg-white/[0.06]',
+                'bg-primary/20',
+                'bg-primary/40',
+                'bg-primary/60',
+                'bg-primary/80',
+                'bg-primary',
+              ].map((cls) => (
+                <div key={cls} className={`w-4 h-4 ${cls}`} />
+              ))}
             </div>
             <span>More</span>
           </div>

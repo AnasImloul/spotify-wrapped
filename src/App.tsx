@@ -4,7 +4,6 @@ import { PWAInstallPrompt } from '@/features/onboarding/components/PWAInstallPro
 import { SpotifyDataProvider, DateRangeProvider } from '@/shared/contexts';
 import { FilterProvider } from '@/features/analytics/contexts';
 import { BrandingProvider } from '@/features/sharing/contexts';
-import { Analytics } from '@vercel/analytics/react';
 
 function App() {
   return (
@@ -21,7 +20,6 @@ function App() {
           </FilterProvider>
         </DateRangeProvider>
       </BrowserRouter>
-      <Analytics />
     </>
   );
 }

@@ -4,43 +4,80 @@
  */
 
 export const CHART_COLORS = {
-  primary: '#1db954',
-  secondary: '#1ed760',
-  accent: '#1aa34a',
-  text: '#ffffff',
-  textMuted: '#b3b3b3',
+  primary: '#1ED760',
+  secondary: '#509BF5',
+  accent: '#FFC864',
+  text: '#FFFFFF',
+  textMuted: '#B3B3B3',
   background: '#121212',
-  backgroundLight: '#282828',
-  grid: 'rgba(255, 255, 255, 0.1)',
-  gradient: {
-    start: '#1db954',
-    end: '#1ed760',
+  backgroundLight: '#181818',
+  grid: '#2B2B2B',
+  axis: '#525252',
+} as const;
+
+export const CHART_SERIES = [
+  '#1ED760',
+  '#509BF5',
+  '#FFC864',
+  '#FF6437',
+  '#FFFFFF',
+  '#B3B3B3',
+  '#2E9E58',
+  '#3A6FB0',
+] as const;
+
+export const CHART_AXIS = {
+  stroke: CHART_COLORS.grid,
+  tick: { fill: CHART_COLORS.textMuted, fontSize: 11 },
+  tickLine: false,
+} as const;
+
+export const CHART_X_AXIS = {
+  ...CHART_AXIS,
+  interval: 'preserveStartEnd',
+  minTickGap: 36,
+  height: 28,
+} as const;
+
+export const TIME_OF_DAY_SWATCH = {
+  morning: 'bg-code-yellow',
+  afternoon: 'bg-code-orange',
+  evening: 'bg-code-green',
+  night: 'bg-code-blue',
+} as const;
+
+export const CHART_GRID = {
+  stroke: CHART_COLORS.grid,
+  vertical: false,
+} as const;
+
+export const CHART_TOOLTIP = {
+  contentStyle: {
+    backgroundColor: '#1C1C1C',
+    border: `1px solid ${CHART_COLORS.axis}`,
+    borderRadius: 0,
+    color: CHART_COLORS.text,
+    fontSize: 12,
+    boxShadow: '0 16px 40px rgba(0, 0, 0, 0.55)',
   },
+  labelStyle: { color: CHART_COLORS.textMuted, marginBottom: 4 },
+  itemStyle: { color: CHART_COLORS.text, padding: 0 },
+  cursor: { stroke: CHART_COLORS.axis, fill: 'rgba(255, 255, 255, 0.04)' },
 } as const;
 
 export const CHART_THEME = {
   spotify: {
-    colors: ['#1db954', '#1ed760', '#1aa34a', '#17883e', '#126e33'],
-    background: '#121212',
-    text: '#ffffff',
-  },
-  rainbow: {
-    colors: ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8', '#F7DC6F'],
-    background: '#121212',
-    text: '#ffffff',
-  },
-  neon: {
-    colors: ['#FF006E', '#8338EC', '#3A86FF', '#FB5607', '#FFBE0B'],
-    background: '#0a0a0a',
-    text: '#ffffff',
+    colors: [...CHART_SERIES],
+    background: CHART_COLORS.background,
+    text: CHART_COLORS.text,
   },
 } as const;
 
 export const HEATMAP_COLORS = {
-  low: 'rgba(29, 185, 84, 0.1)',
-  medium: 'rgba(29, 185, 84, 0.5)',
-  high: 'rgba(29, 185, 84, 0.8)',
-  highest: 'rgba(29, 185, 84, 1)',
+  low: 'rgba(30, 215, 96, 0.12)',
+  medium: 'rgba(30, 215, 96, 0.4)',
+  high: 'rgba(30, 215, 96, 0.7)',
+  highest: 'rgba(30, 215, 96, 1)',
 } as const;
 
 export const CHART_DEFAULTS = {

@@ -1,16 +1,7 @@
 import { useMemo, useState, useEffect } from 'react';
 import { Card, CardContent } from '@/shared/components/ui/card';
 import { Button } from '@/shared/components/ui/button';
-import { Badge } from '@/shared/components/ui/badge';
-import {
-  Sparkles,
-  Calendar,
-  Music,
-  Headphones,
-  TrendingUp,
-  ChevronDown,
-  ChevronUp,
-} from 'lucide-react';
+import { Calendar, Music, Headphones, ChevronDown, ChevronUp } from 'lucide-react';
 import { useSpotifyData } from '@/shared/hooks';
 import { formatNumber } from '@/shared/utils';
 import { cn } from '@/shared/utils';
@@ -227,14 +218,20 @@ export function DiscoveryTimeline() {
     setExpandedMonths(newExpanded);
   };
 
+  const segment = (active: boolean) =>
+    `h-8 px-3 inline-flex items-center gap-1.5 text-sm font-medium tabular-nums transition-colors border-r border-input last:border-r-0 whitespace-nowrap ${
+      active
+        ? 'bg-primary text-primary-foreground'
+        : 'text-muted-foreground hover:bg-white/5 hover:text-foreground'
+    }`;
+
   if (!stats || discoveryData.length === 0) {
     return (
-      <Card className="bg-black/40 border-white/10">
+      <Card>
         <CardContent className="pt-6">
-          <div className="text-center py-12 text-white/40">
-            <Sparkles className="w-12 h-12 mx-auto mb-3 opacity-50" />
-            <p>No consistently listened music found in your history</p>
-            <p className="text-sm mt-2">
+          <div className="text-center py-12 border border-dashed border-input">
+            <p className="font-medium">No consistently listened music found in your history</p>
+            <p className="text-sm text-muted-foreground mt-2">
               This shows artists and tracks you listened to regularly, not one-time plays
             </p>
           </div>
@@ -244,197 +241,150 @@ export function DiscoveryTimeline() {
   }
 
   return (
-    <Card className="bg-black/40 border-white/10">
+    <Card>
       <CardContent className="pt-6">
         <div className="flex items-start justify-between gap-4 flex-wrap mb-6">
-          <div>
-            <div className="flex gap-2">
-              <Badge
-                variant="secondary"
-                className="bg-gradient-to-r from-green-500/20 to-emerald-500/20 text-white border-green-500/30"
-              >
-                <Headphones className="w-3 h-3 mr-1" />
-                {formatNumber(totalArtists)} Artists
-              </Badge>
-              <Badge
-                variant="secondary"
-                className="bg-gradient-to-r from-blue-500/20 to-cyan-500/20 text-white border-blue-500/30"
-              >
-                <Music className="w-3 h-3 mr-1" />
-                {formatNumber(totalTracks)} Tracks
-              </Badge>
-            </div>
-          </div>
-
-          {/* Filters */}
-          <div className="flex gap-4 flex-wrap">
-            {/* Type Filter */}
-            <div className="flex gap-2">
-              <Button
-                variant={showType === 'artists' ? 'default' : 'outline'}
-                size="sm"
-                onClick={() => setShowType('artists')}
-                className={cn(
-                  'gap-2',
-                  showType === 'artists'
-                    ? 'bg-green-500 hover:bg-green-600 text-white'
-                    : 'text-white/70 hover:text-white border-white/20 hover:bg-white/10'
-                )}
-              >
-                <Headphones className="h-4 w-4" />
+          <dl className="flex gap-6">
+            <div className="flex flex-col">
+              <dt className="label-caps mt-1 order-2 flex items-center gap-2">
+                <span className="h-2.5 w-2.5 bg-code-green" aria-hidden />
                 Artists
-              </Button>
-              <Button
-                variant={showType === 'tracks' ? 'default' : 'outline'}
-                size="sm"
-                onClick={() => setShowType('tracks')}
-                className={cn(
-                  'gap-2',
-                  showType === 'tracks'
-                    ? 'bg-blue-500 hover:bg-blue-600 text-white'
-                    : 'text-white/70 hover:text-white border-white/20 hover:bg-white/10'
-                )}
-              >
-                <Music className="h-4 w-4" />
+              </dt>
+              <dd className="order-1 text-2xl font-medium tabular-nums">
+                {formatNumber(totalArtists)}
+              </dd>
+            </div>
+            <div className="flex flex-col">
+              <dt className="label-caps mt-1 order-2 flex items-center gap-2">
+                <span className="h-2.5 w-2.5 bg-code-blue" aria-hidden />
                 Tracks
-              </Button>
+              </dt>
+              <dd className="order-1 text-2xl font-medium tabular-nums">
+                {formatNumber(totalTracks)}
+              </dd>
+            </div>
+          </dl>
+
+          <div className="flex gap-3 flex-wrap">
+            <div role="group" aria-label="Show" className="flex border border-input">
+              <button
+                onClick={() => setShowType('artists')}
+                aria-pressed={showType === 'artists'}
+                className={segment(showType === 'artists')}
+              >
+                <Headphones className="h-4 w-4" aria-hidden />
+                Artists
+              </button>
+              <button
+                onClick={() => setShowType('tracks')}
+                aria-pressed={showType === 'tracks'}
+                className={segment(showType === 'tracks')}
+              >
+                <Music className="h-4 w-4" aria-hidden />
+                Tracks
+              </button>
             </div>
 
-            {/* Year Filter */}
             {availableYears.length > 1 && (
-              <div className="flex gap-2 flex-wrap">
-                <Button
-                  variant={selectedYear === 'all' ? 'default' : 'outline'}
-                  size="sm"
+              <div
+                role="group"
+                aria-label="Year"
+                className="flex border border-input overflow-x-auto scrollbar-hide max-w-full"
+              >
+                <button
                   onClick={() => setSelectedYear('all')}
-                  className={cn(
-                    'gap-2',
-                    selectedYear === 'all'
-                      ? 'bg-purple-500 hover:bg-purple-600 text-white'
-                      : 'text-white/70 hover:text-white border-white/20 hover:bg-white/10'
-                  )}
+                  aria-pressed={selectedYear === 'all'}
+                  className={segment(selectedYear === 'all')}
                 >
-                  <Calendar className="h-4 w-4" />
+                  <Calendar className="h-4 w-4" aria-hidden />
                   All Years
-                </Button>
+                </button>
                 {availableYears.map((year) => (
-                  <Button
+                  <button
                     key={year}
-                    variant={selectedYear === year ? 'default' : 'outline'}
-                    size="sm"
                     onClick={() => setSelectedYear(year)}
-                    className={cn(
-                      selectedYear === year
-                        ? 'bg-purple-500 hover:bg-purple-600 text-white'
-                        : 'text-white/70 hover:text-white border-white/20 hover:bg-white/10'
-                    )}
+                    aria-pressed={selectedYear === year}
+                    className={segment(selectedYear === year)}
                   >
                     {year}
-                  </Button>
+                  </button>
                 ))}
               </div>
             )}
           </div>
         </div>
         {groupedByMonth.length === 0 ? (
-          <div className="text-center py-12 text-white/40">
-            <Sparkles className="w-12 h-12 mx-auto mb-3 opacity-50" />
+          <div className="text-center py-12 border border-dashed border-input text-muted-foreground">
             <p>No discoveries found in selected category</p>
           </div>
         ) : (
-          <div
-            className="space-y-4 max-h-[600px] overflow-y-auto custom-scrollbar pr-2"
-            style={{ paddingLeft: '5px' }}
-          >
+          <div className="space-y-6 max-h-[600px] overflow-y-auto custom-scrollbar pr-2">
             {groupedByMonth.map(([monthYear, items]) => {
               const isExpanded = expandedMonths.has(monthYear);
               const displayItems = isExpanded ? items : items.slice(0, 5);
               const hasMore = items.length > 5;
 
               return (
-                <div key={monthYear} className="border-l-2 border-purple-500/30 pl-3 relative">
-                  {/* Timeline dot */}
-                  <div className="absolute left-0 top-1.5 w-3 h-3 bg-purple-500 rounded-full -translate-x-[7px] ring-4 ring-black/40" />
+                <div key={monthYear} className="border-l border-input pl-4 relative">
+                  <div className="absolute left-0 top-2 w-2 h-2 bg-foreground -translate-x-[4.5px]" />
 
-                  {/* Month header */}
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-2">
-                      <Calendar className="w-4 h-4 text-purple-400" />
-                      <h3 className="font-bold text-white">{monthYear}</h3>
-                      <Badge
-                        variant="secondary"
-                        className="bg-purple-500/20 text-purple-300 border-purple-500/30"
-                      >
-                        {items.length} consistent
-                      </Badge>
-                    </div>
+                  <div className="flex items-baseline gap-3 mb-1">
+                    <h4 className="font-semibold">{monthYear}</h4>
+                    <span className="text-xs text-muted-foreground tabular-nums">
+                      {items.length} consistent
+                    </span>
                   </div>
 
-                  {/* Discoveries */}
-                  <div className="space-y-2 mb-3">
+                  <ul className="border-t border-border mb-2">
                     {displayItems.map((item, index) => (
-                      <div
+                      <li
                         key={`${item.type}-${item.name}-${index}`}
-                        className={cn(
-                          'rounded-lg p-3 border-2 transition-all duration-200',
-                          item.type === 'artist'
-                            ? 'bg-gradient-to-br from-green-500/10 to-emerald-600/10 border-green-500/20 hover:border-green-500/40 hover:bg-green-500/5'
-                            : 'bg-gradient-to-br from-blue-500/10 to-cyan-600/10 border-blue-500/20 hover:border-blue-500/40 hover:bg-blue-500/5'
-                        )}
+                        className="flex items-start gap-3 py-2.5 border-b border-border"
                       >
-                        <div className="flex items-start justify-between gap-3">
-                          <div className="flex items-start gap-3 flex-1 min-w-0">
-                            {item.type === 'artist' ? (
-                              <Headphones className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
-                            ) : (
-                              <Music className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" />
-                            )}
-                            <div className="min-w-0 flex-1">
-                              <p className="font-semibold text-white truncate">{item.name}</p>
-                              {item.artist && (
-                                <p className="text-xs text-white/60 truncate">{item.artist}</p>
-                              )}
-                              <div className="flex items-center gap-2 mt-1 flex-wrap">
-                                <p className="text-xs text-white/40">
-                                  {item.firstPlayed.toLocaleDateString('en-US', {
-                                    month: 'short',
-                                    day: 'numeric',
-                                    year: 'numeric',
-                                  })}
-                                </p>
-                                <div className="w-1 h-1 rounded-full bg-white/20" />
-                                <p className="text-xs text-white/60 flex items-center gap-1">
-                                  <TrendingUp className="w-3 h-3" />
-                                  {formatNumber(item.totalPlays)} plays
-                                </p>
-                                <div className="w-1 h-1 rounded-full bg-white/20" />
-                                <p className="text-xs text-white/60">
-                                  {item.weeksActive} weeks active
-                                </p>
-                              </div>
-                            </div>
-                          </div>
+                        <span
+                          className={cn(
+                            'h-2.5 w-2.5 flex-shrink-0 mt-1.5',
+                            item.type === 'artist' ? 'bg-code-green' : 'bg-code-blue'
+                          )}
+                          role="img"
+                          aria-label={item.type === 'artist' ? 'Artist' : 'Track'}
+                        />
+                        <div className="min-w-0 flex-1">
+                          <p className="font-medium truncate">{item.name}</p>
+                          {item.artist && (
+                            <p className="text-xs text-muted-foreground truncate">{item.artist}</p>
+                          )}
+                          <p className="text-xs text-muted-foreground mt-0.5 tabular-nums">
+                            {item.firstPlayed.toLocaleDateString('en-US', {
+                              month: 'short',
+                              day: 'numeric',
+                              year: 'numeric',
+                            })}
+                            {' · '}
+                            {formatNumber(item.totalPlays)} plays
+                            {' · '}
+                            {item.weeksActive} weeks active
+                          </p>
                         </div>
-                      </div>
+                      </li>
                     ))}
-                  </div>
+                  </ul>
 
-                  {/* Show more button */}
                   {hasMore && (
                     <Button
                       variant="ghost"
                       size="sm"
                       onClick={() => toggleMonth(monthYear)}
-                      className="w-full text-purple-400 hover:text-purple-300 hover:bg-purple-500/10"
+                      className="w-full text-primary hover:text-primary"
                     >
                       {isExpanded ? (
                         <>
-                          <ChevronUp className="w-4 h-4 mr-1" />
+                          <ChevronUp className="w-4 h-4" aria-hidden />
                           Show Less
                         </>
                       ) : (
                         <>
-                          <ChevronDown className="w-4 h-4 mr-1" />
+                          <ChevronDown className="w-4 h-4" aria-hidden />
                           Show {items.length - 5} More
                         </>
                       )}

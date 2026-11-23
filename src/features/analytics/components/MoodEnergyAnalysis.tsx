@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
-import { Card, CardContent } from '@/shared/components/ui/card';
-import { Sun, Moon, Sunrise, Sunset, Zap, Heart, Coffee, Music, Sparkles } from 'lucide-react';
+import { TIME_OF_DAY_SWATCH } from '@/shared/constants/charts';
 import { useSpotifyData } from '@/shared/hooks';
 import { cn } from '@/shared/utils';
 
@@ -129,48 +128,32 @@ export function MoodEnergyAnalysis() {
       id: 'morning',
       label: 'Morning',
       time: '6 AM - 12 PM',
-      icon: Sunrise,
       mood: moodProfile.morningMood,
-      color: 'from-amber-400 to-yellow-500',
-      bgColor: 'from-amber-400/20 to-yellow-500/20',
-      borderColor: 'border-amber-400/35',
-      iconColor: 'text-amber-300',
+      swatch: TIME_OF_DAY_SWATCH.morning,
       description: 'Energetic & Fresh',
     },
     {
       id: 'afternoon',
       label: 'Afternoon',
       time: '12 PM - 6 PM',
-      icon: Sun,
       mood: moodProfile.afternoonMood,
-      color: 'from-yellow-500 to-amber-600',
-      bgColor: 'from-yellow-500/20 to-amber-600/20',
-      borderColor: 'border-yellow-500/35',
-      iconColor: 'text-yellow-300',
+      swatch: TIME_OF_DAY_SWATCH.afternoon,
       description: 'Focused & Productive',
     },
     {
       id: 'evening',
       label: 'Evening',
       time: '6 PM - 12 AM',
-      icon: Sunset,
       mood: moodProfile.eveningMood,
-      color: 'from-teal-400 to-cyan-500',
-      bgColor: 'from-teal-400/20 to-cyan-500/20',
-      borderColor: 'border-teal-400/35',
-      iconColor: 'text-teal-300',
+      swatch: TIME_OF_DAY_SWATCH.evening,
       description: 'Relaxed & Chill',
     },
     {
       id: 'night',
       label: 'Night',
       time: '12 AM - 6 AM',
-      icon: Moon,
       mood: moodProfile.nightMood,
-      color: 'from-slate-500 to-indigo-600',
-      bgColor: 'from-slate-500/20 to-indigo-600/20',
-      borderColor: 'border-slate-500/35',
-      iconColor: 'text-slate-300',
+      swatch: TIME_OF_DAY_SWATCH.night,
       description: 'Calm & Introspective',
     },
   ];
@@ -179,112 +162,58 @@ export function MoodEnergyAnalysis() {
     energetic: {
       title: 'Energetic Listener',
       description: 'You used music to fuel your energy and start your days strong',
-      icon: Zap,
-      color: 'text-amber-400',
-      bgGradient: 'from-amber-500/20 to-yellow-500/20',
-      borderColor: 'border-amber-500/40',
-      iconGradient: 'from-amber-500 to-yellow-500',
     },
     focused: {
       title: 'Focused Listener',
       description: 'Music helped you stay productive and concentrate during this period',
-      icon: Coffee,
-      color: 'text-yellow-400',
-      bgGradient: 'from-yellow-500/20 to-amber-600/20',
-      borderColor: 'border-yellow-500/40',
-      iconGradient: 'from-yellow-500 to-amber-600',
     },
     relaxed: {
       title: 'Relaxed Listener',
       description: 'You wound down with music, using it to relax and unwind',
-      icon: Heart,
-      color: 'text-teal-400',
-      bgGradient: 'from-teal-500/20 to-cyan-500/20',
-      borderColor: 'border-teal-500/40',
-      iconGradient: 'from-teal-500 to-cyan-500',
     },
     varied: {
       title: 'Balanced Listener',
       description: 'You enjoyed music at all times throughout your listening history',
-      icon: Music,
-      color: 'text-green-400',
-      bgGradient: 'from-green-500/20 to-emerald-500/20',
-      borderColor: 'border-green-500/40',
-      iconGradient: 'from-green-500 to-emerald-500',
     },
   };
 
   const profile = dominantProfiles[moodProfile.dominant];
-  const ProfileIcon = profile.icon;
 
   return (
-    <Card className="bg-black/40 border-white/10">
-      <CardContent className="pt-6 space-y-6">
-        {/* Dominant Profile */}
-        <div
-          className={cn(
-            'bg-gradient-to-br rounded-xl p-6 border-2 hover:scale-[1.01] transition-all duration-300',
-            profile.bgGradient,
-            profile.borderColor
-          )}
-        >
-          <div className="flex items-center gap-4 mb-3">
-            <div
-              className={cn(
-                'w-12 h-12 flex-shrink-0 rounded-full bg-gradient-to-br flex items-center justify-center shadow-lg',
-                profile.iconGradient
-              )}
-            >
-              <ProfileIcon className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <h3 className="text-xl font-bold text-white">{profile.title}</h3>
-              <p className="text-sm text-white/60">{profile.description}</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Time of Day Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {timeOfDayData.map((period) => {
-            const Icon = period.icon;
-
-            return (
-              <div
-                key={period.id}
-                className={cn(
-                  'rounded-xl p-4 border-2 transition-all duration-300 hover:scale-105 cursor-pointer',
-                  `bg-gradient-to-br ${period.bgColor} ${period.borderColor}`
-                )}
-              >
-                <Icon className={cn('w-8 h-8 mb-3', period.iconColor)} />
-                <h4 className="font-bold text-white mb-1">{period.label}</h4>
-                <p className="text-xs text-white/60 mb-2">{period.time}</p>
-                <p className="text-sm text-white/80 mb-2">{period.description}</p>
-                <p className="text-sm font-semibold text-white">{period.mood}</p>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Insights */}
+    <div className="space-y-8">
+      <div>
         <div>
-          <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-            <Sparkles className="w-5 h-5 text-teal-400" />
-            Your Listening Insights
-          </h3>
-          <div className="space-y-3">
-            {moodProfile.insights.map((insight, index) => (
-              <div
-                key={index}
-                className="bg-white/5 rounded-lg p-4 border border-white/10 hover:bg-white/10 hover:border-teal-500/20 transition-all duration-200"
-              >
-                <p className="text-white/90">{insight}</p>
-              </div>
-            ))}
-          </div>
+          <p className="text-3xl lg:text-4xl font-medium leading-tight tracking-[-0.02em]">
+            {profile.title}
+          </p>
+          <p className="text-sm text-muted-foreground mt-1">{profile.description}</p>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+
+      <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 border-t border-border">
+        {timeOfDayData.map((period) => (
+          <li key={period.id} className="py-4 border-b border-border">
+            <div className="flex items-center gap-2 mb-3">
+              <span className={cn('h-2.5 w-2.5 flex-shrink-0', period.swatch)} aria-hidden />
+              <h4 className="label-caps">{period.label}</h4>
+            </div>
+            <p className="text-lg font-medium">{period.mood}</p>
+            <p className="text-sm text-muted-foreground mt-1">{period.description}</p>
+            <p className="text-xs text-muted-foreground mt-2 tabular-nums">{period.time}</p>
+          </li>
+        ))}
+      </ul>
+
+      <div>
+        <h4 className="label-caps pb-2 border-b border-foreground">Your Listening Insights</h4>
+        <ul>
+          {moodProfile.insights.map((insight, index) => (
+            <li key={index} className="py-3 border-b border-border text-foreground">
+              {insight}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
   );
 }

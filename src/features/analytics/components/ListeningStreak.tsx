@@ -1,6 +1,4 @@
 import { useMemo } from 'react';
-import { Card, CardContent } from '@/shared/components/ui/card';
-import { Flame, Calendar, TrendingUp } from 'lucide-react';
 import { useSpotifyData } from '@/shared/hooks';
 import { formatNumber } from '@/shared/utils';
 
@@ -67,73 +65,61 @@ export function ListeningStreak() {
 
   if (!streakData) return null;
 
+  const stats = [
+    {
+      value: formatNumber(streakData.longestStreak),
+      label: 'Best Streak',
+      detail: 'Consecutive days',
+    },
+    {
+      value: formatNumber(streakData.totalActiveDays),
+      label: 'Active Days',
+      detail: 'Days with activity',
+    },
+    {
+      value: formatNumber(streakData.avgMinutesPerActiveDay),
+      label: 'Avg Minutes',
+      detail: 'Per active day',
+    },
+    {
+      value: formatNumber(streakData.maxMinutes),
+      label: 'Peak Day',
+      detail: new Date(streakData.maxDay).toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+      }),
+    },
+  ];
+
   return (
-    <Card className="bg-black/40 border-white/10">
-      <CardContent className="pt-6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {/* Longest Streak */}
-          <div className="bg-gradient-to-br from-amber-500/20 to-yellow-600/20 border-2 border-amber-500/30 rounded-lg p-6 text-center hover:scale-105 transition-all duration-300">
-            <Flame className="w-8 h-8 text-amber-400 mx-auto mb-3" />
-            <p className="text-4xl font-bold text-white mb-2">{streakData.longestStreak}</p>
-            <p className="text-sm text-white/70 font-medium">Best Streak</p>
-            <p className="text-xs text-white/50 mt-1">Consecutive days</p>
+    <div className="space-y-6">
+      <dl className="grid grid-cols-2 lg:grid-cols-4 gap-x-6 border-t border-border">
+        {stats.map((stat) => (
+          <div key={stat.label} className="flex flex-col py-4 border-b border-border">
+            <dt className="label-caps mt-1 order-2">{stat.label}</dt>
+            <dd className="order-1 text-4xl lg:text-5xl font-medium leading-none tracking-[-0.02em] tabular-nums">
+              {stat.value}
+            </dd>
+            <dd className="order-3 text-xs text-muted-foreground mt-0.5">{stat.detail}</dd>
           </div>
+        ))}
+      </dl>
 
-          {/* Total Active Days */}
-          <div className="bg-gradient-to-br from-teal-500/20 to-cyan-600/20 border-2 border-teal-500/30 rounded-lg p-6 text-center hover:scale-105 transition-all duration-300">
-            <Calendar className="w-8 h-8 text-teal-400 mx-auto mb-3" />
-            <p className="text-4xl font-bold text-white mb-2">
-              {formatNumber(streakData.totalActiveDays)}
-            </p>
-            <p className="text-sm text-white/70 font-medium">Active Days</p>
-            <p className="text-xs text-white/50 mt-1">Days with activity</p>
-          </div>
-
-          {/* Average per Active Day */}
-          <div className="bg-gradient-to-br from-green-500/20 to-emerald-600/20 border-2 border-green-500/30 rounded-lg p-6 text-center hover:scale-105 transition-all duration-300">
-            <TrendingUp className="w-8 h-8 text-green-400 mx-auto mb-3" />
-            <p className="text-4xl font-bold text-white mb-2">
-              {formatNumber(streakData.avgMinutesPerActiveDay)}
-            </p>
-            <p className="text-sm text-white/70 font-medium">Avg Minutes</p>
-            <p className="text-xs text-white/50 mt-1">Per active day</p>
-          </div>
-
-          {/* Most Active Day */}
-          <div className="bg-gradient-to-br from-emerald-400/20 to-teal-500/20 border-2 border-emerald-400/30 rounded-lg p-6 text-center hover:scale-105 transition-all duration-300">
-            <TrendingUp className="w-8 h-8 text-emerald-300 mx-auto mb-3" />
-            <p className="text-4xl font-bold text-white mb-2">
-              {formatNumber(streakData.maxMinutes)}
-            </p>
-            <p className="text-sm text-white/70 font-medium">Peak Day</p>
-            <p className="text-xs text-white/50 mt-1">
-              {new Date(streakData.maxDay).toLocaleDateString('en-US', {
-                month: 'short',
-                day: 'numeric',
-              })}
-            </p>
-          </div>
-        </div>
-
-        {/* Summary Text */}
-        <div className="mt-6 p-4 bg-white/5 rounded-lg border border-white/10">
-          <p className="text-white/80 text-sm text-center">
-            You listened to music on{' '}
-            <span className="font-bold text-white">
-              {formatNumber(streakData.totalActiveDays)} days
-            </span>
-            , with your best streak being{' '}
-            <span className="font-bold text-white">
-              {streakData.longestStreak} consecutive days
-            </span>
-            . On active days, you averaged{' '}
-            <span className="font-bold text-white">
-              {formatNumber(streakData.avgMinutesPerActiveDay)} minutes
-            </span>{' '}
-            of listening.
-          </p>
-        </div>
-      </CardContent>
-    </Card>
+      <p className="text-sm text-muted-foreground max-w-prose leading-relaxed">
+        You listened to music on{' '}
+        <span className="font-semibold text-foreground">
+          {formatNumber(streakData.totalActiveDays)} days
+        </span>
+        , with your best streak being{' '}
+        <span className="font-semibold text-foreground">
+          {formatNumber(streakData.longestStreak)} consecutive days
+        </span>
+        . On active days, you averaged{' '}
+        <span className="font-semibold text-foreground">
+          {formatNumber(streakData.avgMinutesPerActiveDay)} minutes
+        </span>{' '}
+        of listening.
+      </p>
+    </div>
   );
 }

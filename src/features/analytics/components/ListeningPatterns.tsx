@@ -6,11 +6,11 @@ import {
   CardHeader,
   CardTitle,
 } from '@/shared/components/ui/card';
-import { Button } from '@/shared/components/ui/button';
 import { useSpotifyData, useDateRange } from '@/shared/hooks';
 import { analyzeListeningPatterns } from '@/shared/services';
 import { formatMinutes, type TimeUnit } from '@/shared/utils';
-import { Calendar, Sun, Moon, Clock } from 'lucide-react';
+import { Clock } from 'lucide-react';
+import { TIME_OF_DAY_SWATCH } from '@/shared/constants/charts';
 
 export function ListeningPatterns() {
   const [timeUnit, setTimeUnit] = useState<TimeUnit>('minutes');
@@ -57,140 +57,157 @@ export function ListeningPatterns() {
   const avgLateNightMinutes =
     patterns.dayCount > 0 ? patterns.lateNightMinutes / patterns.dayCount : 0;
 
+  const groups: {
+    title: string;
+    cols: string;
+    items: { label: string; range?: string; value: number; swatch: string; notes: string[] }[];
+  }[] = [
+    {
+      title: 'Weekday vs Weekend',
+      cols: 'grid-cols-2',
+      items: [
+        {
+          label: 'Avg Weekday',
+          value: avgWeekdayMinutes,
+          swatch: 'bg-code-green',
+          notes: [`(${patterns.weekdayCount.toLocaleString('en-US')} days)`],
+        },
+        {
+          label: 'Avg Weekend Day',
+          value: avgWeekendMinutes,
+          swatch: 'bg-code-blue',
+          notes: [`(${patterns.weekendCount.toLocaleString('en-US')} days)`],
+        },
+      ],
+    },
+    {
+      title: 'Day vs Night',
+      cols: 'grid-cols-2',
+      items: [
+        {
+          label: 'Avg Day',
+          range: '6AM-6PM',
+          value: avgDayMinutes,
+          swatch: 'bg-code-yellow',
+          notes: [
+            `${patterns.dayPercentage}% of total`,
+            `(${patterns.dayCount.toLocaleString('en-US')} days)`,
+          ],
+        },
+        {
+          label: 'Avg Night',
+          range: '6PM-6AM',
+          value: avgNightMinutes,
+          swatch: 'bg-code-blue',
+          notes: [
+            `${patterns.nightPercentage}% of total`,
+            `(${patterns.dayCount.toLocaleString('en-US')} days)`,
+          ],
+        },
+      ],
+    },
+    {
+      title: 'Time of Day Breakdown',
+      cols: 'grid-cols-2 sm:grid-cols-4',
+      items: [
+        {
+          label: 'Morning',
+          range: '6AM-12PM',
+          value: avgMorningMinutes,
+          swatch: TIME_OF_DAY_SWATCH.morning,
+          notes: [],
+        },
+        {
+          label: 'Afternoon',
+          range: '12PM-6PM',
+          value: avgAfternoonMinutes,
+          swatch: TIME_OF_DAY_SWATCH.afternoon,
+          notes: [],
+        },
+        {
+          label: 'Evening',
+          range: '6PM-12AM',
+          value: avgEveningMinutes,
+          swatch: TIME_OF_DAY_SWATCH.evening,
+          notes: [],
+        },
+        {
+          label: 'Late Night',
+          range: '12AM-6AM',
+          value: avgLateNightMinutes,
+          swatch: TIME_OF_DAY_SWATCH.night,
+          notes: [],
+        },
+      ],
+    },
+  ];
+
   return (
-    <Card className="bg-black/40 border-white/10">
-      <CardHeader>
-        <div className="flex items-start justify-between gap-4">
+    <Card>
+      <CardHeader className="border-b border-border">
+        <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <CardTitle className="text-2xl font-bold text-white">Listening Patterns</CardTitle>
-            <CardDescription className="text-white/60">
-              When you listen to music most
-            </CardDescription>
+            <CardTitle className="text-xl">Listening Patterns</CardTitle>
+            <CardDescription>When you listen to music most</CardDescription>
           </div>
 
-          {/* Time Unit Toggle */}
-          <div className="flex gap-2 flex-shrink-0">
-            <Button
-              variant={timeUnit === 'minutes' ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setTimeUnit('minutes')}
-              className={timeUnit === 'minutes' ? 'bg-green-500 hover:bg-green-600' : ''}
-            >
-              <Clock className="w-4 h-4 mr-1 sm:mr-2" />
-              <span className="sm:hidden">min</span>
-              <span className="hidden sm:inline">Minutes</span>
-            </Button>
-            <Button
-              variant={timeUnit === 'hours' ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setTimeUnit('hours')}
-              className={timeUnit === 'hours' ? 'bg-green-500 hover:bg-green-600' : ''}
-            >
-              <Clock className="w-4 h-4 mr-1 sm:mr-2" />
-              <span className="sm:hidden">hr</span>
-              <span className="hidden sm:inline">Hours</span>
-            </Button>
+          <div
+            role="group"
+            aria-label="Time unit"
+            className="flex border border-input flex-shrink-0"
+          >
+            {(['minutes', 'hours'] as const).map((unit) => (
+              <button
+                key={unit}
+                onClick={() => setTimeUnit(unit)}
+                aria-pressed={timeUnit === unit}
+                className={`h-8 px-3 inline-flex items-center gap-1.5 text-sm font-medium transition-colors border-r border-input last:border-r-0 ${
+                  timeUnit === unit
+                    ? 'bg-primary text-primary-foreground'
+                    : 'text-muted-foreground hover:bg-white/5 hover:text-foreground'
+                }`}
+              >
+                <Clock className="w-4 h-4" aria-hidden />
+                <span className="sm:hidden">{unit === 'minutes' ? 'min' : 'hr'}</span>
+                <span className="hidden sm:inline">{unit === 'minutes' ? 'Minutes' : 'Hours'}</span>
+              </button>
+            ))}
           </div>
         </div>
       </CardHeader>
-      <CardContent className="space-y-8">
-        {/* Weekday vs Weekend */}
-        <div>
-          <div className="flex items-center gap-2 mb-4">
-            <Calendar className="w-5 h-5 text-green-400" />
-            <h3 className="text-lg font-semibold text-white">Weekday vs Weekend</h3>
-            <span className="text-xs text-white/50">(Average per Day)</span>
+      <CardContent className="space-y-8 pt-6">
+        {groups.map((group) => (
+          <div key={group.title}>
+            <div className="flex items-baseline gap-2 mb-1">
+              <h4 className="text-base font-semibold">{group.title}</h4>
+              <span className="text-xs text-muted-foreground">(Average per Day)</span>
+            </div>
+            <dl className={`grid ${group.cols} gap-x-6 border-t border-border`}>
+              {group.items.map((item) => (
+                <div key={item.label} className="flex flex-col py-3 border-b border-border min-w-0">
+                  <dt className="order-2 flex items-center gap-2 mt-1">
+                    <span className={`h-2.5 w-2.5 flex-shrink-0 ${item.swatch}`} aria-hidden />
+                    <span className="label-caps whitespace-nowrap">{item.label}</span>
+                  </dt>
+                  <dd className="order-1 text-2xl font-medium tabular-nums">
+                    {formatMinutes(item.value, timeUnit)}
+                  </dd>
+                  {item.range && (
+                    <dd className="order-3 text-xs text-muted-foreground mt-0.5">{item.range}</dd>
+                  )}
+                  {item.notes.map((note) => (
+                    <dd
+                      key={note}
+                      className="order-3 text-xs text-muted-foreground mt-0.5 tabular-nums"
+                    >
+                      {note}
+                    </dd>
+                  ))}
+                </div>
+              ))}
+            </dl>
           </div>
-
-          {/* Average per day comparison */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="bg-white/5 rounded-lg p-4 border border-white/10">
-              <p className="text-white/60 text-sm mb-1">Avg Weekday</p>
-              <p className="text-2xl font-bold text-green-400">
-                {formatMinutes(avgWeekdayMinutes, timeUnit)}
-              </p>
-              <p className="text-white/40 text-[10px] mt-1">({patterns.weekdayCount} days)</p>
-            </div>
-            <div className="bg-white/5 rounded-lg p-4 border border-white/10">
-              <p className="text-white/60 text-sm mb-1">Avg Weekend Day</p>
-              <p className="text-2xl font-bold text-blue-400">
-                {formatMinutes(avgWeekendMinutes, timeUnit)}
-              </p>
-              <p className="text-white/40 text-[10px] mt-1">({patterns.weekendCount} days)</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Day vs Night */}
-        <div>
-          <div className="flex items-center gap-2 mb-4">
-            <div className="flex items-center gap-1">
-              <Sun className="w-5 h-5 text-green-400" />
-              <Moon className="w-5 h-5 text-blue-400" />
-            </div>
-            <h3 className="text-lg font-semibold text-white">Day vs Night</h3>
-            <span className="text-xs text-white/50">(Average per Day)</span>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div className="bg-white/5 rounded-lg p-4 border border-white/10">
-              <p className="text-white/60 text-sm mb-1">Avg Day (6AM-6PM)</p>
-              <p className="text-2xl font-bold text-green-400">
-                {formatMinutes(avgDayMinutes, timeUnit)}
-              </p>
-              <p className="text-white/60 text-xs mt-1">{patterns.dayPercentage}% of total</p>
-              <p className="text-white/40 text-[10px] mt-1">({patterns.dayCount} days)</p>
-            </div>
-            <div className="bg-white/5 rounded-lg p-4 border border-white/10">
-              <p className="text-white/60 text-sm mb-1">Avg Night (6PM-6AM)</p>
-              <p className="text-2xl font-bold text-blue-400">
-                {formatMinutes(avgNightMinutes, timeUnit)}
-              </p>
-              <p className="text-white/60 text-xs mt-1">{patterns.nightPercentage}% of total</p>
-              <p className="text-white/40 text-[10px] mt-1">({patterns.dayCount} days)</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Time of Day Breakdown */}
-        <div>
-          <div className="flex items-center gap-2 mb-4">
-            <Clock className="w-5 h-5 text-green-400" />
-            <h3 className="text-lg font-semibold text-white">Time of Day Breakdown</h3>
-            <span className="text-xs text-white/50">(Average per Day)</span>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            <div className="bg-white/5 rounded-lg p-4 border border-white/10">
-              <p className="text-white/60 text-sm mb-1">Morning</p>
-              <p className="text-white/50 text-xs mb-2">6AM-12PM</p>
-              <p className="text-2xl font-bold text-green-500">
-                {formatMinutes(avgMorningMinutes, timeUnit)}
-              </p>
-            </div>
-            <div className="bg-white/5 rounded-lg p-4 border border-white/10">
-              <p className="text-white/60 text-sm mb-1">Afternoon</p>
-              <p className="text-white/50 text-xs mb-2">12PM-6PM</p>
-              <p className="text-2xl font-bold text-green-400">
-                {formatMinutes(avgAfternoonMinutes, timeUnit)}
-              </p>
-            </div>
-            <div className="bg-white/5 rounded-lg p-4 border border-white/10">
-              <p className="text-white/60 text-sm mb-1">Evening</p>
-              <p className="text-white/50 text-xs mb-2">6PM-12AM</p>
-              <p className="text-2xl font-bold text-blue-400">
-                {formatMinutes(avgEveningMinutes, timeUnit)}
-              </p>
-            </div>
-            <div className="bg-white/5 rounded-lg p-4 border border-white/10">
-              <p className="text-white/60 text-sm mb-1">Late Night</p>
-              <p className="text-white/50 text-xs mb-2">12AM-6AM</p>
-              <p className="text-2xl font-bold text-blue-500">
-                {formatMinutes(avgLateNightMinutes, timeUnit)}
-              </p>
-            </div>
-          </div>
-        </div>
+        ))}
       </CardContent>
     </Card>
   );

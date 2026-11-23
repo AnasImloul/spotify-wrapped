@@ -52,10 +52,26 @@ export default {
           foreground: 'hsl(var(--card-foreground))',
         },
         spotify: {
-          green: '#1DB954',
-          black: '#191414',
+          green: '#1ED760',
+          black: '#121212',
           white: '#FFFFFF',
         },
+        code: {
+          green: 'hsl(var(--code-green))',
+          blue: 'hsl(var(--code-blue))',
+          yellow: 'hsl(var(--code-yellow))',
+          orange: 'hsl(var(--code-orange))',
+          grey: 'hsl(var(--code-grey))',
+        },
+      },
+      fontFamily: {
+        sans: [
+          '"Hanken Grotesk"',
+          '-apple-system',
+          'BlinkMacSystemFont',
+          '"Segoe UI"',
+          'sans-serif',
+        ],
       },
       borderRadius: {
         lg: 'var(--radius)',

@@ -1,5 +1,3 @@
-import { Card, CardContent } from '@/shared/components/ui/card';
-import { Calendar } from 'lucide-react';
 import { MonthPicker } from './MonthPicker';
 import { useDateRange } from '@/shared/hooks';
 import { useMemo } from 'react';
@@ -55,71 +53,65 @@ export function DateRangeSelector() {
     return startDate === clampedStart && endDate === clampedEnd;
   };
 
+  const isAllSelected = startDate === minDate && endDate === maxDate;
+  const segment = (active: boolean) =>
+    `h-8 px-3 text-sm font-medium tabular-nums transition-colors border-r border-input last:border-r-0 ${
+      active
+        ? 'bg-primary text-primary-foreground'
+        : 'text-muted-foreground hover:bg-white/5 hover:text-foreground'
+    }`;
+
   return (
-    <Card className="border-green-500/30 bg-black/40 overflow-visible relative z-10">
-      <CardContent className="p-3 sm:p-4 lg:p-5 overflow-visible">
-        <div className="flex flex-col gap-3 lg:gap-3.5">
-          <div className="flex items-center gap-2 text-white">
-            <Calendar className="w-4 h-4 lg:w-5 lg:h-5 text-green-400 flex-shrink-0" />
-            <span className="font-semibold text-sm">Filter by Date Range:</span>
+    <div className="flex flex-col lg:flex-row lg:items-center gap-3 lg:gap-6">
+      <div className="flex items-center gap-3 min-w-0">
+        <span className="label-caps hidden sm:inline shrink-0">Range</span>
+        {availableYears.length > 0 && (
+          <div
+            role="group"
+            aria-label="Quick select a year"
+            className="flex border border-input overflow-x-auto scrollbar-hide"
+          >
+            <button
+              onClick={resetToFullRange}
+              aria-pressed={isAllSelected}
+              className={segment(isAllSelected)}
+            >
+              All years
+            </button>
+            {availableYears.map((year) => (
+              <button
+                key={year}
+                onClick={() => selectYear(year)}
+                aria-pressed={isYearSelected(year)}
+                className={segment(isYearSelected(year))}
+              >
+                {year}
+              </button>
+            ))}
           </div>
+        )}
+      </div>
 
-          {/* Year shortcuts */}
-          {availableYears.length > 0 && (
-            <div className="flex flex-col gap-1.5">
-              <p className="text-xs text-white/60">Quick select:</p>
-              <div className="flex flex-wrap gap-1.5 lg:gap-2">
-                {availableYears.map((year) => (
-                  <button
-                    key={year}
-                    onClick={() => selectYear(year)}
-                    className={`px-2.5 py-1 lg:px-3 lg:py-1.5 rounded-lg text-xs lg:text-sm font-medium transition-all duration-200 ${
-                      isYearSelected(year)
-                        ? 'bg-gradient-to-r from-green-500 to-green-600 text-white border border-green-400 shadow-lg shadow-green-500/20'
-                        : 'bg-white/5 text-white/70 border border-white/10 hover:bg-white/10 hover:text-white hover:border-white/20'
-                    }`}
-                  >
-                    {year}
-                  </button>
-                ))}
-                <button
-                  onClick={resetToFullRange}
-                  className={`px-2.5 py-1 lg:px-3 lg:py-1.5 rounded-lg text-xs lg:text-sm font-medium transition-all duration-200 ${
-                    startDate === minDate && endDate === maxDate
-                      ? 'bg-gradient-to-r from-green-500 to-green-600 text-white border border-green-400 shadow-lg shadow-green-500/20'
-                      : 'bg-white/5 text-white/70 border border-white/10 hover:bg-white/10 hover:text-white hover:border-white/20'
-                  }`}
-                >
-                  All Years
-                </button>
-              </div>
-            </div>
-          )}
+      <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+        <MonthPicker
+          value={startDate}
+          minDate={minDate}
+          maxDate={maxDate}
+          onChange={setStartDate}
+          label="From"
+        />
+        <MonthPicker
+          value={endDate}
+          minDate={minDate}
+          maxDate={maxDate}
+          onChange={setEndDate}
+          label="To"
+        />
+      </div>
 
-          <div className="flex flex-col sm:flex-row gap-2.5 lg:gap-3 w-full">
-            <MonthPicker
-              value={startDate}
-              minDate={minDate}
-              maxDate={maxDate}
-              onChange={setStartDate}
-              label="From"
-            />
-
-            <MonthPicker
-              value={endDate}
-              minDate={minDate}
-              maxDate={maxDate}
-              onChange={setEndDate}
-              label="To"
-            />
-          </div>
-        </div>
-
-        <p className="text-xs text-white/40 mt-2.5 lg:mt-3 flex items-start sm:items-center gap-2">
-          <span className="w-1 h-1 rounded-full bg-green-400/50 flex-shrink-0 mt-1.5 sm:mt-0"></span>
-          <span>All statistics will be calculated based on the selected date range</span>
-        </p>
-      </CardContent>
-    </Card>
+      <p className="text-xs text-muted-foreground lg:ml-auto">
+        Every number on this page uses this range
+      </p>
+    </div>
   );
 }

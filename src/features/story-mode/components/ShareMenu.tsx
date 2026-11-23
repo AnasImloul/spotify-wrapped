@@ -214,7 +214,7 @@ export function ShareMenu({
         <DropdownMenuItem onClick={handleCopyImage} disabled={isSharing}>
           {copiedImage ? (
             <>
-              <Check className="w-4 h-4 mr-2 text-green-500" />
+              <Check className="w-4 h-4 mr-2 text-primary" />
               Image Copied!
             </>
           ) : (
@@ -228,7 +228,7 @@ export function ShareMenu({
         <DropdownMenuItem onClick={handleCopyText}>
           {copiedText ? (
             <>
-              <Check className="w-4 h-4 mr-2 text-green-500" />
+              <Check className="w-4 h-4 mr-2 text-primary" />
               Text Copied!
             </>
           ) : (
