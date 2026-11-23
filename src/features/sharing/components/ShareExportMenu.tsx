@@ -1,4 +1,4 @@
-import { Share2, Link, FileText, Copy, Check } from 'lucide-react';
+import { Share2, Link, Copy, Check } from 'lucide-react';
 import { Button } from '@/shared/components/ui/button';
 import {
   DropdownMenu,
@@ -10,7 +10,6 @@ import {
 } from '@/shared/components/ui/dropdown-menu';
 import { useState } from 'react';
 import { useFilteredStats, useDateRange } from '@/shared/hooks';
-import { generatePDFReport, exportStatsAsText, copyToClipboard } from '@/shared/services/export';
 import {
   encodeAnalyticsToUrl,
   generateCompactShareUrl,
@@ -38,32 +37,6 @@ export function ShareExportMenu({
 
   const [copied, setCopied] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
-  const [isExporting, setIsExporting] = useState(false);
-
-  const handleExportPDF = async () => {
-    if (!stats || isExporting) return;
-
-    setIsExporting(true);
-    try {
-      await generatePDFReport(stats, { start: startDate, end: endDate });
-    } catch (error) {
-      console.error('Failed to export PDF:', error);
-    } finally {
-      setIsExporting(false);
-    }
-  };
-
-  const handleCopyAsText = async () => {
-    if (!stats) return;
-
-    const text = exportStatsAsText(stats, { start: startDate, end: endDate });
-    const success = await copyToClipboard(text);
-
-    if (success) {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
-  };
 
   const handleCopyShareLink = async () => {
     if (!stats) return;
@@ -156,20 +129,6 @@ export function ShareExportMenu({
         </DropdownMenuItem>
 
         <DropdownMenuItem onClick={handleCopyShareText}>
-          <Copy className="w-4 h-4 mr-2" />
-          Copy Text + Link
-        </DropdownMenuItem>
-
-        <DropdownMenuSeparator />
-        <DropdownMenuLabel>Export Options</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-
-        <DropdownMenuItem onClick={handleExportPDF} disabled={isExporting}>
-          <FileText className="w-4 h-4 mr-2" />
-          {isExporting ? 'Exporting...' : 'Export as PDF'}
-        </DropdownMenuItem>
-
-        <DropdownMenuItem onClick={handleCopyAsText}>
           {copied ? (
             <>
               <Check className="w-4 h-4 mr-2 text-primary" />
@@ -178,7 +137,7 @@ export function ShareExportMenu({
           ) : (
             <>
               <Copy className="w-4 h-4 mr-2" />
-              Copy as Text
+              Copy Text + Link
             </>
           )}
         </DropdownMenuItem>
