@@ -1,4 +1,4 @@
-import { Share2, Link, Copy, Check } from 'lucide-react';
+import { Share2, Link, Check } from 'lucide-react';
 import { Button } from '@/shared/components/ui/button';
 import {
   DropdownMenu,
@@ -10,12 +10,7 @@ import {
 } from '@/shared/components/ui/dropdown-menu';
 import { useState } from 'react';
 import { useFilteredStats, useDateRange } from '@/shared/hooks';
-import {
-  encodeAnalyticsToUrl,
-  generateCompactShareUrl,
-  generateSummaryText,
-  getCompactDataFromUrl,
-} from '@/shared/services/sharing';
+import { encodeAnalyticsToUrl, generateCompactShareUrl } from '@/shared/services/sharing';
 import { useSortedArtists, useSortedTracks } from '@/shared/hooks';
 import { copyTextToClipboard } from '@/lib/social';
 
@@ -35,7 +30,6 @@ export function ShareExportMenu({
   const sortedArtists = useSortedArtists();
   const sortedTracks = useSortedTracks();
 
-  const [copied, setCopied] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
 
   const handleCopyShareLink = async () => {
@@ -55,48 +49,6 @@ export function ShareExportMenu({
       setTimeout(() => setCopiedLink(false), 2000);
     } catch (error) {
       console.error('Failed to copy link:', error);
-    }
-  };
-
-  const handleCopyShareText = async () => {
-    if (!stats) return;
-
-    const encoded = encodeAnalyticsToUrl(
-      stats,
-      sortedArtists.slice(0, 10),
-      sortedTracks.slice(0, 10),
-      { startDate: new Date(startDate), endDate: new Date(endDate) }
-    );
-    const url = generateCompactShareUrl(encoded);
-
-    const compactData = getCompactDataFromUrl() || {
-      v: 2,
-      s: [
-        stats.totalListeningTime,
-        stats.totalTracks,
-        stats.totalArtists,
-        stats.totalTracks,
-        stats.totalArtists,
-        stats.averageListeningPerDay,
-        stats.mostActiveDay,
-        stats.mostActiveDayMinutes,
-      ],
-      a: sortedArtists
-        .slice(0, 10)
-        .map((a) => [a.name, Math.round(a.totalTime / 60000), a.playCount]),
-      t: sortedTracks
-        .slice(0, 10)
-        .map((t) => [t.name, t.artist, Math.round(t.totalMs / 60000), t.playCount]),
-      dr: [startDate, endDate],
-    };
-    const shareText = generateSummaryText(compactData as any);
-
-    try {
-      await copyTextToClipboard(`${shareText}\n\n${url}`);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch (error) {
-      console.error('Failed to copy text:', error);
     }
   };
 
@@ -124,20 +76,6 @@ export function ShareExportMenu({
             <>
               <Link className="w-4 h-4 mr-2" />
               Copy Share Link
-            </>
-          )}
-        </DropdownMenuItem>
-
-        <DropdownMenuItem onClick={handleCopyShareText}>
-          {copied ? (
-            <>
-              <Check className="w-4 h-4 mr-2 text-primary" />
-              Copied!
-            </>
-          ) : (
-            <>
-              <Copy className="w-4 h-4 mr-2" />
-              Copy Text + Link
             </>
           )}
         </DropdownMenuItem>
